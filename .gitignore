@@ -4,3 +4,7 @@ Thumbs.db
 
 # Emulatori Firebase
 firestore-debug.log
+firebase-debug.log
+
+# Note di gestione, solo in locale
+GESTIONE-SICUREZZA.md
