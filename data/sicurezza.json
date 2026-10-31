@@ -19,5 +19,18 @@
   "pomeriggio": 0,
   "sera": 0,
   "notte": 0
+ },
+ "fattori": {
+  "illuminazione": 0,
+  "isolata": 0,
+  "persone-moleste": 0,
+  "degrado": 0,
+  "trasporti": 0,
+  "nessuno-intorno": 0
+ },
+ "denuncia": {
+  "si": 0,
+  "no": 0,
+  "non-dico": 0
  }
 }

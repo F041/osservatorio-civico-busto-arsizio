@@ -1,5 +1,5 @@
 // Panoramica Sicurezza: legge i conteggi aggregati da scripts/build_sicurezza.py (data/sicurezza.json)
-import { CATEGORIE, FASCE } from './sicurezza-config.js';
+import { CATEGORIE, FASCE, FATTORI, DENUNCIA } from './sicurezza-config.js';
 import { caricaMappa, creaMappa, confiniCella, descriviCella } from './mappa.js';
 
 const overview = document.getElementById('overview');
@@ -171,7 +171,15 @@ Promise.all([
         byType.append(barTable(CATEGORIE, data.categorie, data.soglia));
         const byTime = card('Per fascia oraria');
         byTime.append(barTable(FASCE, data.fasce, data.soglia));
-        overview.append(mapCard(data, mappa), totalCard, byType, byTime);
+        const byFactor = card('Cosa ha contribuito');
+        byFactor.append(barTable(FATTORI, data.fattori, data.soglia));
+        const factorNote = document.createElement('p');
+        factorNote.className = 'safety-muted';
+        factorNote.textContent = 'Domanda facoltativa: una segnalazione può indicare più fattori o nessuno.';
+        byFactor.append(factorNote);
+        const byReport = card('Hai sporto denuncia?');
+        byReport.append(barTable(DENUNCIA, data.denuncia, data.soglia));
+        overview.append(mapCard(data, mappa), totalCard, byType, byTime, byFactor, byReport);
 
         overviewNote.textContent = `Aggiornato il ${formatDate(data.generato.slice(0, 10))}. ` +
             `Per non rendere riconoscibile nessuno, i numeri sotto ${data.soglia} non vengono mostrati.`;
