@@ -196,6 +196,13 @@ body {
 .status-messages p { margin: 5px 0; }
 #error-message { color: #dc3545 !important; font-weight: bold; }
 
+/* Avviso copertura dati */
+.data-coverage-notice {
+    margin-bottom: 15px; background-color: #fff8e1; padding: 10px 15px;
+    border: 1px solid #ffe08a; border-left: 4px solid #f0ad4e; border-radius: 4px; font-size: 0.9em;
+}
+.data-coverage-notice a { color: #0056b3; }
+
 /* Tabella e Ordinamento */
 .table-responsive-wrapper {
     overflow-x: auto; width: 100%; margin-bottom: 20px; 
