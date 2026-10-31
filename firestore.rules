@@ -1,0 +1,34 @@
+rules_version = '2';
+
+// Segnalazioni anonime della sezione Sicurezza.
+// Dal sito si può solo creare una segnalazione con i campi e i valori previsti dal modulo
+// (segnala.html, js/sicurezza-config.js): niente testo libero, nomi o indirizzi.
+// Nessuno può leggerle, modificarle o cancellarle dal sito: i conteggi pubblici li calcola
+// scripts/build_sicurezza.py con un account di servizio, che cancella anche quelle oltre i 12 mesi.
+// Se cambi un elenco qui, cambialo anche in js/sicurezza-config.js e in scripts/build_sicurezza.py.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /segnalazioni/{id} {
+      allow create: if segnalazioneValida(request.resource.data);
+      allow read, update, delete: if false;
+    }
+
+    function segnalazioneValida(d) {
+      let campi = ['categoria', 'data', 'fascia', 'zona', 'fattori', 'denuncia', 'creato'];
+      return d.keys().hasOnly(campi) && d.keys().hasAll(campi)
+        && d.categoria in ['insicurezza', 'furto', 'molestia', 'aggressione', 'vandalismo', 'altro']
+        && d.fascia in ['mattina', 'pomeriggio', 'sera', 'notte']
+        && d.zona in ['san-giovanni', 'sant-anna', 'san-michele', 'sant-edoardo', 'madonna-regina',
+                      'beata-giuliana', 'santi-apostoli', 'borsano', 'sacconago']
+        && d.denuncia in ['si', 'no', 'non-dico']
+        && d.fattori is list && d.fattori.size() <= 6
+        && d.fattori.toSet().size() == d.fattori.size()
+        && d.fattori.hasOnly(['illuminazione', 'isolata', 'persone-moleste', 'degrado', 'trasporti', 'nessuno-intorno'])
+        // Data dell'episodio: mezzanotte locale del giorno scelto, negli ultimi 90 giorni
+        && d.data is timestamp
+        && d.data <= request.time
+        && d.data > request.time - duration.value(91, 'd')
+        && d.creato == request.time;
+    }
+  }
+}

@@ -1,0 +1,46 @@
+name: Aggiorna conteggi Sicurezza
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 3 * * *'
+
+jobs:
+  conteggi:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Configura Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Installa il client Firestore
+        run: pip install google-cloud-firestore==2.34.1
+
+      # Account di servizio sicurezza-conteggi (ruolo Cloud Datastore User) del progetto osservatorio-civico-busto
+      - name: Calcola i conteggi e cancella le segnalazioni oltre i 12 mesi
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          echo "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/account.json"
+          GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/account.json" python3 scripts/build_sicurezza.py data/sicurezza.json
+          rm "$RUNNER_TEMP/account.json"
+
+      - name: Committa e pusha i conteggi
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/sicurezza.json
+          if git diff --staged --quiet; then
+            echo "Nessun cambiamento nei conteggi."
+          else
+            git commit -m "Aggiornamento automatico conteggi Sicurezza"
+            git pull --rebase
+            git push
+          fi

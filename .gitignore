@@ -1,3 +1,6 @@
 # File di sistema
 .DS_Store
 Thumbs.db
+
+# Emulatori Firebase
+firestore-debug.log

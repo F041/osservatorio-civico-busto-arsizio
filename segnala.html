@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Segnala - Osservatorio civico Busto Arsizio</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container header-content">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Busto_Arsizio-Stemma.svg" alt="Stemma Comune Busto Arsizio" class="header-logo">
+            <div class="header-text">
+                <h1 class="main-title">Osservatorio civico <span class="location-name">Busto Arsizio</span></h1>
+                <p class="sub-title">Sicurezza · Segnala</p>
+            </div>
+            <nav class="header-nav" aria-label="Sezioni del sito">
+                <a href="index.html" aria-current="true">Sicurezza</a>
+                <a href="pagamenti.html">Pagamenti</a>
+            </nav>
+        </div>
+    </header>
+    <nav class="section-nav" aria-label="Sicurezza">
+        <div class="container">
+            <a href="index.html">Panoramica</a>
+            <a href="segnala.html" aria-current="page">Segnala</a>
+            <a href="privacy.html">Come funziona e privacy</a>
+        </div>
+    </nav>
+
+    <div class="container page-content">
+        <div class="emergency-note report-form" role="note">
+            <strong>In caso di pericolo chiama il 112.</strong> Questa segnalazione è anonima, non è una denuncia
+            e nessuno la legge in tempo reale: serve a contare dove e quando ci si sente insicuri.
+        </div>
+
+        <form id="report-form" class="report-form" novalidate>
+            <fieldset>
+                <legend>1. Cosa è successo?</legend>
+                <div class="choice-list" id="choices-categoria"></div>
+            </fieldset>
+
+            <fieldset>
+                <legend>2. Quando?</legend>
+                <div class="field-row">
+                    <label for="report-date">Giorno</label>
+                    <input type="date" id="report-date" required>
+                </div>
+                <p class="hint">Negli ultimi 90 giorni. Non chiediamo l'ora esatta, solo la fascia.</p>
+                <div class="choice-list" id="choices-fascia"></div>
+            </fieldset>
+
+            <fieldset>
+                <legend>3. Dove?</legend>
+                <div class="field-row">
+                    <label for="report-zone">Quartiere</label>
+                    <select id="report-zone" required></select>
+                </div>
+                <p class="hint">Solo il quartiere: non chiediamo vie, indirizzi o luoghi precisi.</p>
+            </fieldset>
+
+            <fieldset>
+                <legend>4. Cosa ha contribuito? <span class="safety-muted">(facoltativo)</span></legend>
+                <div class="choice-list" id="choices-fattori"></div>
+            </fieldset>
+
+            <fieldset>
+                <legend>5. Hai sporto denuncia?</legend>
+                <div class="choice-list" id="choices-denuncia"></div>
+            </fieldset>
+
+            <p class="hint">Non c'è uno spazio per scrivere: così nessuno può inserire nomi, descrizioni di persone o altri dati che rendano riconoscibile qualcuno.</p>
+            <label class="consent">
+                <input type="checkbox" id="report-consent" required>
+                <span>Ho capito che la segnalazione è anonima e non è una denuncia. <a href="privacy.html" target="_blank">Come funziona e privacy</a></span>
+            </label>
+            <button type="submit" class="cta-button" id="report-submit">Invia segnalazione</button>
+            <p class="form-status" id="report-status" role="status" aria-live="polite"></p>
+        </form>
+
+        <div class="form-thanks" id="report-thanks" hidden>
+            <p><strong>Grazie, la segnalazione è stata registrata.</strong> Comparirà nei conteggi della panoramica entro un giorno.</p>
+            <p><a href="index.html">Vai alla panoramica</a> · <a href="segnala.html">Fai un'altra segnalazione</a></p>
+        </div>
+    </div>
+
+    <footer class="main-footer" style="margin-top:40px; padding: 20px 0; background: #f8f9fa; text-align: center; border-top: 1px solid #e0e0e0;">
+        <a href="https://github.com/F041/esplora-pagamenti-busto-arsizio" target="_blank" rel="noopener" title="Vai al repository GitHub" style="display:inline-flex; align-items:center; gap:8px; color:#222; text-decoration:none; font-size:1.1em;">
+            <svg height="24" width="24" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" style="vertical-align:middle;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.01.08-2.12 0 0 .67-.21 2.2.82a7.65 7.65 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.11.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
+            <span>Progetto su GitHub</span>
+        </a>
+        <a href="privacy.html" class="footer-link">Privacy</a>
+    </footer>
+
+    <script type="module" src="js/segnala.js"></script>
+</body>
+</html>

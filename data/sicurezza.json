@@ -1,0 +1,33 @@
+{
+ "generato": "2026-10-31T16:56:44Z",
+ "finestra_giorni": 90,
+ "da": "2026-08-02",
+ "a": "2026-10-31",
+ "soglia": 3,
+ "totale": 0,
+ "zone": {
+  "san-giovanni": 0,
+  "sant-anna": 0,
+  "san-michele": 0,
+  "sant-edoardo": 0,
+  "madonna-regina": 0,
+  "beata-giuliana": 0,
+  "santi-apostoli": 0,
+  "borsano": 0,
+  "sacconago": 0
+ },
+ "categorie": {
+  "insicurezza": 0,
+  "furto": 0,
+  "molestia": 0,
+  "aggressione": 0,
+  "vandalismo": 0,
+  "altro": 0
+ },
+ "fasce": {
+  "mattina": 0,
+  "pomeriggio": 0,
+  "sera": 0,
+  "notte": 0
+ }
+}

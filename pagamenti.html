@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Google Fonts: Titillium Web -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Titolo della Pagina -->
+    <title>Cerca pagamenti - Osservatorio civico Busto Arsizio</title>
+    
+    <!-- Link CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+      
+    <header class="main-header">
+        <div class="container header-content"> 
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Busto_Arsizio-Stemma.svg" alt="Stemma Comune Busto Arsizio" class="header-logo">
+            <div class="header-text">
+                <h1 class="main-title">Osservatorio civico <span class="location-name">Busto Arsizio</span></h1>
+                <p class="sub-title">Pagamenti · Cerca pagamenti</p>
+            </div>
+            <nav class="header-nav" aria-label="Sezioni del sito">
+                <a href="index.html">Sicurezza</a>
+                <a href="pagamenti.html" aria-current="true">Pagamenti</a>
+            </nav>
+        </div>
+    </header>
+    <nav class="section-nav" aria-label="Pagamenti">
+        <div class="container">
+            <a href="pagamenti.html" aria-current="page">Cerca pagamenti</a>
+            <a href="cruscotto.html">Cruscotto</a>
+            <a href="dati.html">Scarica dati</a>
+        </div>
+    </nav>
+
+    <div id="loading-spinner" style="display: none;"> <!-- Contenitore per lo spinner -->
+        <div class="spinner"></div> <!-- L'elemento che ruota -->
+        <!-- <p>Caricamento...</p> Puoi aggiungere testo qui se vuoi, ma il tuo CSS attuale non lo gestisce -->
+    </div>
+
+    <div class="container page-content">
+        <div class="page-controls-bar">
+            <div class="list-info">Pagamenti (<span id="total-rows-header">0</span>)</div>
+            
+            <div class="filter-dropdown-container">
+                <button id="toggle-filter-dropdown-btn" class="control-button-style">Aggiungi Filtro ▾</button> <!-- Modificato per coerenza con screenshot, usa la freccia che preferisci -->
+                <div id="filter-options-dropdown" class="dropdown-content" style="display: none;">
+                    <a href="#" data-filter-type="year" data-filter-label="Anno">Anno</a>
+                    <a href="#" data-filter-type="beneficiary" data-filter-label="Beneficiario">Beneficiario</a>
+                    <a href="#" data-filter-type="description" data-filter-label="Descrizione">Descrizione</a>
+                    <a href="#" data-filter-type="amount" data-filter-label="Importo (€)">Importo (€)</a>
+                </div>
+            </div>
+            
+            <input type="text" id="search-input" class="main-search-input" placeholder="Cerca beneficiario, descrizione, anno...">
+            <button id="search-button-main" class="control-button-style search-button">Cerca</button> 
+        </div>
+
+        <div id="active-filters-area">
+            <div id="active-filters-container">
+                <!-- I filtri attivi verranno aggiunti qui dinamicamente dal JS -->
+            </div>
+            <div class="action-buttons-for-filters">
+                <button id="apply-filters-button" class="control-button-style apply-button" style="display: none;">Applica</button>
+                <button id="reset-all-filters-button" class="control-button-style" style="display: none;">Reimposta Filtri</button>
+            </div>
+        </div>
+
+        <div class="data-coverage-notice" role="note">
+            <strong>I dati per singolo pagamento si fermano al 30 settembre 2025.</strong>
+            Dal IV trimestre 2025 il Comune pubblica i pagamenti nel nuovo schema standard ANAC
+            (<a href="https://www.anticorruzione.it/-/delibera-n.-495-del-25-settembre-2024" target="_blank" rel="noopener">delibera n. 495/2024</a>):
+            solo importi per tipologia di spesa e categoria di beneficiario, senza numero di mandato, nominativo e descrizione.
+            Per questo i trimestri successivi non sono inclusi.
+        </div>
+
+        <div class="status-messages">
+            <p id="loading-status">Caricamento database...</p> <!-- Questo potrebbe diventare ridondante con lo spinner overlay -->
+            <p id="error-message" style="color: red; display: none;"></p>
+            <p id="results-info">Mostrati <span id="current-rows">0</span> di <span id="total-rows-footer">0</span> risultati. Pagina <span id="current-page">1</span> di <span id="total-pages">1</span>.</p>
+        </div>
+        <div class="table-responsive-wrapper">
+            <table id="results-table">
+                <thead>
+                    <tr>
+                        <th>Anno</th>
+                        <th>Data</th>
+                        <th>Beneficiario</th>
+                        <th id="header-importo" class="sortable-header">Importo (€) <span class="sort-arrow"></span></th>
+                        <th>Descrizione</th>
+                        <th title="Numero del mandato di pagamento emesso dal Comune">N. mandato</th>
+                    </tr>
+                </thead>
+                <tbody id="results-body">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+            <button id="first-page-button" title="Prima Pagina">⏮️</button>
+            <button id="prev-page-button" title="Pagina Precedente">⬅️</button>
+            <span class="page-indicator">
+                Pagina <input type="number" id="page-input" value="1" min="1"> di <span id="pagination-total-pages">1</span>
+            </span>
+            <button id="next-page-button" title="Pagina Successiva">➡️</button>
+            <button id="last-page-button" title="Ultima Pagina">⏭️</button>
+            <label for="rows-per-page" class="rows-per-page-label">Righe per pagina:</label>
+            <select id="rows-per-page">
+                <option value="25">25</option>
+                <option value="50" selected>50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+            </select>
+        </div>
+    </div>
+    <!-- Footer con icona GitHub -->
+    <footer class="main-footer" style="margin-top:40px; padding: 20px 0; background: #f8f9fa; text-align: center; border-top: 1px solid #e0e0e0;">
+        <a href="https://github.com/F041/esplora-pagamenti-busto-arsizio" target="_blank" rel="noopener" title="Vai al repository GitHub" style="display:inline-flex; align-items:center; gap:8px; color:#222; text-decoration:none; font-size:1.1em;">
+            <svg height="24" width="24" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" style="vertical-align:middle;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.01.08-2.12 0 0 .67-.21 2.2.82a7.65 7.65 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.11.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
+            <span>Progetto su GitHub</span>
+        </a>
+        <a href="privacy.html" class="footer-link">Privacy</a>
+    </footer>
+
+    <script src="js/lib/sql-wasm.js"></script> 
+    <script src="js/main.js"></script>
+</body>
+</html>

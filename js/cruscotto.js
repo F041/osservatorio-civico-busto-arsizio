@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const formatMillions = amount => `${millions.format(amount / 1e6)} mln €`;
     const formatDate = iso => iso.split('-').reverse().join('/');
     const escapeHtml = text => String(text).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
-    const exploreLink = name => `<a href="index.html?q=${encodeURIComponent(name)}">${escapeHtml(name)}</a>`;
+    const exploreLink = name => `<a href="pagamenti.html?q=${encodeURIComponent(name)}">${escapeHtml(name)}</a>`;
 
     let data = null;
 
