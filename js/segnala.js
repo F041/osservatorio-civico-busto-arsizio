@@ -98,7 +98,7 @@ form.addEventListener('submit', async event => {
         return;
     }
     submitButton.disabled = true;
-    status.textContent = 'Invio in corso...';
+    status.textContent = 'Invio in corso…';
     try {
         // Senza rete addDoc resterebbe in attesa: dopo 15 secondi lo diamo per fallito
         await Promise.race([
