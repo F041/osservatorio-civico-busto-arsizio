@@ -1,18 +1,20 @@
 // Modulo di segnalazione: scrive su Firestore solo campi a scelta chiusa (vedi firestore.rules)
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js';
-import { initializeAppCheck, ReCaptchaV3Provider } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-app-check.js';
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-app-check.js';
 import { getFirestore, connectFirestoreEmulator, collection, addDoc, serverTimestamp, Timestamp } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js';
 import { FIREBASE_CONFIG, RECAPTCHA_SITE_KEY, GIORNI_INDIETRO, CATEGORIE, FASCE, ZONE, FATTORI, DENUNCIA } from './sicurezza-config.js';
 
 const SEND_TIMEOUT_MS = 15000;
 
+const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 const app = initializeApp(FIREBASE_CONFIG);
-if (RECAPTCHA_SITE_KEY) {
-    initializeAppCheck(app, { provider: new ReCaptchaV3Provider(RECAPTCHA_SITE_KEY), isTokenAutoRefreshEnabled: true });
+// App Check con Fraud Defense: Firestore accetta solo richieste dalle pagine vere. La chiave vale solo per f041.github.io
+if (RECAPTCHA_SITE_KEY && !isLocal) {
+    initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider(RECAPTCHA_SITE_KEY), isTokenAutoRefreshEnabled: true });
 }
 const db = getFirestore(app);
 // In locale (python -m http.server + firebase emulators:start) si scrive sull'emulatore, mai sul database vero
-if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') connectFirestoreEmulator(db, '127.0.0.1', 8085);
+if (isLocal) connectFirestoreEmulator(db, '127.0.0.1', 8085);
 
 const form = document.getElementById('report-form');
 const dateInput = document.getElementById('report-date');

@@ -8,8 +8,9 @@ export const FIREBASE_CONFIG = {
     appId: '1:482984183218:web:c84a68a802a822454a50ab',
 };
 
-// Chiave reCAPTCHA v3 per App Check: vuota finché non è registrata (vedi README della sezione)
-export const RECAPTCHA_SITE_KEY = '';
+// Chiave del sito Fraud Defense (reCAPTCHA Enterprise, a punteggio) per App Check: pubblica per natura.
+// Registrata nel progetto osservatorio-civico-busto per il solo dominio f041.github.io.
+export const RECAPTCHA_SITE_KEY = '6LfDHwouAAAAADDVYFZFnNqE9XzHSNNEbhapTJum';
 
 export const GIORNI_INDIETRO = 90;
 
