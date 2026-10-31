@@ -30,19 +30,6 @@ export const FASCE = [
     { id: 'notte', label: 'Notte', desc: '22–6' },
 ];
 
-// I nove quartieri di Busto Arsizio
-export const ZONE = [
-    { id: 'san-giovanni', label: 'San Giovanni (centro)' },
-    { id: 'sant-anna', label: "Sant'Anna" },
-    { id: 'san-michele', label: 'San Michele' },
-    { id: 'sant-edoardo', label: "Sant'Edoardo" },
-    { id: 'madonna-regina', label: 'Madonna Regina' },
-    { id: 'beata-giuliana', label: 'Beata Giuliana' },
-    { id: 'santi-apostoli', label: 'Santi Apostoli' },
-    { id: 'borsano', label: 'Borsano' },
-    { id: 'sacconago', label: 'Sacconago' },
-];
-
 export const FATTORI = [
     { id: 'illuminazione', label: 'Poca illuminazione' },
     { id: 'isolata', label: 'Zona isolata o poco frequentata' },

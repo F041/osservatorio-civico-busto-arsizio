@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
     <title>Segnala - Osservatorio civico Busto Arsizio</title>
+    <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -56,11 +57,21 @@
 
             <fieldset>
                 <legend>3. Dove?</legend>
+                <p class="hint">Scegli il quadrato della mappa (circa 250 × 250 metri) in cui è successo.
+                    Salviamo solo il quadrato: né la via né il punto preciso.</p>
                 <div class="field-row">
-                    <label for="report-zone">Quartiere</label>
-                    <select id="report-zone" required aria-describedby="report-zone-hint"></select>
+                    <label for="place-search">Via o luogo</label>
+                    <input type="search" id="place-search" list="place-list" autocomplete="off" spellcheck="false"
+                        placeholder="Es. Corso Italia…" aria-describedby="place-search-hint">
+                    <datalist id="place-list"></datalist>
                 </div>
-                <p class="hint" id="report-zone-hint">Solo il quartiere: non chiediamo vie, indirizzi o luoghi precisi.</p>
+                <p class="hint" id="place-search-hint">La ricerca avviene sul tuo dispositivo: quello che scrivi non viene inviato né salvato.</p>
+                <div class="place-cells" id="place-cells" hidden>
+                    <p class="field-label" id="place-cells-label">In quale tratto?</p>
+                    <div class="choice-list" id="choices-cella" role="radiogroup" aria-labelledby="place-cells-label"></div>
+                </div>
+                <div class="report-map" id="report-map" aria-label="Mappa di Busto Arsizio: tocca un quadrato per sceglierlo"></div>
+                <p class="cell-chosen" id="cell-chosen" aria-live="polite">Nessun quadrato scelto: cerca una via o tocca la mappa.</p>
             </fieldset>
 
             <fieldset>
@@ -99,6 +110,7 @@
         <a href="privacy.html" class="footer-link">Privacy</a>
     </footer>
 
+    <script src="vendor/leaflet/leaflet.js"></script>
     <script type="module" src="js/segnala.js"></script>
 </body>
 </html>

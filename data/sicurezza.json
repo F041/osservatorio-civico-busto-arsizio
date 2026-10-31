@@ -5,17 +5,7 @@
  "a": "2026-10-31",
  "soglia": 3,
  "totale": 0,
- "zone": {
-  "san-giovanni": 0,
-  "sant-anna": 0,
-  "san-michele": 0,
-  "sant-edoardo": 0,
-  "madonna-regina": 0,
-  "beata-giuliana": 0,
-  "santi-apostoli": 0,
-  "borsano": 0,
-  "sacconago": 0
- },
+ "celle": {},
  "categorie": {
   "insicurezza": 0,
   "furto": 0,

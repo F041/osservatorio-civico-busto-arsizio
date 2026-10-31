@@ -11,7 +11,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
     <title>Sicurezza - Osservatorio civico Busto Arsizio</title>
-    <meta name="description" content="Segnalazioni anonime di insicurezza, furti e molestie a Busto Arsizio, con i conteggi per quartiere.">
+    <meta name="description" content="Segnalazioni anonime di insicurezza, furti e molestie a Busto Arsizio, con la mappa delle zone più segnalate.">
+    <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -40,8 +41,8 @@
         <section class="safety-intro">
             <h2>Come ci si sente in città</h2>
             <p>Chi vive o passa da Busto Arsizio può segnalare, in forma anonima, un momento di insicurezza:
-                un furto, una molestia, una zona buia o isolata. Raccogliamo solo tipo, giorno, fascia oraria e quartiere,
-                e pubblichiamo i conteggi per capire dove e quando succede più spesso.</p>
+                un furto, una molestia, una zona buia o isolata. Raccogliamo solo tipo, giorno, fascia oraria e un quadrato
+                di circa 250 metri sulla mappa, e pubblichiamo i conteggi per capire dove e quando succede più spesso.</p>
             <div class="emergency-note" role="note">
                 <strong>Non è una denuncia e nessuno legge le segnalazioni in tempo reale.</strong>
                 In caso di pericolo chiama il <strong>112</strong>. Per denunciare un reato rivolgiti a Carabinieri, Polizia di Stato o Polizia locale.
@@ -52,7 +53,7 @@
         <section class="dashboard-section" style="margin-top: 25px;">
             <h2 id="overview-title">Ultimi 90 giorni</h2>
             <div class="safety-grid" id="overview">
-                <p class="safety-muted">Caricamento dei conteggi...</p>
+                <p class="safety-muted">Caricamento dei conteggi…</p>
             </div>
             <p class="safety-muted" id="overview-note"></p>
         </section>
@@ -66,6 +67,7 @@
         <a href="privacy.html" class="footer-link">Privacy</a>
     </footer>
 
+    <script src="vendor/leaflet/leaflet.js"></script>
     <script type="module" src="js/sicurezza.js"></script>
 </body>
 </html>

@@ -6,6 +6,7 @@ rules_version = '2';
 // Nessuno può leggerle, modificarle o cancellarle dal sito: i conteggi pubblici li calcola
 // scripts/build_sicurezza.py con un account di servizio, che cancella anche quelle oltre i 12 mesi.
 // Se cambi un elenco qui, cambialo anche in js/sicurezza-config.js e in scripts/build_sicurezza.py.
+// Il luogo è solo il codice di un quadrato di circa 250 m (rRRcCC) della griglia di scripts/build_mappa.py.
 service cloud.firestore {
   match /databases/{database}/documents {
     match /segnalazioni/{id} {
@@ -14,12 +15,12 @@ service cloud.firestore {
     }
 
     function segnalazioneValida(d) {
-      let campi = ['categoria', 'data', 'fascia', 'zona', 'fattori', 'denuncia', 'creato'];
+      let campi = ['categoria', 'data', 'fascia', 'cella', 'fattori', 'denuncia', 'creato'];
       return d.keys().hasOnly(campi) && d.keys().hasAll(campi)
         && d.categoria in ['insicurezza', 'furto', 'molestia', 'aggressione', 'vandalismo', 'altro']
         && d.fascia in ['mattina', 'pomeriggio', 'sera', 'notte']
-        && d.zona in ['san-giovanni', 'sant-anna', 'san-michele', 'sant-edoardo', 'madonna-regina',
-                      'beata-giuliana', 'santi-apostoli', 'borsano', 'sacconago']
+        // Griglia di 34 righe e 25 colonne
+        && d.cella is string && d.cella.matches('^r([0-2][0-9]|3[0-3])c([01][0-9]|2[0-4])$')
         && d.denuncia in ['si', 'no', 'non-dico']
         && d.fattori is list && d.fattori.size() <= 6
         && d.fattori.toSet().size() == d.fattori.size()

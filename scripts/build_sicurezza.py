@@ -3,8 +3,8 @@
 Uso: GOOGLE_APPLICATION_CREDENTIALS=chiave.json python scripts/build_sicurezza.py data/sicurezza.json
 
 Gira ogni notte nel workflow sicurezza.yml con un account di servizio (ruolo Cloud Datastore User).
-Pubblica solo conteggi degli ultimi 90 giorni per quartiere, tipo e fascia, presi separatamente,
-e nasconde quelli sotto SOGLIA. Cancella le segnalazioni più vecchie di 12 mesi, come dice privacy.html.
+Pubblica solo conteggi degli ultimi 90 giorni per quadrato della mappa, tipo e fascia, presi separatamente,
+e nasconde quelli sotto SOGLIA (i quadrati sotto soglia non compaiono proprio). Cancella le segnalazioni più vecchie di 12 mesi, come dice privacy.html.
 Gli elenchi devono coincidere con firestore.rules e js/sicurezza-config.js.
 """
 import json
@@ -23,8 +23,6 @@ SOGLIA = 3  # conteggi da 1 a SOGLIA-1 pubblicati come "meno di SOGLIA"
 
 CATEGORIE = ["insicurezza", "furto", "molestia", "aggressione", "vandalismo", "altro"]
 FASCE = ["mattina", "pomeriggio", "sera", "notte"]
-ZONE = ["san-giovanni", "sant-anna", "san-michele", "sant-edoardo", "madonna-regina",
-        "beata-giuliana", "santi-apostoli", "borsano", "sacconago"]
 
 
 def published_counts(counter, keys):
@@ -45,12 +43,12 @@ def delete_expired(client, now):
 def build(client, now):
     start = now - timedelta(days=FINESTRA_GIORNI)
     docs = client.collection(COLLECTION).where(filter=FieldFilter("data", ">=", start)).stream()
-    zone, categorie, fasce = Counter(), Counter(), Counter()
+    celle, categorie, fasce = Counter(), Counter(), Counter()
     totale = 0
     for doc in docs:
         d = doc.to_dict()
         totale += 1
-        zone[d.get("zona")] += 1
+        celle[d.get("cella")] += 1
         categorie[d.get("categoria")] += 1
         fasce[d.get("fascia")] += 1
     return {
@@ -60,7 +58,8 @@ def build(client, now):
         "a": now.strftime("%Y-%m-%d"),
         "soglia": SOGLIA,
         "totale": totale,
-        "zone": published_counts(zone, ZONE),
+        # Quadrati di scripts/build_mappa.py, dal più segnalato
+        "celle": {k: n for k, n in celle.most_common() if k and n >= SOGLIA},
         "categorie": published_counts(categorie, CATEGORIE),
         "fasce": published_counts(fasce, FASCE),
     }
