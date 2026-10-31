@@ -203,6 +203,24 @@ body {
 }
 .data-coverage-notice a { color: #0056b3; }
 
+/* Cruscotto (cruscotto.html) */
+.dashboard-controls { flex-wrap: wrap; gap: 10px; }
+.dashboard-label { font-weight: 600; }
+.dashboard-toggle { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600; }
+.dashboard-search { display: flex; gap: 8px; flex: 1 1 320px; }
+.dashboard-search .main-search-input { flex: 1; min-width: 0; }
+.dashboard-section { margin-bottom: 25px; }
+.dashboard-section h2 { font-size: 1.25em; font-weight: 600; margin: 0 0 10px; }
+.dashboard-table .num { text-align: right; white-space: nowrap; }
+.dashboard-table td a { color: #0056b3; text-decoration: none; }
+.dashboard-table td a:hover { text-decoration: underline; }
+.dashboard-table .total-row td { font-weight: 700; background-color: #f7f7f7; }
+.dashboard-table.private-only th:nth-child(3), .dashboard-table.private-only td:nth-child(3) { display: none; }
+.category-tag { display: inline-block; padding: 1px 8px; border-radius: 10px; background: #e9ecef; color: #495057; font-size: 0.85em; white-space: nowrap; }
+.dashboard-method { background: #fff; border: 1px solid #e3e3e3; border-radius: 4px; padding: 12px 15px; font-size: 0.9em; }
+.dashboard-method ul { margin: 0; padding-left: 20px; }
+.dashboard-method a { color: #0056b3; }
+
 /* Tabella e Ordinamento */
 .table-responsive-wrapper {
     overflow-x: auto; width: 100%; margin-bottom: 20px; 
@@ -353,6 +371,7 @@ td { color: #212529; }
     .page-controls-bar > * { margin-bottom: 10px; width: 100%; box-sizing: border-box; }
     .page-controls-bar .list-info { margin-right: 0; text-align: center; }
     .main-search-input { min-width: 0; }
+    .dashboard-search { flex: 0 0 auto; } /* in colonna flex-basis diventerebbe un'altezza */
 
     #active-filters-area { flex-direction: column; align-items: stretch; }
     .action-buttons-for-filters {

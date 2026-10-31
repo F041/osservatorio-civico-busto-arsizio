@@ -45,6 +45,9 @@ jobs:
           # echo "$CURRENT_DATE_SIMPLE" > last_update.txt
           echo "File last_update.json creato."
 
+      - name: Genera dati del cruscotto
+        run: python3 scripts/build_cruscotto.py ${{ steps.db_info.outputs.DB_FILENAME }} data/cruscotto.json
+
       - name: Committa e Pusha file aggiornati (DB e data)
         run: |
           git config --local user.email "action@github.com"
@@ -52,6 +55,7 @@ jobs:
           
           git add ${{ steps.db_info.outputs.DB_FILENAME }} 
           git add last_update.json # Aggiungi anche il file della data
+          git add data/cruscotto.json
           
           if git diff --staged --quiet; then
             echo "Nessun cambiamento nei dati da committare."

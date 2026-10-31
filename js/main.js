@@ -207,7 +207,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if(loadingStatusElement) loadingStatusElement.textContent = 'Caricamento database in memoria...'; else console.log('Caricamento database in memoria...');
             db = new SQL.Database(new Uint8Array(arrayBuffer));
             if(loadingStatusElement) { loadingStatusElement.textContent = 'Database caricato!'; loadingStatusElement.style.display = 'none';} else console.log('Database caricato!');
-            
+
+            // Ricerca precompilata da link esterni (es. cruscotto.html → index.html?q=AGESP)
+            const initialSearch = new URLSearchParams(window.location.search).get('q');
+            if (initialSearch && searchInput) searchInput.value = initialSearch;
+
             await fetchDataAndDisplay();
             updateActionButtonsVisibility();
             updateSortArrows();
