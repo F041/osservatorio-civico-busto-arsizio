@@ -290,6 +290,7 @@ body {
 .consent input { margin-top: 5px; flex: none; }
 .form-status { margin: 12px 0 0; font-weight: 600; }
 .form-status.error { color: #b02a37; }
+.report-form .recaptcha-note { margin-top: 16px; }
 .form-thanks { background: #e8f5ee; border: 1px solid #b7dfc8; border-left: 4px solid #1baf7a; border-radius: 4px; padding: 12px 15px; max-width: 760px; }
 .draft-banner { background: #fff8e1; border: 1px dashed #f0ad4e; border-radius: 4px; padding: 8px 12px; margin-bottom: 15px; font-weight: 600; }
 .privacy-text { max-width: 760px; background: #fff; border: 1px solid #e3e3e3; border-radius: 4px; padding: 12px 20px; }
