@@ -67,8 +67,13 @@ body {
     transition: background-color 0.2s, color 0.2s;
 }
 .header-nav a:hover {
-    background-color: #495057; 
-    color: #fff; 
+    background-color: #495057;
+    color: #fff;
+}
+.header-nav a[aria-current="page"] {
+    background-color: #495057;
+    color: #fff;
+    font-weight: 600;
 }
 
 /* Controlli Pagina */
@@ -220,6 +225,27 @@ body {
 .dashboard-method { background: #fff; border: 1px solid #e3e3e3; border-radius: 4px; padding: 12px 15px; font-size: 0.9em; }
 .dashboard-method ul { margin: 0; padding-left: 20px; }
 .dashboard-method a { color: #0056b3; }
+
+/* Grafico spesa per anno (cruscotto.html) */
+.chart-card { background: #fff; border: 1px solid #e3e3e3; border-radius: 4px; padding: 12px 15px; }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0 0 8px; padding: 0; list-style: none; font-size: 0.875em; color: #52514e; }
+.chart-legend li { display: inline-flex; align-items: center; gap: 6px; }
+.chart-swatch { display: inline-block; flex: none; width: 10px; height: 10px; border-radius: 2px; }
+.year-chart { position: relative; }
+.year-chart svg { display: block; overflow: visible; }
+.year-chart .chart-col { cursor: pointer; outline: none; }
+.year-chart .chart-hit { fill: transparent; }
+.year-chart .chart-col:hover .chart-hit, .year-chart .chart-col:focus-visible .chart-hit { fill: rgba(0, 0, 0, 0.04); }
+.year-chart .chart-col:focus-visible .chart-hit { stroke: #52514e; stroke-width: 1; }
+.chart-tooltip { position: absolute; z-index: 2; pointer-events: none; background: #fff; border: 1px solid #c3c2b7; border-radius: 4px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12); padding: 8px 10px; font-size: 0.8125em; white-space: nowrap; }
+.chart-tooltip[hidden] { display: none; }
+.chart-tooltip .tt-title { font-weight: 600; margin-bottom: 4px; }
+.chart-tooltip .tt-row { display: flex; align-items: center; gap: 6px; color: #52514e; }
+.chart-tooltip .tt-value { min-width: 5.5em; text-align: right; font-weight: 600; color: #333; font-variant-numeric: tabular-nums; }
+.chart-tooltip .tt-total { border-top: 1px solid #e1e0d9; margin-top: 4px; padding-top: 4px; }
+.chart-note { margin: 6px 0 0; font-size: 0.8125em; color: #52514e; }
+.chart-table { margin-top: 8px; font-size: 0.9em; }
+.chart-table summary { cursor: pointer; color: #0056b3; margin-bottom: 8px; }
 
 /* Tabella e Ordinamento */
 .table-responsive-wrapper {

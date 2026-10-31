@@ -15,11 +15,12 @@
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Busto_Arsizio-Stemma.svg" alt="Stemma Comune Busto Arsizio" class="header-logo">
             <div class="header-text">
                 <h1 class="main-title">Osservatorio Pagamenti <span class="location-name">Busto Arsizio</span></h1>
-                <p class="sub-title">Cruscotto dati</p>
+                <p class="sub-title">Cruscotto</p>
             </div>
-            <nav class="header-nav">
-                <a href="index.html">Esplora Dati</a>
-                <a href="dati.html">Dati</a>
+            <nav class="header-nav" aria-label="Sezioni del sito">
+                <a href="index.html">Esplora mandati</a>
+                <a href="cruscotto.html" aria-current="page">Cruscotto</a>
+                <a href="dati.html">Scarica dati</a>
             </nav>
         </div>
     </header>
@@ -38,6 +39,26 @@
                 <button type="submit" class="control-button-style search-button">Cerca</button>
             </form>
         </div>
+
+        <section class="dashboard-section">
+            <h2>Spesa per anno e categoria</h2>
+            <div class="chart-card">
+                <ul class="chart-legend" id="year-legend"></ul>
+                <div class="year-chart" id="year-chart">
+                    <div class="chart-tooltip" id="year-tooltip" hidden></div>
+                </div>
+                <p class="chart-note" id="year-chart-note">Clic su un anno per selezionarlo nel cruscotto.</p>
+                <details class="chart-table">
+                    <summary>Mostra i dati in tabella</summary>
+                    <div class="table-responsive-wrapper">
+                        <table class="dashboard-table">
+                            <thead id="year-table-head"></thead>
+                            <tbody id="year-table-body"></tbody>
+                        </table>
+                    </div>
+                </details>
+            </div>
+        </section>
 
         <section class="dashboard-section">
             <h2>Ripartizione per categoria</h2>
