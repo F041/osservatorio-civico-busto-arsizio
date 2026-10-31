@@ -325,6 +325,8 @@ body {
 .link-button { padding: 0; border: 0; background: none; font: inherit; color: #0d5bb8; text-decoration: underline; text-align: left; cursor: pointer; }
 .privacy-text { max-width: 760px; background: #fff; border: 1px solid #e3e3e3; border-radius: 4px; padding: 12px 20px; }
 .privacy-text h2 { font-size: 1.15em; margin: 18px 0 6px; }
+.privacy-text ul { padding-left: 20px; }
+.privacy-text li { margin-bottom: 8px; }
 
 /* Tabella e Ordinamento */
 .table-responsive-wrapper {
