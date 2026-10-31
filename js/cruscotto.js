@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const categoriesBody = document.getElementById('categories-body');
     const rankingBody = document.getElementById('ranking-body');
     const rankingTitle = document.getElementById('ranking-title');
+    const categoriesTitle = document.getElementById('categories-title');
+    const entitiesTitle = document.getElementById('entities-title');
     const entitiesBody = document.getElementById('entities-body');
     const yearChart = document.getElementById('year-chart');
     const yearTooltip = document.getElementById('year-tooltip');
@@ -107,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
         totalValue.className = 'tt-value';
         totalValue.textContent = formatMillions(stats.totale);
         const totalLabel = document.createElement('span');
-        totalLabel.textContent = `Totale, ${integer.format(stats.n)} mandati`;
+        totalLabel.textContent = `Totale, ${integer.format(stats.n)} pagamenti`;
         total.append(totalValue, totalLabel);
         yearTooltip.append(total);
 
@@ -212,7 +214,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }).join('') + `<tr class="total-row"><td>Totale</td><td class="num">${euro.format(stats.totale)}</td><td class="num">100%</td><td class="num">${integer.format(stats.n)}</td></tr>`;
 
         const ranking = stats.beneficiari.filter(b => !privateOnly.checked || b.cat === PRIVATI).slice(0, RANKING_SIZE);
-        rankingTitle.textContent = `Primi ${RANKING_SIZE} beneficiari${privateOnly.checked ? ' privati' : ''}`;
+        // Il periodo nel titolo: le tabelle cambiano con il menu Periodo e con il clic sul grafico
+        const periodSuffix = ` · ${periodLabel(period)}`;
+        categoriesTitle.textContent = `Ripartizione per categoria${periodSuffix}`;
+        rankingTitle.textContent = `Primi ${RANKING_SIZE} beneficiari${privateOnly.checked ? ' privati' : ''}${periodSuffix}`;
+        entitiesTitle.textContent = `Società partecipate ed enti controllati${periodSuffix}`;
         rankingBody.closest('table').classList.toggle('private-only', privateOnly.checked); // colonna Categoria ridondante
         rankingBody.innerHTML = ranking.map((b, i) =>
             `<tr><td class="num">${i + 1}</td><td>${exploreLink(b.b)}</td><td><span class="category-tag">${escapeHtml(b.cat)}</span></td><td class="num">${euro.format(b.imp)}</td><td class="num">${share(b.imp)}</td><td class="num">${integer.format(b.n)}</td></tr>`
@@ -228,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => { if (!response.ok) throw new Error(`HTTP ${response.status}`); return response.json(); })
         .then(json => {
             data = json;
-            coverageNotice.innerHTML = `Dati per singolo mandato dal <strong>${formatDate(data.periodo.da)}</strong> al <strong>${formatDate(data.periodo.a)}</strong>. ` +
+            coverageNotice.innerHTML = `Dati per singolo pagamento dal <strong>${formatDate(data.periodo.da)}</strong> al <strong>${formatDate(data.periodo.a)}</strong>. ` +
                 'Dal IV trimestre 2025 il Comune pubblica solo dati aggregati (schema ANAC, delibera n. 495/2024), non inclusi.';
             periodSelect.innerHTML = ['tutti', ...data.anni].map(p => `<option value="${p}">${escapeHtml(periodLabel(p))}</option>`).join('');
             periodSelect.addEventListener('change', render);

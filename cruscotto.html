@@ -18,7 +18,7 @@
                 <p class="sub-title">Cruscotto</p>
             </div>
             <nav class="header-nav" aria-label="Sezioni del sito">
-                <a href="index.html">Esplora mandati</a>
+                <a href="index.html">Cerca pagamenti</a>
                 <a href="cruscotto.html" aria-current="page">Cruscotto</a>
                 <a href="dati.html">Scarica dati</a>
             </nav>
@@ -35,7 +35,7 @@
                 <input type="checkbox" id="private-only"> Solo privati
             </label>
             <form class="dashboard-search" action="index.html" method="get">
-                <input type="text" name="q" class="main-search-input" placeholder="Cerca beneficiario o descrizione in Esplora Dati...">
+                <input type="text" name="q" class="main-search-input" placeholder="Cerca beneficiario o descrizione tra i pagamenti...">
                 <button type="submit" class="control-button-style search-button">Cerca</button>
             </form>
         </div>
@@ -61,10 +61,10 @@
         </section>
 
         <section class="dashboard-section">
-            <h2>Ripartizione per categoria</h2>
+            <h2 id="categories-title">Ripartizione per categoria</h2>
             <div class="table-responsive-wrapper">
                 <table class="dashboard-table">
-                    <thead><tr><th>Categoria</th><th class="num">Importo</th><th class="num">% sul totale</th><th class="num">N. mandati</th></tr></thead>
+                    <thead><tr><th>Categoria</th><th class="num">Importo</th><th class="num">% sul totale</th><th class="num">N. pagamenti</th></tr></thead>
                     <tbody id="categories-body"></tbody>
                 </table>
             </div>
@@ -74,17 +74,17 @@
             <h2 id="ranking-title">Primi 20 beneficiari</h2>
             <div class="table-responsive-wrapper">
                 <table class="dashboard-table">
-                    <thead><tr><th class="num">#</th><th>Beneficiario</th><th>Categoria</th><th class="num">Importo</th><th class="num">% sul totale</th><th class="num">N. mandati</th></tr></thead>
+                    <thead><tr><th class="num">#</th><th>Beneficiario</th><th>Categoria</th><th class="num">Importo</th><th class="num">% sul totale</th><th class="num">N. pagamenti</th></tr></thead>
                     <tbody id="ranking-body"></tbody>
                 </table>
             </div>
         </section>
 
         <section class="dashboard-section">
-            <h2>Società partecipate ed enti controllati</h2>
+            <h2 id="entities-title">Società partecipate ed enti controllati</h2>
             <div class="table-responsive-wrapper">
                 <table class="dashboard-table">
-                    <thead><tr><th>Beneficiario</th><th>Categoria</th><th class="num">Importo</th><th class="num">% sul totale</th><th class="num">N. mandati</th><th>Note</th></tr></thead>
+                    <thead><tr><th>Beneficiario</th><th>Categoria</th><th class="num">Importo</th><th class="num">% sul totale</th><th class="num">N. pagamenti</th><th>Note</th></tr></thead>
                     <tbody id="entities-body"></tbody>
                 </table>
             </div>
@@ -93,11 +93,12 @@
         <section class="dashboard-section dashboard-method">
             <h2>Come leggere i dati</h2>
             <ul>
+                <li>Ogni pagamento è un <em>mandato di pagamento</em>: l'ordine con cui il Comune paga un fornitore, un ente o una persona. Un mandato "DIVERSI" ne raggruppa molti (es. gli stipendi del mese).</li>
                 <li>Le percentuali sono sul totale del periodo scelto per tutti i beneficiari, anche con "Solo privati" attivo.</li>
                 <li>Le varianti dello stesso nome che differiscono solo per punteggiatura (es. "S.P.A." e "SPA") sono unite.</li>
                 <li>Partecipate ed enti controllati: elenchi di Amministrazione trasparente &gt; Enti controllati (aggiornamenti di novembre e dicembre 2025), più le società storiche che compaiono nei pagamenti.</li>
-                <li>"Personale, fisco e giroconti" raccoglie i mandati cumulativi "DIVERSI" (stipendi, tributi), Erario, INPDAP/INPS, INAIL, Agenzia delle Entrate e i giroconti verso il Comune stesso.</li>
-                <li>Clic su un beneficiario per vederne i singoli mandati in Esplora Dati. Le regole di classificazione sono in <a href="https://github.com/F041/esplora-pagamenti-busto-arsizio/blob/main/scripts/build_cruscotto.py" target="_blank" rel="noopener">scripts/build_cruscotto.py</a>.</li>
+                <li>"Personale, fisco e giroconti" raccoglie i pagamenti cumulativi "DIVERSI" (stipendi, tributi), Erario, INPDAP/INPS, INAIL, Agenzia delle Entrate e i giroconti verso il Comune stesso.</li>
+                <li>Clic su un beneficiario per vederne i singoli pagamenti in Cerca pagamenti. Le regole di classificazione sono in <a href="https://github.com/F041/esplora-pagamenti-busto-arsizio/blob/main/scripts/build_cruscotto.py" target="_blank" rel="noopener">scripts/build_cruscotto.py</a>.</li>
             </ul>
         </section>
     </div>

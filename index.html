@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <!-- Titolo della Pagina -->
-    <title>Osservatorio Pagamenti Busto Arsizio - Esplora Dati</title>
+    <title>Cerca pagamenti - Osservatorio Pagamenti Busto Arsizio</title>
     
     <!-- Link CSS -->
     <link rel="stylesheet" href="css/style.css">
@@ -22,10 +22,10 @@
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Busto_Arsizio-Stemma.svg" alt="Stemma Comune Busto Arsizio" class="header-logo">
             <div class="header-text">
                 <h1 class="main-title">Osservatorio Pagamenti <span class="location-name">Busto Arsizio</span></h1>
-                <p class="sub-title">Esplora mandati</p>
+                <p class="sub-title">Cerca pagamenti</p>
             </div>
             <nav class="header-nav" aria-label="Sezioni del sito">
-                <a href="index.html" aria-current="page">Esplora mandati</a>
+                <a href="index.html" aria-current="page">Cerca pagamenti</a>
                 <a href="cruscotto.html">Cruscotto</a>
                 <a href="dati.html">Scarica dati</a>
             </nav>
@@ -39,19 +39,19 @@
 
     <div class="container page-content">
         <div class="page-controls-bar">
-            <div class="list-info">Elenco (<span id="total-rows-header">0</span>)</div>
+            <div class="list-info">Pagamenti (<span id="total-rows-header">0</span>)</div>
             
             <div class="filter-dropdown-container">
                 <button id="toggle-filter-dropdown-btn" class="control-button-style">Aggiungi Filtro ▾</button> <!-- Modificato per coerenza con screenshot, usa la freccia che preferisci -->
                 <div id="filter-options-dropdown" class="dropdown-content" style="display: none;">
                     <a href="#" data-filter-type="year" data-filter-label="Anno">Anno</a>
                     <a href="#" data-filter-type="beneficiary" data-filter-label="Beneficiario">Beneficiario</a>
-                    <a href="#" data-filter-type="description" data-filter-label="Descrizione Mandato">Descrizione Mandato</a>
+                    <a href="#" data-filter-type="description" data-filter-label="Descrizione">Descrizione</a>
                     <a href="#" data-filter-type="amount" data-filter-label="Importo (€)">Importo (€)</a>
                 </div>
             </div>
             
-            <input type="text" id="search-input" class="main-search-input" placeholder="Ricerca generale...">
+            <input type="text" id="search-input" class="main-search-input" placeholder="Cerca beneficiario, descrizione, anno...">
             <button id="search-button-main" class="control-button-style search-button">Cerca</button> 
         </div>
 
@@ -66,7 +66,7 @@
         </div>
 
         <div class="data-coverage-notice" role="note">
-            <strong>I dati per singolo mandato si fermano al 30 settembre 2025.</strong>
+            <strong>I dati per singolo pagamento si fermano al 30 settembre 2025.</strong>
             Dal IV trimestre 2025 il Comune pubblica i pagamenti nel nuovo schema standard ANAC
             (<a href="https://www.anticorruzione.it/-/delibera-n.-495-del-25-settembre-2024" target="_blank" rel="noopener">delibera n. 495/2024</a>):
             solo importi per tipologia di spesa e categoria di beneficiario, senza numero di mandato, nominativo e descrizione.
@@ -83,11 +83,11 @@
                 <thead>
                     <tr>
                         <th>Anno</th>
-                        <th>Data Mandato</th>
+                        <th>Data</th>
                         <th>Beneficiario</th>
                         <th id="header-importo" class="sortable-header">Importo (€) <span class="sort-arrow"></span></th>
-                        <th>Descrizione Mandato</th>
-                        <th>Numero Mandato</th>
+                        <th>Descrizione</th>
+                        <th title="Numero del mandato di pagamento emesso dal Comune">N. mandato</th>
                     </tr>
                 </thead>
                 <tbody id="results-body">
