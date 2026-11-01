@@ -1,7 +1,7 @@
 // Modulo di segnalazione: scrive su Firestore solo campi a scelta chiusa (vedi firestore.rules)
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js';
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-app-check.js';
-import { getFirestore, connectFirestoreEmulator, collection, addDoc, serverTimestamp, Timestamp } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js';
+import { getFirestore, connectFirestoreEmulator, collection, doc, setDoc, serverTimestamp, Timestamp } from 'https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js';
 import { FIREBASE_CONFIG, RECAPTCHA_SITE_KEY, GIORNI_INDIETRO, CATEGORIE, FASCE, FATTORI, DENUNCIA } from './sicurezza-config.js';
 import { caricaMappa, creaMappa, punti, confiniCella, centroCella, cellaDi, descriviCella } from './mappa.js';
 
@@ -165,6 +165,17 @@ function readForm() {
     };
 }
 
+// Un solo documento per pagina, con l'id scelto subito: se la rete è lenta e si riprova, la scrittura
+// rimasta in coda e quella nuova vanno sullo stesso documento, e le regole (solo creazione) scartano la seconda
+const segnalazione = doc(collection(db, 'segnalazioni'));
+let tentativoScaduto = false;
+
+function mostraGrazie() {
+    form.hidden = true;
+    thanks.hidden = false;
+    thanks.scrollIntoView({ block: 'center' });
+}
+
 form.addEventListener('submit', async event => {
     event.preventDefault();
     status.classList.remove('error');
@@ -177,20 +188,27 @@ form.addEventListener('submit', async event => {
     submitButton.disabled = true;
     status.textContent = 'Invio in corso…';
     try {
-        // Senza rete addDoc resterebbe in attesa: dopo 15 secondi lo diamo per fallito
+        // Senza rete setDoc resterebbe in attesa: dopo 15 secondi smettiamo di aspettare, ma la scrittura resta in coda
+        const scrittura = setDoc(segnalazione, data);
+        // Se arriva dopo il timeout, il grazie compare appena il server conferma
+        scrittura.then(mostraGrazie, () => {});
         await Promise.race([
-            addDoc(collection(db, 'segnalazioni'), data),
+            scrittura,
             new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), SEND_TIMEOUT_MS)),
         ]);
-        form.hidden = true;
-        thanks.hidden = false;
-        thanks.scrollIntoView({ block: 'center' });
+        mostraGrazie();
     } catch (err) {
+        // Dopo un tentativo scaduto, il rifiuto vuol dire che il documento esiste già: la prima scrittura è arrivata
+        if (err.code === 'permission-denied' && tentativoScaduto) return mostraGrazie();
         console.error('Invio segnalazione non riuscito:', err);
         status.classList.add('error');
-        status.textContent = err.message === 'timeout'
-            ? 'Invio non riuscito: controlla la connessione e riprova.'
-            : 'Invio non riuscito. Riprova tra qualche minuto.';
+        if (err.message === 'timeout') {
+            tentativoScaduto = true;
+            status.textContent = 'La connessione è lenta: la segnalazione partirà appena torna la rete. '
+                + 'Tieni aperta la pagina. Se riprovi non verrà contata due volte.';
+        } else {
+            status.textContent = 'Invio non riuscito. Riprova tra qualche minuto.';
+        }
         submitButton.disabled = false;
     }
 });
