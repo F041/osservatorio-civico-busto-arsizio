@@ -311,7 +311,8 @@ body {
 .form-thanks { background: #e8f5ee; border: 1px solid #b7dfc8; border-left: 4px solid #1baf7a; border-radius: 4px; padding: 12px 15px; max-width: 760px; }
 .draft-banner { background: #fff8e1; border: 1px dashed #f0ad4e; border-radius: 4px; padding: 8px 12px; margin-bottom: 15px; font-weight: 600; }
 /* Mappe (js/mappa.js): sfondo fuori dal comune, nomi di vie e luoghi */
-.leaflet-container { font-family: inherit; background: #ecebe6; }
+/* Leaflet usa z-index fino a 1000: il contesto proprio lo tiene sotto il footer fisso (z-index 100) */
+.leaflet-container { font-family: inherit; background: #ecebe6; isolation: isolate; z-index: 0; }
 .map-label span { position: absolute; transform: translate(-50%, -50%); white-space: nowrap; pointer-events: none;
     font-size: 12px; color: #52514e; text-shadow: 0 0 2px #fff, 0 0 2px #fff, 0 0 4px #fff; }
 .map-label-place span { font-weight: 600; color: #222; }
@@ -332,7 +333,8 @@ body {
 .privacy-text ul, .privacy-text ol { padding-left: 20px; }
 .routing-table { font-size: 0.95em; margin: 4px 0 10px; }
 .routing-table th:first-child, .routing-table td:first-child { width: 38%; }
-.status-tag { display: inline-block; padding: 0 6px; border: 1px dashed #b07a00; border-radius: 4px; color: #6b4a00; background: #fff8e1; font-size: 0.85em; white-space: nowrap; }
+.routing-table td a { overflow-wrap: anywhere; }
+.routing-table .source-link { font-size: 0.85em; color: #52514e; }
 .nowrap { white-space: nowrap; }
 .privacy-text li { margin-bottom: 8px; }
 
