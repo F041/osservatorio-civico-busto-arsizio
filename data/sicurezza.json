@@ -1,22 +1,28 @@
 {
- "generato": "2026-11-01T06:36:44Z",
+ "generato": "2026-11-01T10:42:57Z",
  "finestra_giorni": 90,
  "da": "2026-08-03",
  "a": "2026-11-01",
  "soglia": 3,
- "totale": 0,
- "celle": {},
+ "totale": 7,
+ "celle": {
+  "r15c04": 7
+ },
  "celle_per": {
   "categoria": {
    "insicurezza": {},
    "furto": {},
    "molestia": {},
    "aggressione": {},
-   "vandalismo": {},
+   "vandalismo": {
+    "r15c04": 7
+   },
    "altro": {}
   },
   "fascia": {
-   "mattina": {},
+   "mattina": {
+    "r15c04": 7
+   },
    "pomeriggio": {},
    "sera": {},
    "notte": {}
@@ -25,7 +31,9 @@
    "illuminazione": {},
    "isolata": {},
    "persone-moleste": {},
-   "degrado": {},
+   "degrado": {
+    "r15c04": 7
+   },
    "trasporti": {},
    "nessuno-intorno": {}
   }
@@ -35,11 +43,11 @@
   "furto": 0,
   "molestia": 0,
   "aggressione": 0,
-  "vandalismo": 0,
+  "vandalismo": 7,
   "altro": 0
  },
  "fasce": {
-  "mattina": 0,
+  "mattina": 7,
   "pomeriggio": 0,
   "sera": 0,
   "notte": 0
@@ -48,13 +56,13 @@
   "illuminazione": 0,
   "isolata": 0,
   "persone-moleste": 0,
-  "degrado": 0,
+  "degrado": 7,
   "trasporti": 0,
   "nessuno-intorno": 0
  },
  "denuncia": {
   "si": 0,
-  "no": 0,
+  "no": 7,
   "non-dico": 0
  }
 }
