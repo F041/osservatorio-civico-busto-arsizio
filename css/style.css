@@ -334,7 +334,6 @@ body {
 .routing-table { font-size: 0.95em; margin: 4px 0 10px; }
 .routing-table th:first-child, .routing-table td:first-child { width: 38%; }
 .routing-table td a { overflow-wrap: anywhere; }
-.routing-table .source-link { font-size: 0.85em; color: #52514e; }
 .nowrap { white-space: nowrap; }
 .privacy-text li { margin-bottom: 8px; }
 
