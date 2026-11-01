@@ -9,12 +9,26 @@ const overviewNote = document.getElementById('overview-note');
 const integer = new Intl.NumberFormat('it-IT');
 const formatDate = iso => iso.split('-').reverse().join('/');
 
-// Classi della mappa: un solo tono di blu, più segnalazioni = più scuro. La prima parte dalla soglia.
-const CLASSI = [
-    { da: 20, colore: '#104281' },
-    { da: 10, colore: '#256abf' },
-    { da: 5, colore: '#5598e7' },
-    { da: 0, colore: '#9ec5f4' },
+// Classi della mappa: soglie delle quattro intensità, dalla più alta. La più bassa parte dalla soglia.
+const CLASSI = [20, 10, 5, 0];
+
+// Scale a quattro intensità, dalla più chiara (validate con la skill dataviz: tinta unica, contrasto >= 2:1 sulla mappa).
+// Ogni tipo ha la sua tinta, ripresa dalle barre di "Per tipo"; tutte le altre viste usano il blu.
+const SCALA_BLU = ['#86b6ef', '#3987e5', '#1c5cab', '#0d366b'];
+const COLORI_TIPO = {
+    insicurezza: { barra: '#eb6834', scala: ['#fe8e66', '#e05e29', '#b03e03', '#7b2903'] },
+    furto: { barra: '#1baf7a', scala: ['#40c68f', '#08a26f', '#007d54', '#025639'] },
+    molestia: { barra: '#6250d6', scala: ['#a7a6fe', '#8174fd', '#604ed4', '#4324ab'] },
+    aggressione: { barra: '#eda100', scala: ['#eaa015', '#bb7e03', '#8d5e03', '#614003'] },
+    vandalismo: { barra: '#008300', scala: ['#5dc657', '#37a332', '#068005', '#055804'] },
+    altro: { barra: '#898781', scala: ['#b3b1ab', '#8e8c86', '#6b6963', '#494842'] },
+};
+
+// Viste della mappa: tutte le segnalazioni o una sola voce alla volta (mai due incrociate, per non rendere riconoscibile nessuno)
+const GRUPPI_FILTRO = [
+    { campo: 'categoria', titolo: 'Tipo', voci: CATEGORIE },
+    { campo: 'fascia', titolo: 'Fascia oraria', voci: FASCE },
+    { campo: 'fattori', titolo: 'Cosa ha contribuito', voci: FATTORI },
 ];
 
 function card(title) {
@@ -27,7 +41,7 @@ function card(title) {
 }
 
 // Una riga per voce, nell'ordine del modulo; null = meno della soglia, mostrato senza barra
-function barTable(options, counts, threshold) {
+function barTable(options, counts, threshold, colori) {
     const max = Math.max(1, ...options.map(o => counts[o.id] ?? 0));
     const table = document.createElement('table');
     table.className = 'bar-table';
@@ -52,6 +66,7 @@ function barTable(options, counts, threshold) {
                 const bar = document.createElement('div');
                 bar.className = 'bar';
                 bar.style.width = `${(value / max) * 100}%`;
+                if (colori?.[option.id]) bar.style.background = colori[option.id].barra;
                 barCell.append(bar);
             }
             numCell.textContent = integer.format(value);
@@ -60,91 +75,146 @@ function barTable(options, counts, threshold) {
     return table;
 }
 
-// Quadrati con almeno `soglia` segnalazioni: mappa, legenda e la stessa informazione in tabella
+// Quadrati con almeno `soglia` segnalazioni: filtro, mappa, legenda e la stessa informazione in tabella
 function mapCard(data, mappa) {
     const section = card(`Dove: zone con almeno ${data.soglia} segnalazioni`);
     section.classList.add('safety-card-wide');
+
+    const filterRow = document.createElement('div');
+    filterRow.className = 'map-filter';
+    const filterLabel = document.createElement('label');
+    filterLabel.htmlFor = 'map-filter';
+    filterLabel.textContent = 'Mostra';
+    const select = document.createElement('select');
+    select.id = 'map-filter';
+    select.append(new Option('Tutte le segnalazioni', ''));
+    for (const gruppo of GRUPPI_FILTRO) {
+        const optgroup = document.createElement('optgroup');
+        optgroup.label = gruppo.titolo;
+        optgroup.append(...gruppo.voci.map(v => new Option(v.label, `${gruppo.campo}.${v.id}`)));
+        select.append(optgroup);
+    }
+    const reset = document.createElement('button');
+    reset.type = 'button';
+    reset.className = 'link-button';
+    reset.textContent = 'Mostra tutte';
+    filterRow.append(filterLabel, select, reset);
+    const filterHint = document.createElement('p');
+    filterHint.className = 'safety-muted map-filter-hint';
+    filterHint.textContent = 'Una voce alla volta: incrociarne due, per esempio tipo e orario, renderebbe più riconoscibili le persone.';
+    section.append(filterRow, filterHint);
+
     const mapDiv = document.createElement('div');
     mapDiv.className = 'overview-map';
     mapDiv.setAttribute('aria-label', 'Mappa delle zone con più segnalazioni; gli stessi dati sono nella tabella sotto');
-    section.append(mapDiv);
-
-    const classi = CLASSI.map((c, i) => {
-        const da = Math.max(c.da, data.soglia);
-        const a = i > 0 ? CLASSI[i - 1].da - 1 : null;
-        return { ...c, da, label: a === null ? `${da} e più` : `${da}–${a}` };
-    });
     const legend = document.createElement('ul');
     legend.className = 'chart-legend';
-    for (const classe of [...classi].reverse()) {
-        const item = document.createElement('li');
-        const swatch = document.createElement('span');
-        swatch.className = 'chart-swatch';
-        swatch.style.background = classe.colore;
-        item.append(swatch, classe.label);
-        legend.append(item);
-    }
-    section.append(legend);
-
-    const celle = Object.entries(data.celle).sort((a, b) => b[1] - a[1]);
     const note = document.createElement('p');
     note.className = 'safety-muted';
-    section.append(note);
+    note.setAttribute('aria-live', 'polite');
+    const tableWrap = document.createElement('div');
+    section.append(mapDiv, legend, note, tableWrap);
+
+    const classi = CLASSI.map((da, i) => {
+        const minimo = Math.max(da, data.soglia);
+        return { da: minimo, label: i === 0 ? `${minimo} e più` : `${minimo}–${CLASSI[i - 1] - 1}` };
+    });
 
     // Leaflet va creato quando la scheda è già nella pagina, altrimenti non ne conosce le dimensioni
-    requestAnimationFrame(() => {
-        const L = window.L;
-        const map = creaMappa(mapDiv, mappa, { griglia: false, tenue: true });
-        const quadrati = new Map();
-        for (const [id, n] of celle) {
-            const colore = classi.find(c => n >= c.da).colore;
-            quadrati.set(id, L.rectangle(confiniCella(mappa.griglia, id), { color: '#ffffff', weight: 1.5, fillColor: colore, fillOpacity: 0.85 })
-                .bindTooltip(`${descriviCella(mappa, id)}: ${integer.format(n)} segnalazioni`, { sticky: true })
-                .addTo(map));
+    let map = null;
+    const quadrati = window.L.layerGroup();
+    const rettangoli = new Map();
+    const mappaPronta = new Promise(resolve => requestAnimationFrame(() => {
+        map = creaMappa(mapDiv, mappa, { griglia: false, tenue: true });
+        quadrati.addTo(map);
+        // Si parte inquadrando le zone segnalate, non tutto il comune; cambiando filtro la vista resta ferma
+        const tutte = Object.keys(data.celle).flatMap(id => confiniCella(mappa.griglia, id));
+        if (tutte.length) map.fitBounds(window.L.latLngBounds(tutte), { padding: [40, 40], maxZoom: 15 });
+        resolve();
+    }));
+
+    function mostra(valore) {
+        const [campo, voce] = valore ? valore.split('.') : [];
+        const opzione = campo && GRUPPI_FILTRO.find(g => g.campo === campo)?.voci.find(v => v.id === voce);
+        if (valore && !opzione) return mostra('');
+        select.value = valore;
+        reset.hidden = !valore;
+        const celle = Object.entries(valore ? data.celle_per?.[campo]?.[voce] ?? {} : data.celle).sort((a, b) => b[1] - a[1]);
+        const scala = campo === 'categoria' ? COLORI_TIPO[voce].scala : SCALA_BLU;
+        const colore = n => scala[3 - classi.findIndex(c => n >= c.da)];
+        const nome = opzione ? `«${opzione.label}»` : '';
+
+        // Il filtro resta nell'indirizzo, così la vista si può condividere (senza aggiungere passi al tasto Indietro)
+        const url = new URL(location.href);
+        if (valore) url.searchParams.set('mostra', valore); else url.searchParams.delete('mostra');
+        history.replaceState(null, '', url);
+
+        legend.replaceChildren(...classi.map((classe, i) => {
+            const item = document.createElement('li');
+            const swatch = document.createElement('span');
+            swatch.className = 'chart-swatch';
+            swatch.style.background = scala[3 - i];
+            item.append(swatch, classe.label);
+            return item;
+        }).reverse());
+
+        mappaPronta.then(() => {
+            quadrati.clearLayers();
+            rettangoli.clear();
+            for (const [id, n] of celle) {
+                const testo = `${descriviCella(mappa, id)}: ${integer.format(n)} segnalazioni${nome ? ` ${nome}` : ''}`;
+                const rect = window.L.rectangle(confiniCella(mappa.griglia, id), { color: '#ffffff', weight: 1.5, fillColor: colore(n), fillOpacity: 0.85 })
+                    .bindTooltip(testo, { sticky: true });
+                quadrati.addLayer(rect);
+                rettangoli.set(id, rect);
+            }
+        });
+
+        tableWrap.replaceChildren();
+        if (!celle.length) {
+            note.textContent = valore
+                ? `Nessuna zona con almeno ${data.soglia} segnalazioni ${nome} negli ultimi ${data.finestra_giorni} giorni.`
+                : `Ancora nessuna zona con almeno ${data.soglia} segnalazioni negli ultimi ${data.finestra_giorni} giorni.`;
+            return;
         }
-        // Si parte inquadrando le zone segnalate, non tutto il comune
-        if (quadrati.size) map.fitBounds(L.featureGroup([...quadrati.values()]).getBounds(), { padding: [40, 40], maxZoom: 15 });
-        for (const row of section.querySelectorAll('tr[data-cella]')) {
-            row.querySelector('button').addEventListener('click', () => {
-                const rect = quadrati.get(row.dataset.cella);
+        note.textContent = 'Ogni zona è un quadrato di circa 250 metri, indicato con le vie principali che contiene.';
+        const table = document.createElement('table');
+        table.className = 'bar-table zone-table';
+        table.createCaption().textContent = valore ? `Zone con più segnalazioni ${nome}` : 'Zone con più segnalazioni';
+        for (const [id, n] of celle.slice(0, 10)) {
+            const row = table.insertRow();
+            const label = document.createElement('th');
+            label.scope = 'row';
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'link-button';
+            button.textContent = descriviCella(mappa, id);
+            button.title = 'Mostra sulla mappa';
+            button.addEventListener('click', () => {
+                const rect = rettangoli.get(id);
                 map.fitBounds(rect.getBounds(), { maxZoom: 16 });
                 rect.openTooltip(rect.getBounds().getCenter());
                 mapDiv.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
             });
+            label.append(button);
+            row.append(label);
+            const barCell = row.insertCell();
+            barCell.className = 'bar-cell';
+            const bar = document.createElement('div');
+            bar.className = 'bar';
+            bar.style.width = `${(n / celle[0][1]) * 100}%`;
+            bar.style.background = scala[1];
+            barCell.append(bar);
+            const numCell = row.insertCell();
+            numCell.className = 'num';
+            numCell.textContent = integer.format(n);
         }
-    });
+        tableWrap.append(table);
+    }
 
-    if (!celle.length) {
-        note.textContent = `Ancora nessuna zona con almeno ${data.soglia} segnalazioni negli ultimi ${data.finestra_giorni} giorni.`;
-        return section;
-    }
-    note.textContent = 'Ogni zona è un quadrato di circa 250 metri, indicato con le vie principali che contiene.';
-    const table = document.createElement('table');
-    table.className = 'bar-table zone-table';
-    table.createCaption().textContent = 'Zone con più segnalazioni';
-    for (const [id, n] of celle.slice(0, 10)) {
-        const row = table.insertRow();
-        row.dataset.cella = id;
-        const label = document.createElement('th');
-        label.scope = 'row';
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'link-button';
-        button.textContent = descriviCella(mappa, id);
-        button.title = 'Mostra sulla mappa';
-        label.append(button);
-        row.append(label);
-        const barCell = row.insertCell();
-        barCell.className = 'bar-cell';
-        const bar = document.createElement('div');
-        bar.className = 'bar';
-        bar.style.width = `${(n / celle[0][1]) * 100}%`;
-        barCell.append(bar);
-        const numCell = row.insertCell();
-        numCell.className = 'num';
-        numCell.textContent = integer.format(n);
-    }
-    section.append(table);
+    select.addEventListener('change', () => mostra(select.value));
+    reset.addEventListener('click', () => { mostra(''); select.focus(); });
+    mostra(new URLSearchParams(location.search).get('mostra') ?? '');
     return section;
 }
 
@@ -168,7 +238,7 @@ Promise.all([
             totalCard.append(empty);
         }
         const byType = card('Per tipo');
-        byType.append(barTable(CATEGORIE, data.categorie, data.soglia));
+        byType.append(barTable(CATEGORIE, data.categorie, data.soglia, COLORI_TIPO));
         const byTime = card('Per fascia oraria');
         byTime.append(barTable(FASCE, data.fasce, data.soglia));
         const byFactor = card('Cosa ha contribuito');

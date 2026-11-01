@@ -6,6 +6,30 @@
  "soglia": 3,
  "totale": 0,
  "celle": {},
+ "celle_per": {
+  "categoria": {
+   "insicurezza": {},
+   "furto": {},
+   "molestia": {},
+   "aggressione": {},
+   "vandalismo": {},
+   "altro": {}
+  },
+  "fascia": {
+   "mattina": {},
+   "pomeriggio": {},
+   "sera": {},
+   "notte": {}
+  },
+  "fattori": {
+   "illuminazione": {},
+   "isolata": {},
+   "persone-moleste": {},
+   "degrado": {},
+   "trasporti": {},
+   "nessuno-intorno": {}
+  }
+ },
  "categorie": {
   "insicurezza": 0,
   "furto": 0,
