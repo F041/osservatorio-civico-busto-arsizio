@@ -1,10 +1,10 @@
 {
- "generato": "2026-11-11T11:18:40Z",
+ "generato": "2026-11-12T11:38:38Z",
  "finestra_giorni": 90,
- "da": "2026-08-13",
- "a": "2026-11-11",
+ "da": "2026-08-14",
+ "a": "2026-11-12",
  "soglia": 3,
- "totale": 3,
+ "totale": 4,
  "celle": {
   "r15c04": 3
  },
@@ -39,7 +39,7 @@
   }
  },
  "categorie": {
-  "insicurezza": 0,
+  "insicurezza": null,
   "furto": 0,
   "molestia": 0,
   "aggressione": 0,
@@ -48,7 +48,7 @@
  },
  "fasce": {
   "mattina": 3,
-  "pomeriggio": 0,
+  "pomeriggio": null,
   "sera": 0,
   "notte": 0
  },
@@ -58,11 +58,11 @@
   "persone-moleste": 0,
   "degrado": 3,
   "trasporti": 0,
-  "nessuno-intorno": 0
+  "nessuno-intorno": null
  },
  "denuncia": {
   "si": 0,
-  "no": 3,
+  "no": 4,
   "non-dico": 0
  }
 }
