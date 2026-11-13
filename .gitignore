@@ -8,3 +8,7 @@ firebase-debug.log
 
 # Note di gestione, solo in locale
 GESTIONE-SICUREZZA.md
+
+# Dipendenze delle prove e impostazioni locali di Claude Code
+tests/regole/node_modules/
+.claude/settings.local.json

@@ -1,0 +1,50 @@
+name: Raccogli notizie
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */2 * * *'
+
+# Due raccolte non devono scrivere insieme sul ramo notizie
+concurrency: notizie
+
+jobs:
+  raccolta:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout del sito (per lo script)
+        uses: actions/checkout@v5
+        with:
+          path: sito
+
+      # Gli articoli stanno sul ramo notizie: un commit su main farebbe ripartire la pubblicazione del sito
+      - name: Checkout del ramo notizie
+        uses: actions/checkout@v5
+        with:
+          ref: notizie
+          path: raccolta
+
+      - name: Configura Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Raccogli gli articoli nuovi
+        run: python3 sito/scripts/raccogli_notizie.py raccolta/articoli.jsonl
+
+      - name: Committa e pusha
+        working-directory: raccolta
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add articoli.jsonl
+          if git diff --staged --quiet; then
+            echo "Nessun articolo nuovo."
+          else
+            git commit -m "Raccolta notizie"
+            git pull --rebase
+            git push
+          fi
