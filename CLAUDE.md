@@ -59,12 +59,17 @@ dal ramo `main`. Due sezioni: Pagamenti (dati dal repo della pipeline, aggiornat
 ## Segnalazioni dalle notizie (in costruzione)
 Decisioni prese con l'utente a novembre 2026:
 - Fonti: ilBustese, Malpensa24, Prealpina, VareseNews. Raccolta e analisi una volta al giorno.
-- Analisi in due passi: selezione da titolo e riassunto, poi estrazione dal testo completo nello schema delle
-  segnalazioni (categoria, data dell'episodio, fascia, via o luogo, fattori, seguito di un fatto già noto).
-  Solo episodi nello spazio pubblico del comune di Busto (la sezione di Prealpina comprende la Valle Olona).
-- Via e luoghi diventano quadrati con `data/mappa.json`, senza geocoder esterni.
+- Analisi in due passi: filtro delle vie (`scripts/vie_busto.py`: l'articolo nomina Busto o un quartiere e almeno
+  una via o un luogo dello stradario di `data/mappa.json`), poi estrazione col modello dal testo completo nello
+  schema delle segnalazioni (categoria, data dell'episodio, fascia, via o luogo, fattori, seguito di un fatto già
+  noto). La via può essere solo una di quelle trovate dal filtro; da lì i quadrati, senza geocoder esterni.
+  Un episodio senza via o luogo sulla mappa si scarta (i quartieri sono troppo generici).
+- Solo episodi nel comune di Busto (la sezione di Prealpina comprende la Valle Olona), in spazi pubblici o aperti
+  al pubblico, compresi i bar. Contano anche i furti in casa; il resto di quello che succede in casa no.
 - Conciliazione tra fonti: stesso episodio se vicino per giorno, quadrato e tipo; si uniscono i campi e i link.
-- Categorie: escluse truffe, violenza domestica e incidenti stradali; spaccio come categoria solo per le notizie.
+- Categorie: escluse truffe, violenza domestica, incidenti stradali e fatti dentro il carcere. Solo per le notizie:
+  spaccio; insicurezza per le lamentele ricorrenti su una via senza un fatto datato. Furti ripetuti nello stesso
+  posto senza date sono un episodio solo. Un processo per un fatto vecchio è un seguito.
 - Mappa: le notizie sono un livello separato, spento all'inizio, disegnato con un altro stile. I conteggi
   delle due fonti non si sommano mai.
 - Revisione umana: gli episodi nuovi arrivano in una pull request, pubblicati solo dopo l'approvazione.

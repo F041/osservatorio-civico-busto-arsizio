@@ -2,12 +2,14 @@
 
 Uso: uv run --no-project --python 3.12 --with trafilatura python -I valutazione/prepara_campione.py articoli.jsonl [n]
      ... prepara_campione.py articoli.jsonl arricchito
+     ... prepara_campione.py articoli.jsonl resto
 
 Campione a caso: metà dalla cronaca di ilBustese, dove gli episodi sono più frequenti, metà a caso dalle altre
 testate, in parti uguali. Il seme è fisso, così il campione si può rifare uguale.
 Campione arricchito: tutti gli articoli che nominano Busto (o un suo quartiere) e una parola di cronaca nel titolo,
 nel riassunto o nel link, esclusi quelli già nel campione a caso. Serve ad avere abbastanza episodi veri e fatti
 raccontati da più testate; non misura la frequenza degli episodi.
+Resto: tutti gli altri articoli, per cercarvi nuovi candidati con il filtro delle vie (valutazione/candidati_vie.py).
 I testi finiscono in valutazione/dati/, esclusa da git: servono solo alla prova e poi si cancellano.
 """
 import json
@@ -43,8 +45,12 @@ def a_caso(articoli, n):
     return scelti
 
 
+def gia_scelti(*nomi):
+    return {json.loads(r)['url'] for n in nomi if (DATI / n).exists() for r in open(DATI / n, encoding='utf-8') if r.strip()}
+
+
 def arricchito(articoli):
-    gia = {json.loads(r)['url'] for r in open(DATI / 'campione.jsonl', encoding='utf-8') if r.strip()}
+    gia = gia_scelti('campione.jsonl')
     return [a for a in articoli if a['url'] not in gia
             and CRONACA.search(f"{a['titolo']} {a['sommario']}") and BUSTO.search(f"{a['titolo']} {a['sommario']} {a['url']}")]
 
@@ -53,6 +59,9 @@ def main(percorso, quale='80'):
     articoli = [json.loads(r) for r in open(percorso, encoding='utf-8') if r.strip()]
     if quale == 'arricchito':
         scelti, uscita, prefisso = arricchito(articoli), DATI / 'campione-arricchito.jsonl', 'b'
+    elif quale == 'resto':
+        gia = gia_scelti('campione.jsonl', 'campione-arricchito.jsonl')
+        scelti, uscita, prefisso = [a for a in articoli if a['url'] not in gia], DATI / 'testi-resto.jsonl', 'r'
     else:
         scelti, uscita, prefisso = a_caso(articoli, int(quale)), DATI / 'campione.jsonl', 'a'
     DATI.mkdir(exist_ok=True)
