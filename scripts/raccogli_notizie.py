@@ -24,6 +24,8 @@ import html
 import json
 import re
 import sys
+import time
+import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
@@ -45,10 +47,20 @@ VARESENEWS_TAG = 'https://www.varesenews.it/citta/busto-arsizio-tag/'
 SITEMAP_NS = {'s': 'http://www.sitemaps.org/schemas/sitemap/0.9', 'n': 'http://www.google.com/schemas/sitemap-news/0.9'}
 
 
-def scarica(url):
+def scarica(url, attese=(20, 60)):
+    """Con un giro al giorno un errore momentaneo del server costerebbe un giorno: si riprova dopo le attese."""
     req = urllib.request.Request(url, headers={'User-Agent': USER_AGENT})
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return r.read()
+    for attesa in (*attese, None):
+        try:
+            with urllib.request.urlopen(req, timeout=30) as r:
+                return r.read()
+        except urllib.error.HTTPError as err:
+            if err.code < 500 or attesa is None:
+                raise
+        except (urllib.error.URLError, TimeoutError):
+            if attesa is None:
+                raise
+        time.sleep(attesa)
 
 
 def pulisci(testo):
