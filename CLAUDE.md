@@ -15,8 +15,8 @@ dal ramo `main`. Due sezioni: Pagamenti (dati dal repo della pipeline, aggiornat
   ultimi 90 giorni, soglia 3, soppressione dei numeri ricavabili per sottrazione, cancellazione dopo 12 mesi.
 - Mappa: griglia di quadrati di circa 250 m (`rRRcCC`), disegnata da `data/mappa.json`
   (`scripts/build_mappa.py`, dati OpenStreetMap), Leaflet in `vendor/leaflet`, nessun server di mappe esterno.
-- Notizie: `scripts/raccogli_notizie.py` (workflow `notizie.yml`, ogni 2 ore) scrive `articoli.jsonl`
-  sul ramo `notizie`, non su main.
+- Notizie: `scripts/raccogli_notizie.py` (workflow `notizie.yml`, ogni giorno alle 4:41 UTC) scrive
+  `articoli.jsonl` sul ramo `notizie`, non su main. Ogni elenco letto deve coprire più di un giorno.
 
 ## Regole fisse
 - Mai salvare in locale, mostrare in chat o committare segreti: chiave segreta di reCAPTCHA, account di servizio,
@@ -58,7 +58,7 @@ dal ramo `main`. Due sezioni: Pagamenti (dati dal repo della pipeline, aggiornat
 
 ## Segnalazioni dalle notizie (in costruzione)
 Decisioni prese con l'utente a novembre 2026:
-- Fonti: ilBustese, Malpensa24, Prealpina, VareseNews. Raccolta ogni 2 ore, analisi una volta al giorno.
+- Fonti: ilBustese, Malpensa24, Prealpina, VareseNews. Raccolta e analisi una volta al giorno.
 - Analisi in due passi: selezione da titolo e riassunto, poi estrazione dal testo completo nello schema delle
   segnalazioni (categoria, data dell'episodio, fascia, via o luogo, fattori, seguito di un fatto già noto).
   Solo episodi nello spazio pubblico del comune di Busto (la sezione di Prealpina comprende la Valle Olona).
@@ -72,6 +72,7 @@ Decisioni prese con l'utente a novembre 2026:
   Link agli articoli solo nella vista del singolo quadrato, con almeno 3 episodi. Soglia 3 anche per le notizie.
 - Diritto d'autore: il testo serve solo a estrarre i fatti, non si ripubblica né si conserva.
 - Prima del via: due settimane di articoli, circa 100 classificati a mano con l'utente, e misura di episodi
-  trovati e inventati. Sullo stesso campione si confrontano i modelli: Claude via API (gira nelle Actions,
-  costa pochi dollari al mese) e Gemma 4 in locale sul PC dell'utente (gratis, ma serve il PC acceso).
+  trovati e inventati. Sullo stesso campione si confrontano tre strade: Gemma 4 in locale (gratis, serve il PC
+  acceso), Claude da Claude Code sul PC dell'utente (piano in abbonamento, serve il PC acceso) e Claude via API
+  nelle Actions (pochi dollari al mese, a parte rispetto all'abbonamento, chiave creata dall'utente).
 - La nuova fonte va spiegata in "Come funziona e privacy".

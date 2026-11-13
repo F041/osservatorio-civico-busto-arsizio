@@ -2,8 +2,10 @@ name: Raccogli notizie
 
 on:
   workflow_dispatch:
+  # Una volta al giorno, alle 4:41 UTC: lontano dall'inizio dell'ora e dalle ore di punta, quando GitHub
+  # ritarda o salta più spesso i lavori programmati. Ogni fonte copre più di un giorno (scripts/raccogli_notizie.py)
   schedule:
-    - cron: '17 */2 * * *'
+    - cron: '41 4 * * *'
 
 # Due raccolte non devono scrivere insieme sul ramo notizie
 concurrency: notizie

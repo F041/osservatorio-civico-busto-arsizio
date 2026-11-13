@@ -6,6 +6,7 @@ description: >-
   controllare lo stato delle GitHub Actions e della pubblicazione, fare screenshot delle pagine,
   elencare le segnalazioni in sola lettura. NON scrive testi del sito, NON decide cosa conta come
   segnalazione, NON cancella né modifica dati. Usalo quando il compito è di routine e ben definito.
+  Gira dentro Claude Code con l'abbonamento dell'utente, non con l'API a pagamento.
 model: haiku
 tools:
   - Bash
