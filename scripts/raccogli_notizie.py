@@ -142,7 +142,8 @@ def prealpina():
 FONTI = [ilbustese, malpensa24, prealpina, varesenews, varesenews_tag]
 
 
-def main(percorso):
+def unisci(percorso, fonti, *argomenti):
+    """Aggiunge al file gli articoli nuovi di ogni fonte (chiamata con `argomenti`), senza doppioni per link."""
     adesso = datetime.now(timezone.utc)
     try:
         with open(percorso, encoding='utf-8') as f:
@@ -154,9 +155,9 @@ def main(percorso):
     noti = {r['url'] for r in righe}
 
     riuscite = 0
-    for fonte in FONTI:
+    for fonte in fonti:
         try:
-            trovati = fonte()
+            trovati = fonte(*argomenti)
         except Exception as err:  # una fonte giù non deve fermare le altre
             print(f'::warning::{fonte.__name__}: {err}')
             continue
@@ -177,4 +178,4 @@ def main(percorso):
 
 
 if __name__ == '__main__':
-    main(sys.argv[1])
+    unisci(sys.argv[1], FONTI)

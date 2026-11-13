@@ -72,7 +72,9 @@ Decisioni prese con l'utente a novembre 2026:
   Link agli articoli solo nella vista del singolo quadrato, con almeno 3 episodi. Soglia 3 anche per le notizie.
 - Diritto d'autore: il testo serve solo a estrarre i fatti, non si ripubblica né si conserva.
 - Prima del via: due settimane di articoli, circa 100 classificati a mano con l'utente, e misura di episodi
-  trovati e inventati. Sullo stesso campione si confrontano tre strade: Gemma 4 in locale (gratis, serve il PC
-  acceso), Claude da Claude Code sul PC dell'utente (piano in abbonamento, serve il PC acceso) e Claude via API
-  nelle Actions (pochi dollari al mese, a parte rispetto all'abbonamento, chiave creata dall'utente).
+  trovati e inventati. Sullo stesso campione si confrontano due strade, tutte e due sul PC dell'utente:
+  Gemma 4 12B in locale (`C:\Users\GabrieleRig\.android\models\gemma-4-12b`) e Claude da Claude Code
+  (`claude -p --json-schema`, con l'abbonamento). L'API a pagamento è esclusa.
+- Storico per la prova: `scripts/storico_notizie.py` recupera a mano gli ultimi N giorni dagli archivi delle testate
+  nello stesso file della raccolta (994 articoli per i 30 giorni fino al 13/11/2026).
 - La nuova fonte va spiegata in "Come funziona e privacy".
