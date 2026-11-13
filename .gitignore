@@ -12,3 +12,7 @@ GESTIONE-SICUREZZA.md
 # Dipendenze delle prove e impostazioni locali di Claude Code
 tests/regole/node_modules/
 .claude/settings.local.json
+
+# Dati della prova del motore delle notizie (testi degli articoli): solo in locale
+valutazione/dati/
+__pycache__/
