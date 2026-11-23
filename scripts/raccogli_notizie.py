@@ -3,9 +3,9 @@
 Uso: python scripts/raccogli_notizie.py articoli.jsonl
 
 Gira una volta al giorno nel workflow notizie.yml e scrive sul ramo `notizie`, non su main (così non
-riparte la pubblicazione del sito). Salva solo i dati che le testate espongono nei loro elenchi: link,
-titolo, riassunto, data e categorie. Il testo degli articoli non viene scaricato qui: lo legge, per i soli
-candidati, il passo di analisi. Nessun modello linguistico in questo passo.
+riparte la pubblicazione del sito). Il repo è pubblico: si salvano solo testata, link e date, perché titoli e
+riassunti riportano testo delle testate e nomi di persone. Titolo e testo li legge dal link il passo di analisi.
+Nessun modello linguistico in questo passo.
 
 Ogni elenco deve coprire più di un giorno, così un giro in ritardo o saltato da GitHub perde poco.
 Fonti e scelte, verificate a novembre 2026 (tra parentesi quanto copriva ogni elenco):
@@ -34,6 +34,7 @@ from email.utils import parsedate_to_datetime
 USER_AGENT = 'OsservatorioCivicoBusto/0.1 (+https://f041.github.io/osservatorio-civico-busto-arsizio/)'
 CONSERVAZIONE_GIORNI = 365
 MAX_SOMMARIO = 500
+CAMPI_SALVATI = ('fonte', 'url', 'pubblicato', 'visto')
 
 ILBUSTESE = ['https://www.ilbustese.it/links/rss/argomenti/cronaca-26/rss.xml',
              'https://www.ilbustese.it/links/rss/argomenti/busto-1/rss.xml']
@@ -171,7 +172,7 @@ def unisci(percorso, fonti, *argomenti):
 
     with open(percorso, 'w', encoding='utf-8', newline='\n') as f:
         for r in righe:
-            f.write(json.dumps(r, ensure_ascii=False) + '\n')
+            f.write(json.dumps({k: r.get(k) for k in CAMPI_SALVATI}, ensure_ascii=False) + '\n')
     print(f'Totale: {len(righe)} articoli')
     if not riuscite:
         sys.exit('Nessuna fonte raggiungibile')

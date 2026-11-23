@@ -3,6 +3,7 @@
 Uso: uv run --no-project --python 3.12 --with trafilatura python -I valutazione/prepara_campione.py articoli.jsonl [n]
      ... prepara_campione.py articoli.jsonl arricchito
      ... prepara_campione.py articoli.jsonl resto
+     ... prepara_campione.py articoli.jsonl nuovi
 
 Campione a caso: metà dalla cronaca di ilBustese, dove gli episodi sono più frequenti, metà a caso dalle altre
 testate, in parti uguali. Il seme è fisso, così il campione si può rifare uguale.
@@ -10,6 +11,7 @@ Campione arricchito: tutti gli articoli che nominano Busto (o un suo quartiere) 
 nel riassunto o nel link, esclusi quelli già nel campione a caso. Serve ad avere abbastanza episodi veri e fatti
 raccontati da più testate; non misura la frequenza degli episodi.
 Resto: tutti gli altri articoli, per cercarvi nuovi candidati con il filtro delle vie (valutazione/candidati_vie.py).
+Nuovi: gli articoli raccolti dopo i campioni precedenti, mai usati per scrivere le regole (id n001...).
 I testi finiscono in valutazione/dati/, esclusa da git: servono solo alla prova e poi si cancellano.
 """
 import json
@@ -51,8 +53,9 @@ def gia_scelti(*nomi):
 
 def arricchito(articoli):
     gia = gia_scelti('campione.jsonl')
-    return [a for a in articoli if a['url'] not in gia
-            and CRONACA.search(f"{a['titolo']} {a['sommario']}") and BUSTO.search(f"{a['titolo']} {a['sommario']} {a['url']}")]
+    # L'elenco salva solo il link: titolo e riassunto ci sono solo nei file vecchi
+    testa = lambda a: f"{a.get('titolo', '')} {a.get('sommario', '')} {a['url']}"
+    return [a for a in articoli if a['url'] not in gia and CRONACA.search(testa(a)) and BUSTO.search(testa(a))]
 
 
 def main(percorso, quale='80'):
@@ -62,6 +65,9 @@ def main(percorso, quale='80'):
     elif quale == 'resto':
         gia = gia_scelti('campione.jsonl', 'campione-arricchito.jsonl')
         scelti, uscita, prefisso = [a for a in articoli if a['url'] not in gia], DATI / 'testi-resto.jsonl', 'r'
+    elif quale == 'nuovi':
+        gia = gia_scelti('campione.jsonl', 'campione-arricchito.jsonl', 'testi-resto.jsonl')
+        scelti, uscita, prefisso = [a for a in articoli if a['url'] not in gia], DATI / 'testi-nuovi.jsonl', 'n'
     else:
         scelti, uscita, prefisso = a_caso(articoli, int(quale)), DATI / 'campione.jsonl', 'a'
     DATI.mkdir(exist_ok=True)
@@ -71,10 +77,10 @@ def main(percorso, quale='80'):
                 pagina = scarica(a['url']).decode('utf-8', errors='replace')
                 testo = trafilatura.extract(pagina, include_comments=False, include_tables=False) or ''
                 meta = trafilatura.extract_metadata(pagina)
-                titolo = (meta.title if meta and meta.title else a['titolo'])
+                titolo = (meta.title if meta and meta.title else a.get('titolo', ''))
             except Exception as err:
                 print(f'::warning::{a["url"]}: {err}')
-                testo, titolo = '', a['titolo']
+                testo, titolo = '', a.get('titolo', '')
             riga = {'id': f'{prefisso}{i:03d}', **a, 'titolo': titolo, 'testo': testo}
             f.write(json.dumps(riga, ensure_ascii=False) + '\n')
             print(f'{riga["id"]} {a["fonte"]:10} {len(testo.split()):5} parole  {titolo[:70]}')
