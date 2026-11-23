@@ -57,6 +57,13 @@ await prova('modifica negata', assertFails(updateDoc(esistente, { categoria: 'al
 await prova('cancellazione negata', assertFails(deleteDoc(esistente)));
 await prova('altra collezione negata', assertFails(addDoc(collection(db, 'altro'), valid())));
 
+// L'elenco degli articoli lo usa solo l'account di servizio: i link contengono i titoli, con nomi di persone
+await env.withSecurityRulesDisabled(ctx => setDoc(doc(ctx.firestore(), 'notizie_articoli/prova'), { fonte: 'prova' }));
+await prova('articoli: lettura singola negata', assertFails(getDoc(doc(db, 'notizie_articoli/prova'))));
+await prova('articoli: lettura elenco negata', assertFails(getDocs(collection(db, 'notizie_articoli'))));
+await prova('articoli: scrittura negata', assertFails(setDoc(doc(db, 'notizie_articoli/nuovo'), { fonte: 'prova' })));
+await prova('articoli: cancellazione negata', assertFails(deleteDoc(doc(db, 'notizie_articoli/prova'))));
+
 // Stesso id usato due volte (nuovo tentativo con la rete lenta, js/segnala.js): il secondo invio va rifiutato
 await env.clearFirestore();
 const ref = doc(col);

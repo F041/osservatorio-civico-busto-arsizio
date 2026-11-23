@@ -1,8 +1,8 @@
 """Recupero una tantum degli articoli passati, per la prova del motore prima di avere settimane di raccolta.
 
-Uso: python scripts/storico_notizie.py articoli.jsonl [giorni]   (giorni: 30 se non indicato)
+Uso: GOOGLE_APPLICATION_CREDENTIALS=chiave.json python scripts/storico_notizie.py [giorni]   (30 se non indicato)
 
-Scrive nello stesso formato di raccogli_notizie.py e salta i link già presenti. Si lancia a mano.
+Scrive nella stessa collezione di raccogli_notizie.py e salta i link già presenti. Si lancia a mano.
 Archivi usati, verificati a novembre 2026:
 - ilBustese: mappa del sito (circa 5 settimane, con titoli e date), sezioni Cronaca e Busto.
 - Malpensa24: API WordPress della categoria 12, una pagina da 100 articoli alla volta.
@@ -19,7 +19,8 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from raccogli_notizie import MALPENSA24, SITEMAP_NS, VARESENEWS_TAG, articolo, pulisci, scarica, unisci  # noqa: E402
+from raccogli_notizie import (MALPENSA24, SITEMAP_NS, VARESENEWS_TAG, articolo, client_firestore, pulisci,  # noqa: E402
+                              scarica, unisci)
 
 PAUSA = 1.5
 ILBUSTESE_SITEMAP = 'https://www.ilbustese.it/sitemap.xml'
@@ -125,11 +126,11 @@ def varesenews(dal):
     return out
 
 
-def main(percorso, giorni=30):
+def main(giorni=30):
     dal = (datetime.now(timezone.utc) - timedelta(days=giorni)).isoformat()
     print(f'Articoli pubblicati dal {dal[:10]}')
-    unisci(percorso, [ilbustese, malpensa24, prealpina, varesenews], dal)
+    unisci(client_firestore(), [ilbustese, malpensa24, prealpina, varesenews], dal)
 
 
 if __name__ == '__main__':
-    main(sys.argv[1], int(sys.argv[2]) if len(sys.argv) > 2 else 30)
+    main(int(sys.argv[1]) if len(sys.argv) > 1 else 30)

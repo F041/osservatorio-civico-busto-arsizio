@@ -1,11 +1,12 @@
 """Raccolta degli articoli di Busto Arsizio da quattro testate locali, per le segnalazioni dalle notizie.
 
-Uso: python scripts/raccogli_notizie.py articoli.jsonl
+Uso: GOOGLE_APPLICATION_CREDENTIALS=chiave.json python scripts/raccogli_notizie.py
+     ... python scripts/raccogli_notizie.py --esporta articoli.jsonl   (copia locale dell'elenco, per la prova)
 
-Gira una volta al giorno nel workflow notizie.yml e scrive sul ramo `notizie`, non su main (così non
-riparte la pubblicazione del sito). Il repo è pubblico: si salvano solo testata, link e date, perché titoli e
-riassunti riportano testo delle testate e nomi di persone. Titolo e testo li legge dal link il passo di analisi.
-Nessun modello linguistico in questo passo.
+Gira una volta al giorno nel workflow notizie.yml e scrive nella collezione Firestore `notizie_articoli`, che le
+regole chiudono al sito. Si salvano solo testata, link e date: titoli e riassunti riportano testo delle testate e
+nomi di persone. Anche i link contengono spesso il titolo, per questo l'elenco non sta nel repo pubblico.
+Titolo e testo li legge dal link il passo di analisi. Nessun modello linguistico in questo passo.
 
 Ogni elenco deve coprire più di un giorno, così un giro in ritardo o saltato da GitHub perde poco.
 Fonti e scelte, verificate a novembre 2026 (tra parentesi quanto copriva ogni elenco):
@@ -18,8 +19,9 @@ Fonti e scelte, verificate a novembre 2026 (tra parentesi quanto copriva ogni el
 - VareseNews: il feed del tag Busto è vietato dal robots.txt (/*/feed/$). Si legge il feed generale,
   tenendo la categoria "Busto Arsizio/Altomilanese" (circa 20 ore), e la pagina del tag Busto per i
   restanti (circa 2 giorni, senza data né riassunto).
-Le righe più vecchie di CONSERVAZIONE_GIORNI vengono cancellate, come le segnalazioni.
+I documenti più vecchi di CONSERVAZIONE_GIORNI vengono cancellati, come le segnalazioni.
 """
+import hashlib
 import html
 import json
 import re
@@ -35,6 +37,9 @@ USER_AGENT = 'OsservatorioCivicoBusto/0.1 (+https://f041.github.io/osservatorio-
 CONSERVAZIONE_GIORNI = 365
 MAX_SOMMARIO = 500
 CAMPI_SALVATI = ('fonte', 'url', 'pubblicato', 'visto')
+PROJECT_ID = 'osservatorio-civico-busto'
+COLLEZIONE = 'notizie_articoli'
+BLOCCO = 400  # documenti per ogni scrittura o lettura multipla
 
 ILBUSTESE = ['https://www.ilbustese.it/links/rss/argomenti/cronaca-26/rss.xml',
              'https://www.ilbustese.it/links/rss/argomenti/busto-1/rss.xml']
@@ -143,40 +148,89 @@ def prealpina():
 FONTI = [ilbustese, malpensa24, prealpina, varesenews, varesenews_tag]
 
 
-def unisci(percorso, fonti, *argomenti):
-    """Aggiunge al file gli articoli nuovi di ogni fonte (chiamata con `argomenti`), senza doppioni per link."""
-    adesso = datetime.now(timezone.utc)
-    try:
-        with open(percorso, encoding='utf-8') as f:
-            righe = [json.loads(r) for r in f if r.strip()]
-    except FileNotFoundError:
-        righe = []
-    limite = (adesso - timedelta(days=CONSERVAZIONE_GIORNI)).isoformat()
-    righe = [r for r in righe if r['visto'] >= limite]
-    noti = {r['url'] for r in righe}
+def client_firestore():
+    # Importato qui: gli script di prova usano `scarica` senza avere questo pacchetto
+    from google.cloud import firestore
+    return firestore.Client(project=PROJECT_ID)
 
-    riuscite = 0
+
+def id_articolo(url):
+    return hashlib.sha256(url.encode('utf-8')).hexdigest()[:32]
+
+
+def a_blocchi(voci):
+    for i in range(0, len(voci), BLOCCO):
+        yield voci[i:i + BLOCCO]
+
+
+def salva(client, articoli):
+    raccolta = client.collection(COLLEZIONE)
+    for blocco in a_blocchi(articoli):
+        scrittura = client.batch()
+        for a in blocco:
+            scrittura.set(raccolta.document(id_articolo(a['url'])), {k: a.get(k) for k in CAMPI_SALVATI})
+        scrittura.commit()
+
+
+def gia_salvati(client, articoli):
+    """Id degli articoli già in collezione: legge solo quelli degli elenchi di oggi, non tutta la collezione."""
+    raccolta = client.collection(COLLEZIONE)
+    riferimenti = [raccolta.document(i) for i in {id_articolo(a['url']) for a in articoli}]
+    noti = set()
+    for blocco in a_blocchi(riferimenti):
+        noti |= {d.id for d in client.get_all(blocco, field_paths=['url']) if d.exists}
+    return noti
+
+
+def cancella_scaduti(client, limite):
+    from google.cloud.firestore_v1.base_query import FieldFilter
+    scaduti = [d.reference for d in client.collection(COLLEZIONE).where(filter=FieldFilter('visto', '<', limite)).stream()]
+    for blocco in a_blocchi(scaduti):
+        scrittura = client.batch()
+        for riferimento in blocco:
+            scrittura.delete(riferimento)
+        scrittura.commit()
+    return len(scaduti)
+
+
+def unisci(client, fonti, *argomenti):
+    """Aggiunge alla collezione gli articoli nuovi di ogni fonte (chiamata con `argomenti`), senza doppioni per link."""
+    adesso = datetime.now(timezone.utc)
+    cancellati = cancella_scaduti(client, (adesso - timedelta(days=CONSERVAZIONE_GIORNI)).isoformat(timespec='seconds'))
+
+    riuscite, aggiunti = 0, 0
     for fonte in fonti:
         try:
-            trovati = fonte(*argomenti)
+            trovati = [a for a in fonte(*argomenti) if a['url']]
         except Exception as err:  # una fonte giù non deve fermare le altre
             print(f'::warning::{fonte.__name__}: {err}')
             continue
         riuscite += 1
-        nuovi = [a for a in trovati if a['url'] and a['url'] not in noti]
-        for a in nuovi:
-            a['visto'] = adesso.isoformat(timespec='seconds')
-            noti.add(a['url'])
-        righe.extend(nuovi)
+        noti = gia_salvati(client, trovati)
+        nuovi = {}
+        for a in trovati:
+            i = id_articolo(a['url'])
+            if i not in noti and i not in nuovi:
+                nuovi[i] = {**a, 'visto': adesso.isoformat(timespec='seconds')}
+        salva(client, list(nuovi.values()))
+        aggiunti += len(nuovi)
         print(f'{fonte.__name__}: {len(trovati)} nell\'elenco, {len(nuovi)} nuovi')
 
-    with open(percorso, 'w', encoding='utf-8', newline='\n') as f:
-        for r in righe:
-            f.write(json.dumps({k: r.get(k) for k in CAMPI_SALVATI}, ensure_ascii=False) + '\n')
-    print(f'Totale: {len(righe)} articoli')
+    print(f'Aggiunti {aggiunti} articoli, cancellati {cancellati} oltre i {CONSERVAZIONE_GIORNI} giorni')
     if not riuscite:
         sys.exit('Nessuna fonte raggiungibile')
 
 
+def esporta(client, percorso):
+    righe = sorted((d.to_dict() for d in client.collection(COLLEZIONE).stream()), key=lambda r: (r['visto'], r['url']))
+    with open(percorso, 'w', encoding='utf-8', newline='\n') as f:
+        for r in righe:
+            f.write(json.dumps({k: r.get(k) for k in CAMPI_SALVATI}, ensure_ascii=False) + '\n')
+    print(f'Esportati {len(righe)} articoli in {percorso}')
+
+
 if __name__ == '__main__':
-    unisci(sys.argv[1], FONTI)
+    if sys.argv[1:2] == ['--esporta']:
+        esporta(client_firestore(), sys.argv[2])
+    else:
+        unisci(client_firestore(), FONTI)

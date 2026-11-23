@@ -7,46 +7,33 @@ on:
   schedule:
     - cron: '41 4 * * *'
 
-# Due raccolte non devono scrivere insieme sul ramo notizie
+# Due raccolte non devono scrivere insieme
 concurrency: notizie
 
 jobs:
   raccolta:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
 
     steps:
-      - name: Checkout del sito (per lo script)
+      - name: Checkout
         uses: actions/checkout@v5
-        with:
-          path: sito
-
-      # Gli articoli stanno sul ramo notizie: un commit su main farebbe ripartire la pubblicazione del sito
-      - name: Checkout del ramo notizie
-        uses: actions/checkout@v5
-        with:
-          ref: notizie
-          path: raccolta
 
       - name: Configura Python
         uses: actions/setup-python@v6
         with:
           python-version: '3.12'
 
-      - name: Raccogli gli articoli nuovi
-        run: python3 sito/scripts/raccogli_notizie.py raccolta/articoli.jsonl
+      - name: Installa il client Firestore
+        run: pip install google-cloud-firestore==2.34.1
 
-      - name: Committa e pusha
-        working-directory: raccolta
+      # L'elenco sta nella collezione notizie_articoli, chiusa al sito: il repo è pubblico e i link contengono i titoli.
+      # Account di servizio sicurezza-conteggi (ruolo Cloud Datastore User), lo stesso di sicurezza.yml
+      - name: Raccogli gli articoli nuovi
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add articoli.jsonl
-          if git diff --staged --quiet; then
-            echo "Nessun articolo nuovo."
-          else
-            git commit -m "Raccolta notizie"
-            git pull --rebase
-            git push
-          fi
+          echo "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/account.json"
+          GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/account.json" python3 scripts/raccogli_notizie.py
+          rm "$RUNNER_TEMP/account.json"
