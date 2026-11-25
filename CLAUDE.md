@@ -16,7 +16,8 @@ dal ramo `main`. Due sezioni: Pagamenti (dati dal repo della pipeline, aggiornat
 - Mappa: griglia di quadrati di circa 250 m (`rRRcCC`), disegnata da `data/mappa.json`
   (`scripts/build_mappa.py`, dati OpenStreetMap), Leaflet in `vendor/leaflet`, nessun server di mappe esterno.
 - Notizie: `scripts/raccogli_notizie.py` (workflow `notizie.yml`, ogni giorno alle 4:41 UTC) scrive
-  `articoli.jsonl` sul ramo `notizie`, non su main. Ogni elenco letto deve coprire più di un giorno.
+  nella collezione Firestore `notizie_articoli`, chiusa al sito: solo testata, link e date. Mai nel repo, che è
+  pubblico: i link contengono i titoli, con nomi di persone. Ogni elenco letto deve coprire più di un giorno.
 
 ## Regole fisse
 - Mai salvare in locale, mostrare in chat o committare segreti: chiave segreta di reCAPTCHA, account di servizio,
@@ -63,23 +64,52 @@ Decisioni prese con l'utente a novembre 2026:
   una via o un luogo dello stradario di `data/mappa.json`), poi estrazione col modello dal testo completo nello
   schema delle segnalazioni (categoria, data dell'episodio, fascia, via o luogo, fattori, seguito di un fatto già
   noto). La via può essere solo una di quelle trovate dal filtro; da lì i quadrati, senza geocoder esterni.
-  Un episodio senza via o luogo sulla mappa si scarta (i quartieri sono troppo generici).
+  Un episodio senza via o luogo sulla mappa si scarta (i quartieri sono troppo generici). Se un luogo noto si perde
+  al filtro, si aggiungono i suoi sinonimi in `vie_busto.py` (es. "pronto soccorso di Busto" per l'ospedale), non un
+  modello in più: la comprensione del testo la fa già il passo col modello.
 - Solo episodi nel comune di Busto (la sezione di Prealpina comprende la Valle Olona), in spazi pubblici o aperti
   al pubblico, compresi i bar. Contano anche i furti in casa; il resto di quello che succede in casa no.
 - Conciliazione tra fonti: stesso episodio se vicino per giorno, quadrato e tipo; si uniscono i campi e i link.
-- Categorie: escluse truffe, violenza domestica, incidenti stradali e fatti dentro il carcere. Solo per le notizie:
+  Prima si tolgono le copie dello stesso articolo con link diversi. Nello stesso articolo, stesso tipo e stessa via a
+  un giorno di distanza sono un episodio solo. Se una via ha 6 o più quadrati, due vie diverse si uniscono solo nello stesso giorno.
+- Categorie: escluse truffe, violenza domestica, incidenti stradali, allarmi bomba via mail, inseguimenti senza un altro reato, crolli, suicidi, restauri e fatti dentro il carcere. Solo per le notizie:
   spaccio; insicurezza per le lamentele ricorrenti su una via senza un fatto datato. Furti ripetuti nello stesso
-  posto senza date sono un episodio solo. Un processo per un fatto vecchio è un seguito.
-- Mappa: le notizie sono un livello separato, spento all'inizio, disegnato con un altro stile. I conteggi
-  delle due fonti non si sommano mai.
+  posto senza date sono un episodio solo. Un processo per un fatto vecchio è un seguito. Dalla verifica dei fatti
+  del 25/11/2026: esclusi ricordi di anni prima, danni lasciati da mercati ed eventi, volantini e proteste politiche,
+  auto in fiamme senza dolo, elenchi di luoghi letti in consiglio; i fatti sul treno contano solo se avvenuti in
+  stazione o col treno fermo a Busto (decisione dell'utente); commenti e reazioni a un fatto già raccontato sono seguiti.
+  I rifiuti abbandonati restano in "Vandalismo o degrado" (decisione dell'utente del 25/11/2026). Categoria
+  "Allagamento" solo per le notizie (sottopassi, strade o piazze allagate con pericolo o disagi); gli altri danni del
+  maltempo, le buche e i guasti no. Sulla mappa si separano dai reati col filtro "Mostra".
+- Mappa: selettore "Fonte" con due viste, una alla volta e mai sovrapposte. Segnalazioni (predefinita) con i quadrati,
+  Notizie (`js/notizie.js`, `?vista=notizie`) con vie evidenziate e un punto per parchi e stazioni. Senza
+  `data/notizie.json` il selettore non compare. I conteggi delle due fonti non si sommano mai.
+- Quartieri: `scripts/build_quartieri.py` scrive `data/quartieri.json` da OpenStreetMap, che ha solo i punti (i confini
+  mancano, verificato il 25/11/2026). La mappa mostra i nomi, mai confini stimati. Icone dei tipi: Lucide (ISC), nel filtro, nelle tabelle e
+  sulla mappa (una per tipo, affiancate sulla stessa via; quelle che si accavallano si nascondono, prima le vie con più fatti).
+- Dati della vista: `scripts/conciliazione.py` unisce gli episodi, `scripts/build_notizie.py` scrive i fatti
+  (via, giorno, tipo, link) degli ultimi 365 giorni, quanti ne tiene la raccolta. Il navigatore del periodo sotto la
+  mappa (1 mese, 3 mesi, 6 mesi, Tutto, o maniglie trascinabili) conta le vie nel browser. Che i singoli fatti
+  siano leggibili nel file, sotto la soglia, va bene (decisione dell'utente del 25/11/2026). `data/notizie.json` non va mai nel
+  repo: si genera durante la pubblicazione del sito (decisione del 24/11/2026), così i link spariscono davvero
+  quando scadono.
+- Storico: ilBustese rallenta di proposito le richieste in blocco (circa 30 secondi per pagina degli articoli e
+  dell'archivio; feed e mappa del sito no). Non fingersi un browser: si scarica da solo, a parte e con calma.
+  Prealpina: le mappe del sito più vecchie non hanno date, si leggono dalla pagina dell'articolo.
 - Revisione umana: gli episodi nuovi arrivano in una pull request, pubblicati solo dopo l'approvazione.
 - Dati personali: mai nomi o età, solo i campi dello schema e il link; cancellazione dopo 12 mesi.
-  Link agli articoli solo nella vista del singolo quadrato, con almeno 3 episodi. Soglia 3 anche per le notizie.
+  Link agli articoli solo nel dettaglio della singola via. Soglia 2 per le notizie (decisione dell'utente del
+  24/11/2026: fatti pochi e sparsi), 3 per le segnalazioni dei cittadini.
 - Diritto d'autore: il testo serve solo a estrarre i fatti, non si ripubblica né si conserva.
 - Prima del via: due settimane di articoli, circa 100 classificati a mano con l'utente, e misura di episodi
   trovati e inventati. Sullo stesso campione si confrontano due strade, tutte e due sul PC dell'utente:
   Gemma 4 12B in locale (`C:\Users\GabrieleRig\.android\models\gemma-4-12b`) e Claude da Claude Code
   (`claude -p --json-schema`, con l'abbonamento). L'API a pagamento è esclusa.
 - Storico per la prova: `scripts/storico_notizie.py` recupera a mano gli ultimi N giorni dagli archivi delle testate
-  nello stesso file della raccolta (994 articoli per i 30 giorni fino al 13/11/2026).
+  nella stessa collezione della raccolta (994 articoli per i 30 giorni fino al 13/11/2026). Copia locale per le
+  prove: `python scripts/raccogli_notizie.py --esporta valutazione/dati/articoli.jsonl`.
+  Gli ultimi 365 giorni, quanti ne mostra la mappa (dal 25/11/2026; prima solo il 2026, da qui i nomi dei file):
+  `bash valutazione/recupero_veloci.sh` per Malpensa24, Prealpina e VareseNews;
+  `bash valutazione/riprendi_ilbustese.sh` per ilBustese, che richiede più giorni: si ferma quando si vuole e riparte
+  da dove era. Anteprima locale: `valutazione/episodi_anteprima.py`, poi `scripts/build_notizie.py`.
 - La nuova fonte va spiegata in "Come funziona e privacy".

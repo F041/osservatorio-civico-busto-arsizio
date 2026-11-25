@@ -15,4 +15,7 @@ tests/regole/node_modules/
 
 # Dati della prova del motore delle notizie (testi degli articoli): solo in locale
 valutazione/dati/
+
+# Fatti della vista Notizie, con i link: si generano durante la pubblicazione, mai nel repo
+data/notizie.json
 __pycache__/

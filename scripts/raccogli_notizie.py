@@ -25,6 +25,7 @@ import hashlib
 import html
 import json
 import re
+import subprocess
 import sys
 import time
 import urllib.error
@@ -67,6 +68,17 @@ def scarica(url, attese=(20, 60)):
             if attesa is None:
                 raise
         time.sleep(attesa)
+
+
+def scarica_entro(url, secondi=90):
+    """Come scarica, ma con un limite sull'intera richiesta. Il timeout di urllib vale per ogni singola lettura: un
+    server che tiene aperta la connessione senza mandare nulla l'ha bloccata per ore (novembre 2026). ilBustese
+    risponde alle richieste in blocco dopo circa 30 secondi, da qui il margine largo. Usa curl (Windows e Linux)."""
+    r = subprocess.run(['curl', '-sSL', '--fail', '--max-time', str(secondi), '-A', USER_AGENT, url],
+                       capture_output=True, timeout=secondi + 10)
+    if r.returncode:
+        raise RuntimeError(f'curl {r.returncode}: {r.stderr.decode(errors="replace").strip()[:200]}')
+    return r.stdout
 
 
 def pulisci(testo):

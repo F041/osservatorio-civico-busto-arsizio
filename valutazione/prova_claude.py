@@ -21,10 +21,10 @@ from pathlib import Path
 
 QUI = Path(__file__).parent
 sys.path.insert(0, str(QUI.parent / 'scripts'))
-from vie_busto import Stradario  # noqa: E402
+from vie_busto import Stradario, togli_copie  # noqa: E402
 
 MAX_TESTO = 8000
-CATEGORIE = ['furto', 'molestia', 'aggressione', 'vandalismo', 'spaccio', 'insicurezza', 'altro']
+CATEGORIE = ['furto', 'molestia', 'aggressione', 'vandalismo', 'spaccio', 'insicurezza', 'allagamento', 'altro']
 FASCE = ['mattina', 'pomeriggio', 'sera', 'notte']
 FATTORI = ['illuminazione', 'isolata', 'persone-moleste', 'degrado', 'trasporti', 'nessuno-intorno']
 
@@ -72,6 +72,8 @@ def chiedi(modello, prompt, sch, messaggio, cartella):
 def analizza(a, modello, prompt, stradario, cartella):
     pulito, vie = stradario.filtro(a)
     riga = {'id': a['id'], 'modello': modello, 'vie': [v['nome'] for v in vie]}
+    if not a.get('testo'):
+        riga['senza_testo'] = True
     if not vie:
         return riga | {'estrazione': None}
     elenco = '\n'.join(f"- {v['nome']}" + (' (nome ambiguo nello stradario)' if v['ambigua'] else '') for v in vie)
@@ -90,11 +92,15 @@ def main():
 
     prompt = (QUI / 'prompt_estrazione.md').read_text(encoding='utf-8')
     stradario = Stradario()
-    articoli = [json.loads(r) for r in open(arg.campione, encoding='utf-8') if r.strip()]
+    # Solo le righe complete: il file dei testi può essere ancora in scrittura
+    articoli = togli_copie(json.loads(r) for r in open(arg.campione, encoding='utf-8') if r.endswith('\n') and r.strip())
     fatte = []
     if Path(arg.uscita).exists():
         fatte = [json.loads(r) for r in open(arg.uscita, encoding='utf-8') if r.strip()]
         fatte = [r for r in fatte if not (r['estrazione'] or {}).get('errore')]
+        # Un articolo analizzato senza testo si rifà se nel frattempo il testo è arrivato
+        testi = {a['id']: a.get('testo') for a in articoli}
+        fatte = [r for r in fatte if not (r.get('senza_testo') and testi.get(r['id']))]
     noti = {r['id'] for r in fatte}
     da_fare = [a for a in articoli if a['id'] not in noti]
     print(f'{len(da_fare)} articoli da analizzare con {arg.modello}')

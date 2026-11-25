@@ -1,6 +1,7 @@
 // Panoramica Sicurezza: legge i conteggi aggregati da scripts/build_sicurezza.py (data/sicurezza.json)
 import { CATEGORIE, FASCE, FATTORI, DENUNCIA } from './sicurezza-config.js';
 import { caricaMappa, creaMappa, confiniCella, descriviCella } from './mappa.js';
+import { creaVistaNotizie } from './notizie.js';
 
 const overview = document.getElementById('overview');
 const overviewTitle = document.getElementById('overview-title');
@@ -75,10 +76,42 @@ function barTable(options, counts, threshold, colori) {
     return table;
 }
 
-// Quadrati con almeno `soglia` segnalazioni: filtro, mappa, legenda e la stessa informazione in tabella
-function mapCard(data, mappa) {
+// Scelta tra le due viste della mappa: una alla volta, perché i numeri delle due fonti non si sommano
+function selettoreFonte(iniziale, cambia) {
+    const riga = document.createElement('div');
+    riga.className = 'map-source';
+    const etichetta = document.createElement('span');
+    etichetta.className = 'map-source-label';
+    etichetta.id = 'map-source-label';
+    etichetta.textContent = 'Fonte';
+    const gruppo = document.createElement('div');
+    gruppo.className = 'map-source-options';
+    gruppo.setAttribute('role', 'radiogroup');
+    gruppo.setAttribute('aria-labelledby', etichetta.id);
+    for (const [valore, testo] of [['segnalazioni', 'Segnalazioni'], ['notizie', 'Notizie']]) {
+        const label = document.createElement('label');
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = 'map-source';
+        input.value = valore;
+        input.checked = valore === iniziale;
+        input.addEventListener('change', () => cambia(valore));
+        const nome = document.createElement('span');
+        nome.textContent = testo;
+        label.append(input, nome);
+        gruppo.append(label);
+    }
+    riga.append(etichetta, gruppo);
+    return riga;
+}
+
+// Quadrati con almeno `soglia` segnalazioni: filtro, mappa, legenda e la stessa informazione in tabella.
+// Se ci sono i dati delle notizie, un selettore passa alla vista con le vie (js/notizie.js)
+function mapCard(data, mappa, notizie, applicaVista) {
     const section = card(`Dove: zone con almeno ${data.soglia} segnalazioni`);
     section.classList.add('safety-card-wide');
+    const titolo = section.querySelector('h3');
+    const titoloSegnalazioni = titolo.textContent;
 
     const filterRow = document.createElement('div');
     filterRow.className = 'map-filter';
@@ -102,7 +135,9 @@ function mapCard(data, mappa) {
     const filterHint = document.createElement('p');
     filterHint.className = 'safety-muted map-filter-hint';
     filterHint.textContent = 'Una voce alla volta: incrociarne due, per esempio tipo e orario, renderebbe più riconoscibili le persone.';
-    section.append(filterRow, filterHint);
+    const filtri = document.createElement('div');
+    filtri.append(filterRow, filterHint);
+    section.append(filtri);
 
     const mapDiv = document.createElement('div');
     mapDiv.className = 'overview-map';
@@ -113,7 +148,9 @@ function mapCard(data, mappa) {
     note.className = 'safety-muted';
     note.setAttribute('aria-live', 'polite');
     const tableWrap = document.createElement('div');
-    section.append(mapDiv, legend, note, tableWrap);
+    const pannelloSegnalazioni = document.createElement('div');
+    pannelloSegnalazioni.append(legend, note, tableWrap);
+    section.append(mapDiv, pannelloSegnalazioni);
 
     const classi = CLASSI.map((da, i) => {
         const minimo = Math.max(da, data.soglia);
@@ -129,7 +166,8 @@ function mapCard(data, mappa) {
         quadrati.addTo(map);
         // Si parte inquadrando le zone segnalate, non tutto il comune; cambiando filtro la vista resta ferma
         const tutte = Object.keys(data.celle).flatMap(id => confiniCella(mappa.griglia, id));
-        if (tutte.length) map.fitBounds(window.L.latLngBounds(tutte), { padding: [40, 40], maxZoom: 15 });
+        // Senza animazione: un'animazione ancora in corso sovrascriverebbe la vista Notizie aperta da link
+        if (tutte.length) map.fitBounds(window.L.latLngBounds(tutte), { padding: [40, 40], maxZoom: 15, animate: false });
         resolve();
     }));
 
@@ -215,16 +253,65 @@ function mapCard(data, mappa) {
     select.addEventListener('change', () => mostra(select.value));
     reset.addEventListener('click', () => { mostra(''); select.focus(); });
     mostra(new URLSearchParams(location.search).get('mostra') ?? '');
+
+    if (notizie) {
+        const vista = creaVistaNotizie(notizie, mappa, () => map, mapDiv);
+        vista.pannello.hidden = true;
+        vista.filtro.hidden = true;
+        section.append(vista.pannello);
+        section.insertBefore(vista.filtro, mapDiv);
+        // Il titolo della sezione segue il periodo scelto nel navigatore
+        vista.pannello.addEventListener('periodo', ev => {
+            applicaVista(vista.pannello.hidden ? 'segnalazioni' : 'notizie', ev.detail);
+        });
+
+        const cambiaVista = valore => {
+            const inNotizie = valore === 'notizie';
+            titolo.textContent = inNotizie ? `Dove: vie con almeno ${notizie.soglia} fatti nelle notizie` : titoloSegnalazioni;
+            filtri.hidden = inNotizie;
+            pannelloSegnalazioni.hidden = inNotizie;
+            vista.pannello.hidden = !inNotizie;
+            vista.filtro.hidden = !inNotizie;
+            mapDiv.dataset.vista = valore;
+            applicaVista(valore, vista.periodo());
+            mapDiv.setAttribute('aria-label', inNotizie
+                ? 'Mappa delle vie con più fatti nelle notizie; gli stessi dati sono nella tabella sotto'
+                : 'Mappa delle zone con più segnalazioni; gli stessi dati sono nella tabella sotto');
+            const url = new URL(location.href);
+            if (inNotizie) url.searchParams.set('vista', 'notizie'); else url.searchParams.delete('vista');
+            history.replaceState(null, '', url);
+            mappaPronta.then(() => {
+                if (inNotizie) {
+                    quadrati.remove();
+                    vista.strato.addTo(map);
+                    const limiti = vista.limiti();
+                    // Senza animazione: appena creata, la mappa sta ancora animando lo zoom sulle segnalazioni e
+                    // Leaflet scarterebbe questo cambio di vista
+                    if (limiti) map.fitBounds(limiti, { padding: [40, 40], maxZoom: 15, animate: false });
+                } else {
+                    vista.strato.remove();
+                    quadrati.addTo(map);
+                }
+            });
+        };
+        const iniziale = new URLSearchParams(location.search).get('vista') === 'notizie' ? 'notizie' : 'segnalazioni';
+        section.insertBefore(selettoreFonte(iniziale, cambiaVista), filtri);
+        if (iniziale === 'notizie') cambiaVista('notizie');
+        else applicaVista('segnalazioni');
+    } else {
+        applicaVista('segnalazioni');
+    }
     return section;
 }
 
 Promise.all([
     fetch('data/sicurezza.json').then(response => { if (!response.ok) throw new Error(`HTTP ${response.status}`); return response.json(); }),
     caricaMappa(),
+    // Facoltativo: senza questo file la pagina mostra solo le segnalazioni
+    fetch('data/notizie.json').then(response => (response.ok ? response.json() : null)).catch(() => null),
 ])
-    .then(([data, mappa]) => {
+    .then(([data, mappa, notizie]) => {
         overview.replaceChildren();
-        overviewTitle.textContent = `Ultimi ${data.finestra_giorni} giorni (${formatDate(data.da)} – ${formatDate(data.a)})`;
 
         const totalCard = card('Segnalazioni');
         const total = document.createElement('p');
@@ -249,10 +336,27 @@ Promise.all([
         byFactor.append(factorNote);
         const byReport = card('Hai sporto denuncia?');
         byReport.append(barTable(DENUNCIA, data.denuncia, data.soglia));
-        overview.append(mapCard(data, mappa), totalCard, byType, byTime, byFactor, byReport);
-
-        overviewNote.textContent = `Aggiornato il ${formatDate(data.generato.slice(0, 10))}. ` +
-            `Per non rendere riconoscibile nessuno, i numeri sotto ${data.soglia} non vengono mostrati.`;
+        // Le schede sotto la mappa contano solo le segnalazioni: nella vista Notizie si nascondono, e titolo e nota
+        // seguono la fonte scelta
+        const schedeSegnalazioni = [totalCard, byType, byTime, byFactor, byReport];
+        const testi = {
+            segnalazioni: {
+                titolo: `Ultimi ${data.finestra_giorni} giorni (${formatDate(data.da)} – ${formatDate(data.a)})`,
+                nota: `Aggiornato il ${formatDate(data.generato.slice(0, 10))}. ` +
+                    `Per non rendere riconoscibile nessuno, i numeri sotto ${data.soglia} non vengono mostrati.`,
+            },
+            notizie: notizie && {
+                titolo: `Notizie dal ${formatDate(notizie.da)} al ${formatDate(notizie.a)}`,
+                nota: `Aggiornato il ${formatDate(notizie.generato.slice(0, 10))}.`,
+            },
+        };
+        const applicaVista = (vista, periodo) => {
+            if (periodo) testi.notizie.titolo = `Notizie dal ${formatDate(periodo.da)} al ${formatDate(periodo.a)}`;
+            for (const scheda of schedeSegnalazioni) scheda.hidden = vista === 'notizie';
+            overviewTitle.textContent = testi[vista].titolo;
+            overviewNote.textContent = testi[vista].nota;
+        };
+        overview.append(mapCard(data, mappa, notizie, applicaVista), ...schedeSegnalazioni);
     })
     .catch(error => {
         console.error('Errore caricamento conteggi:', error);

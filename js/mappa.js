@@ -64,13 +64,39 @@ const STILE_VIE_TENUE = [
     { color: '#e5e4df', weight: 1, dashArray: '3 4' },
 ];
 
-function etichetta(latlng, testo, classe) {
+function etichetta(latlng, testo, classe, pane = 'markerPane') {
     const span = document.createElement('span');
     span.textContent = testo;
     return L.marker(latlng, {
         icon: L.divIcon({ className: `map-label ${classe}`, html: span, iconSize: null }),
-        interactive: false, keyboard: false,
+        interactive: false, keyboard: false, pane,
     });
+}
+
+// Nomi dei quartieri (data/quartieri.json, da OpenStreetMap: solo i punti, i confini non esistono). Stanno sopra il
+// fondo ma sotto le linee e i quadrati, così non coprono i dati; spariscono da vicino, dove servono i nomi delle vie
+function aggiungiQuartieri(map, g) {
+    const pane = map.createPane('quartieri');
+    pane.style.zIndex = 350;
+    pane.style.pointerEvents = 'none';
+    fetch('data/quartieri.json')
+        .then(response => (response.ok ? response.json() : null))
+        .then(dati => {
+            if (!dati) return;
+            // Le località minori (neighbourhood, le cascine) solo da più vicino: da lontano si sovrappongono ai quartieri
+            const gruppo = tipo => L.layerGroup(dati.quartieri.filter(q => (q.tipo === 'suburb') === (tipo === 'suburb'))
+                .map(q => etichetta(punti(g, q.p)[0], q.n, 'map-label-quartiere', 'quartieri')));
+            const quartieri = gruppo('suburb');
+            const localita = gruppo('neighbourhood');
+            const aggiorna = () => {
+                const zoom = map.getZoom();
+                if (zoom < 15.5) quartieri.addTo(map); else quartieri.remove();
+                if (zoom >= 14 && zoom < 15.5) localita.addTo(map); else localita.remove();
+            };
+            map.on('zoomend', aggiorna);
+            aggiorna();
+        })
+        .catch(() => {});
 }
 
 // Punto a metà del tratto più lungo di una via, dove metterne il nome
@@ -82,13 +108,15 @@ function metaVia(g, via) {
 
 export function creaMappa(element, data, { griglia = true, tenue = false } = {}) {
     const g = data.griglia;
-    const renderer = L.canvas({ padding: 0.5 });
     const confine = punti(g, data.confine);
     const limiti = L.latLngBounds(confine);
     const map = L.map(element, {
-        renderer, minZoom: 12, maxZoom: 18, zoomSnap: 0.5,
+        renderer: L.canvas({ padding: 0.5 }), minZoom: 12, maxZoom: 18, zoomSnap: 0.5,
         maxBounds: limiti.pad(0.3), scrollWheelZoom: false,
     });
+    // Il fondo (confine, vie, ferrovie, griglia) ha un pane suo, sotto i nomi dei quartieri; i dati restano sopra
+    map.createPane('fondo').style.zIndex = 300;
+    const renderer = L.canvas({ padding: 0.5, pane: 'fondo' });
     map.attributionControl.setPrefix(false)
         .addAttribution('Dati <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap</a>');
     map.fitBounds(limiti);
@@ -121,5 +149,6 @@ export function creaMappa(element, data, { griglia = true, tenue = false } = {})
     };
     map.on('zoomend', aggiornaNomi);
     aggiornaNomi();
+    aggiungiQuartieri(map, g);
     return map;
 }

@@ -1,0 +1,125 @@
+{
+ "fonte": "OpenStreetMap (ODbL)",
+ "quartieri": [
+  {
+   "n": "Beata Giuliana",
+   "p": [
+    6252,
+    2506
+   ],
+   "tipo": "suburb"
+  },
+  {
+   "n": "Borsano",
+   "p": [
+    1953,
+    5008
+   ],
+   "tipo": "suburb"
+  },
+  {
+   "n": "Cascina Brughetto",
+   "p": [
+    2947,
+    5779
+   ],
+   "tipo": "neighbourhood"
+  },
+  {
+   "n": "Cascina dei Poveri",
+   "p": [
+    6643,
+    2378
+   ],
+   "tipo": "neighbourhood"
+  },
+  {
+   "n": "Frati",
+   "p": [
+    4320,
+    5947
+   ],
+   "tipo": "suburb"
+  },
+  {
+   "n": "Madonna Regina",
+   "p": [
+    4135,
+    1423
+   ],
+   "tipo": "suburb"
+  },
+  {
+   "n": "Redentore",
+   "p": [
+    5098,
+    2707
+   ],
+   "tipo": "suburb"
+  },
+  {
+   "n": "Sacconago",
+   "p": [
+    3061,
+    3729
+   ],
+   "tipo": "suburb"
+  },
+  {
+   "n": "San Giovanni",
+   "p": [
+    4395,
+    4791
+   ],
+   "tipo": "suburb"
+  },
+  {
+   "n": "San Giuseppe",
+   "p": [
+    5316,
+    4134
+   ],
+   "tipo": "suburb"
+  },
+  {
+   "n": "San Michele",
+   "p": [
+    4509,
+    4203
+   ],
+   "tipo": "suburb"
+  },
+  {
+   "n": "Sant'Anna",
+   "p": [
+    6465,
+    4178
+   ],
+   "tipo": "suburb"
+  },
+  {
+   "n": "Sant'Edoardo",
+   "p": [
+    3572,
+    5514
+   ],
+   "tipo": "suburb"
+  },
+  {
+   "n": "Santa Croce",
+   "p": [
+    2806,
+    5793
+   ],
+   "tipo": "suburb"
+  },
+  {
+   "n": "Santi Apostoli",
+   "p": [
+    5187,
+    5780
+   ],
+   "tipo": "suburb"
+  }
+ ]
+}

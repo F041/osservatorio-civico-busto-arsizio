@@ -35,9 +35,12 @@ CERCA_PREFISSO = re.compile(r'\b(' + '|'.join(re.escape(p) for p in sorted(PREFI
 BUSTO = re.compile(r"\b(busto|bustocc|bustes|sacconago|borsano|beata giuliana|sant.anna|redentore|veroncora|"
                    r"madonna regina|santi apostoli|sant.edoardo|san michele)", re.I)
 PAROLA = re.compile(r"[^\W_]+(?:['’][^\W_]+)?")
-# Stazioni e parchi: il nome del luogo, o un modo comune di chiamarlo
+# Stazioni, ospedale e parchi: il nome del luogo, o un modo comune di chiamarlo. L'ospedale entra dalla verifica del
+# 25/11/2026: l'aggressione al pronto soccorso era raccontata senza via
 ALIAS_LUOGHI = {'Busto Arsizio FS': ['stazione fs', 'stazione centrale', 'stazione delle fs', 'stazione ferroviaria'],
-                'Busto Arsizio Nord': ['stazione nord', 'stazione delle nord', 'ferrovienord', 'ferrovie nord']}
+                'Busto Arsizio Nord': ['stazione nord', 'stazione delle nord', 'ferrovienord', 'ferrovie nord'],
+                'ASST Valle Olona': ['pronto soccorso di busto', 'pronto soccorso dell ospedale di busto',
+                                     'ospedale di busto', 'ospedale di circolo di busto', 'ospedale bustocco']}
 
 
 # Numeri delle vie dedicate a una data, scritti in cifre o in numeri romani: "via XX Settembre", "via 4 Novembre"
@@ -66,6 +69,24 @@ def pulisci_testo(testo):
         if riga and (FINE_FRASE.search(riga) or len(riga) >= 200):
             righe.append(riga)
     return '\n'.join(righe)
+
+
+def togli_copie(articoli):
+    """Tiene una volta sola lo stesso articolo pubblicato con link diversi (stessa testata, titolo e inizio del testo)."""
+    visti, unici = set(), []
+    for a in articoli:
+        chiave = (a.get('fonte'), a.get('titolo'), (a.get('testo') or '')[:300])
+        if chiave not in visti:
+            visti.add(chiave)
+            unici.append(a)
+    return unici
+
+
+def varianti_verde(nome):
+    """Lo stesso parco o giardino con i nomi usati dagli articoli: "Giardini del Museo del Tessile" è anche "parco del
+    Museo del Tessile"."""
+    resto = nome.partition(' ')[2]
+    return [f'{tipo} {resto}' for tipo in ('parco', 'giardini', 'giardino')]
 
 
 class Stradario:
@@ -97,7 +118,7 @@ class Stradario:
         for l in mappa['luoghi']:
             frasi = ALIAS_LUOGHI.get(l['n'], [])
             if re.match(r'(Parco|Giardin)', l['n']):
-                frasi = frasi + [l['n']]
+                frasi = frasi + varianti_verde(l['n'])
             for f in frasi:
                 self.luoghi.append({'nome': l['n'], 'frase': ' '.join(norma(f)), 'celle': {l['c']}})
 
