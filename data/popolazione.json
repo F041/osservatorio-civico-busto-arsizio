@@ -1,0 +1,1128 @@
+{
+ "generato": "2026-11-25T20:23:01Z",
+ "residenti": {
+  "mese": "2026-08",
+  "valore": 84828,
+  "provvisorio": true,
+  "fonte": "ISTAT, bilancio demografico mensile",
+  "link": "https://demo.istat.it/app/?i=D7B&l=it",
+  "mesi": [
+   {
+    "mese": "2026-01",
+    "residenti": 84596,
+    "provvisorio": true
+   },
+   {
+    "mese": "2026-02",
+    "residenti": 84605,
+    "provvisorio": true
+   },
+   {
+    "mese": "2026-03",
+    "residenti": 84581,
+    "provvisorio": true
+   },
+   {
+    "mese": "2026-04",
+    "residenti": 84586,
+    "provvisorio": true
+   },
+   {
+    "mese": "2026-05",
+    "residenti": 84624,
+    "provvisorio": true
+   },
+   {
+    "mese": "2026-06",
+    "residenti": 84684,
+    "provvisorio": true
+   },
+   {
+    "mese": "2026-07",
+    "residenti": 84724,
+    "provvisorio": true
+   },
+   {
+    "mese": "2026-08",
+    "residenti": 84828,
+    "provvisorio": true
+   }
+  ]
+ },
+ "consultazione": {
+  "nome": "Referendum costituzionale del 22 e 23 marzo 2026",
+  "data": "2026-03-22",
+  "aggiornamento": "23/03/2026-17.54",
+  "fonte": "Comune di Busto Arsizio, Ufficio elettorale (dati ufficiosi)",
+  "link_sezioni": "https://elezionibustoarsizio.risele.it/web2603/referendum/AFFLSEZ_1_12026_R4.xml",
+  "link_comune": "https://elezionibustoarsizio.risele.it/web2603/referendum/AFFLTOT_1_12026.xml",
+  "elettori": 64287,
+  "elettori_m": 30885,
+  "elettori_f": 33402
+ },
+ "k": 1.31952,
+ "gruppi": [
+  {
+   "nome": "Centro / Zona Stazione / Frati",
+   "sezioni": 18,
+   "elettori": 14014,
+   "quota_elettori": 0.218,
+   "residenti_stimati": 18492
+  },
+  {
+   "nome": "San Michele / Centro Nord",
+   "sezioni": 9,
+   "elettori": 8011,
+   "quota_elettori": 0.1246,
+   "residenti_stimati": 10571
+  },
+  {
+   "nome": "Sant’Edoardo",
+   "sezioni": 10,
+   "elettori": 8467,
+   "quota_elettori": 0.1317,
+   "residenti_stimati": 11172
+  },
+  {
+   "nome": "Beata Giuliana",
+   "sezioni": 10,
+   "elettori": 8056,
+   "quota_elettori": 0.1253,
+   "residenti_stimati": 10630
+  },
+  {
+   "nome": "Redentore / Santi Apostoli",
+   "sezioni": 11,
+   "elettori": 8487,
+   "quota_elettori": 0.132,
+   "residenti_stimati": 11199
+  },
+  {
+   "nome": "Madonna Regina",
+   "sezioni": 6,
+   "elettori": 5285,
+   "quota_elettori": 0.0822,
+   "residenti_stimati": 6974
+  },
+  {
+   "nome": "Borsano",
+   "sezioni": 6,
+   "elettori": 5149,
+   "quota_elettori": 0.0801,
+   "residenti_stimati": 6794
+  },
+  {
+   "nome": "Sacconago",
+   "sezioni": 9,
+   "elettori": 6602,
+   "quota_elettori": 0.1027,
+   "residenti_stimati": 8711
+  },
+  {
+   "nome": "Sezioni speciali (ospedale e istituto La Provvidenza)",
+   "sezioni": 2,
+   "elettori": 216,
+   "quota_elettori": 0.0034,
+   "residenti_stimati": 285
+  }
+ ],
+ "plessi": [
+  {
+   "nome": "Ezio Crespi",
+   "seggio": "SC. ELEM. 'E.CRESPI' VIA LUIGI MAINO, 19",
+   "sezioni": [
+    1,
+    5
+   ],
+   "zona": "San Giuseppe",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "criterio": "Aggregazione",
+   "nota": "San Giuseppe è compreso nel gruppo centrale insieme alla zona stazione.",
+   "fonte": "https://comprensivocrespi.edu.it/la-scuola/",
+   "elettori": 3671
+  },
+  {
+   "nome": "Sant’Anna",
+   "seggio": "SCUOLA ELEM. \"SANT'ANNA\" VIA ERCOLE COMERIO, 10",
+   "sezioni": [
+    6,
+    8
+   ],
+   "zona": "Sant’Anna",
+   "gruppo": "Redentore / Santi Apostoli",
+   "criterio": "Aggregazione",
+   "nota": "Come nel foglio originale (\"secondo la traccia\"): la fonte di questa scelta non è nota.",
+   "fonte": "https://comprensivocrespi.edu.it/la-scuola/",
+   "elettori": 2355
+  },
+  {
+   "nome": "Beata Giuliana – Puricelli",
+   "seggio": "SC. ELEM. BEATA GIULIANA VIA MARCO MINGHETTI, 20",
+   "sezioni": [
+    9,
+    13
+   ],
+   "zona": "Beata Giuliana",
+   "gruppo": "Beata Giuliana",
+   "criterio": "Scuola nel quartiere",
+   "nota": "L’istituto conferma scuola e indirizzo.",
+   "fonte": "https://icpertinibusto.edu.it/luogo/istituto/beata-giuliana-puricelli/",
+   "elettori": 4279
+  },
+  {
+   "nome": "Marco Polo",
+   "seggio": "SC. ELEM. \"M. POLO\" VIA CAVALIER CARLO AZIMONTI, 28",
+   "sezioni": [
+    14,
+    16
+   ],
+   "zona": "Confine Redentore / Beata Giuliana",
+   "gruppo": "Redentore / Santi Apostoli",
+   "criterio": "Confine",
+   "nota": "Attribuita al Redentore come nel foglio originale (\"secondo la traccia\"): la fonte di questa scelta non è nota.",
+   "fonte": "https://www.malpensa24.it/busto-un-anno-di-piazza-scolastica-alle-marco-polo-unidea-per-le-tommaseo/",
+   "elettori": 1964
+  },
+  {
+   "nome": "Ospedale di Circolo",
+   "seggio": "OSPEDALE DI CIRCOLO BUSTO A. PIAZZALE GIUSEPPE SOLARO, 3",
+   "sezioni": [
+    17,
+    17
+   ],
+   "zona": "Sede sanitaria",
+   "gruppo": "Sezioni speciali (ospedale e istituto La Provvidenza)",
+   "criterio": "A parte",
+   "nota": "Sede ospedaliera indicata nel prospetto del referendum, tenuta separata dai quartieri.",
+   "fonte": "https://www.comune.bustoarsizio.va.it/it/page/referendum-costituzionale-del-22-23-marzo-2026-160980-162166",
+   "elettori": 1
+  },
+  {
+   "nome": "Luigi Morelli",
+   "seggio": "SC. ELEM. \"L. MORELLI\" VIA TOCE, 14",
+   "sezioni": [
+    18,
+    22
+   ],
+   "zona": "Santi Apostoli",
+   "gruppo": "Redentore / Santi Apostoli",
+   "criterio": "Scuola nel quartiere",
+   "nota": "L’istituto colloca le Morelli in Santi Apostoli.",
+   "fonte": "https://comprensivocrespi.edu.it/la-scuola/",
+   "elettori": 4168
+  },
+  {
+   "nome": "Istituto La Provvidenza",
+   "seggio": "ISTITUTO \"LA PROVVIDENZA\" VIA SAN GIOVANNI BOSCO, 3",
+   "sezioni": [
+    23,
+    23
+   ],
+   "zona": "Sede assistenziale",
+   "gruppo": "Sezioni speciali (ospedale e istituto La Provvidenza)",
+   "criterio": "A parte",
+   "nota": "Sede assistenziale indicata nel prospetto del referendum, tenuta separata dai quartieri.",
+   "fonte": "https://www.comune.bustoarsizio.va.it/it/page/referendum-costituzionale-del-22-23-marzo-2026-160980-162166",
+   "elettori": 215
+  },
+  {
+   "nome": "Nicolò Tommaseo",
+   "seggio": "SC. ELEM. \"N. TOMMASEO\" VIA RAFFAELLO SANZIO, 9 A",
+   "sezioni": [
+    24,
+    27
+   ],
+   "zona": "Frati",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "criterio": "Scuola nel quartiere",
+   "nota": "L’istituto indica i Frati e la vicinanza alla stazione.",
+   "fonte": "https://www.tommaseobusto.edu.it/pagine/la-storia",
+   "elettori": 3267
+  },
+  {
+   "nome": "G. Bertacchi",
+   "seggio": "SC. ELEM. \"G. BERTACCHI\" VIA IPPOLITO PINDEMONTE, 2",
+   "sezioni": [
+    28,
+    33
+   ],
+   "zona": "Sant’Edoardo",
+   "gruppo": "Sant’Edoardo",
+   "criterio": "Scuola nel quartiere",
+   "nota": "L’istituto colloca le Bertacchi a Sant’Edoardo.",
+   "fonte": "https://www.istitutobertacchi.edu.it/luoghi?id=339",
+   "elettori": 5142
+  },
+  {
+   "nome": "Liceo artistico Paolo Candiani",
+   "seggio": "LICEO ARTISTICO VIA LUCIANO MANARA, 10",
+   "sezioni": [
+    34,
+    37
+   ],
+   "zona": "Centro sud-est",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "criterio": "Indirizzo",
+   "nota": "Via Manara parte da piazza Trento e Trieste, sul lato sud-est del centro.",
+   "fonte": "https://it.wikipedia.org/wiki/Toponomastica_storica_di_Busto_Arsizio",
+   "elettori": 3232
+  },
+  {
+   "nome": "Primaria Edmondo De Amicis",
+   "seggio": "SCUOLA ELEM. \"DE AMICIS\" VIA DANTE ALIGHIERI, 5",
+   "sezioni": [
+    38,
+    42
+   ],
+   "zona": "Zona stazione Ferrovienord",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "criterio": "Indirizzo",
+   "nota": "La sede di via Dante è vicino alla stazione di Busto Arsizio Nord.",
+   "fonte": "https://www.icbossibusto.edu.it/luoghi?id=19",
+   "elettori": 3844
+  },
+  {
+   "nome": "Pontida, via Pontida",
+   "seggio": "SC. ELEM. \"PONTIDA\" VIA PONTIDA, 1",
+   "sezioni": [
+    43,
+    48
+   ],
+   "zona": "Confine San Michele / Redentore",
+   "gruppo": "San Michele / Centro Nord",
+   "criterio": "Confine",
+   "nota": "L’istituto descrive la scuola a cavallo tra San Michele e Redentore. Attribuita a San Michele.",
+   "fonte": "https://icdeamicis.edu.it/luogo/primaria-pontida-via-montello/",
+   "elettori": 5381
+  },
+  {
+   "nome": "Pontida, viale Montello",
+   "seggio": "SC. ELEM. \"PONTIDA\" VIALE MONTELLO, 11",
+   "sezioni": [
+    49,
+    51
+   ],
+   "zona": "Confine San Michele / Redentore",
+   "gruppo": "San Michele / Centro Nord",
+   "criterio": "Confine",
+   "nota": "Seconda sede della Pontida, attribuita come quella di via Pontida.",
+   "fonte": "https://icdeamicis.edu.it/luogo/primaria-pontida-via-montello/",
+   "elettori": 2630
+  },
+  {
+   "nome": "Sandro Pertini",
+   "seggio": "SC. ELEM. \"S. PERTINI\" VIA GIOACCHINO ROSSINI, 115",
+   "sezioni": [
+    52,
+    56
+   ],
+   "zona": "Beata Giuliana (ovest)",
+   "gruppo": "Beata Giuliana",
+   "criterio": "Scuola nel quartiere",
+   "nota": "L’istituto indica la parte ovest di Beata Giuliana.",
+   "fonte": "https://icpertinibusto.edu.it/struttura/istituto-comprensivo/plesso-sandro-pertini/",
+   "elettori": 3777
+  },
+  {
+   "nome": "Giovanni Pascoli",
+   "seggio": "SC. ELEM. \"G. PASCOLI\" VIA SAMARATE, 110",
+   "sezioni": [
+    57,
+    62
+   ],
+   "zona": "Madonna Regina",
+   "gruppo": "Madonna Regina",
+   "criterio": "Scuola nel quartiere",
+   "nota": "L’istituto colloca la scuola a Madonna Regina.",
+   "fonte": "https://icdeamicis.edu.it/struttura/il-nostro-istituto/",
+   "elettori": 5285
+  },
+  {
+   "nome": "Ada Negri",
+   "seggio": "SC. ELEM. \"A. NEGRI\" PIAZZA GIOVANNI VENTITREESIMO, 1",
+   "sezioni": [
+    63,
+    67
+   ],
+   "zona": "Sacconago",
+   "gruppo": "Sacconago",
+   "criterio": "Scuola nel quartiere",
+   "nota": "L’IC Galilei colloca la primaria Negri a Sacconago.",
+   "fonte": "https://www.galileibusto.edu.it/pagine/presentazione",
+   "elettori": 3388
+  },
+  {
+   "nome": "Galilei / Parini",
+   "seggio": "SC. M. \"GALILEI/PARINI\" VIA GUGLIELMO QUADRELLI, 2",
+   "sezioni": [
+    68,
+    71
+   ],
+   "zona": "Sacconago",
+   "gruppo": "Sacconago",
+   "criterio": "Indirizzo",
+   "nota": "Il seggio di via Quadrelli è la Galilei di Sacconago.",
+   "fonte": "https://www.galileibusto.edu.it/pagine/presentazione",
+   "elettori": 3214
+  },
+  {
+   "nome": "G. Rossi",
+   "seggio": "SC. ELEM. \"G. ROSSI\" VIA GIULIANI E DALMATI, 1",
+   "sezioni": [
+    72,
+    77
+   ],
+   "zona": "Borsano",
+   "gruppo": "Borsano",
+   "criterio": "Scuola nel quartiere",
+   "nota": "L’IC Galilei colloca la primaria Rossi a Borsano.",
+   "fonte": "https://www.galileibusto.edu.it/pagine/presentazione",
+   "elettori": 5149
+  },
+  {
+   "nome": "Biagio Bellotti",
+   "seggio": "SC. MEDIA \"B. BELLOTTI\" VIA BUSONA, 14",
+   "sezioni": [
+    78,
+    81
+   ],
+   "zona": "Sant’Edoardo",
+   "gruppo": "Sant’Edoardo",
+   "criterio": "Scuola nel quartiere",
+   "nota": "L’istituto colloca le Bellotti a Sant’Edoardo.",
+   "fonte": "https://www.istitutobertacchi.edu.it/luoghi?id=345",
+   "elettori": 3325
+  }
+ ],
+ "sezioni": [
+  {
+   "numero": 1,
+   "scuola": "Ezio Crespi",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "ubicazione": "SC. ELEM. 'E.CRESPI' VIA LUIGI MAINO, 19",
+   "elettori_m": 366,
+   "elettori_f": 401,
+   "elettori": 767
+  },
+  {
+   "numero": 2,
+   "scuola": "Ezio Crespi",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "ubicazione": "SC. ELEM. 'E.CRESPI' VIA LUIGI MAINO, 19",
+   "elettori_m": 397,
+   "elettori_f": 377,
+   "elettori": 774
+  },
+  {
+   "numero": 3,
+   "scuola": "Ezio Crespi",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "ubicazione": "SC. ELEM. 'E.CRESPI' VIA LUIGI MAINO, 19",
+   "elettori_m": 314,
+   "elettori_f": 358,
+   "elettori": 672
+  },
+  {
+   "numero": 4,
+   "scuola": "Ezio Crespi",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "ubicazione": "SC. ELEM. 'E.CRESPI' VIA LUIGI MAINO, 19",
+   "elettori_m": 373,
+   "elettori_f": 396,
+   "elettori": 769
+  },
+  {
+   "numero": 5,
+   "scuola": "Ezio Crespi",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "ubicazione": "SC. ELEM. 'E.CRESPI' VIA LUIGI MAINO, 19",
+   "elettori_m": 337,
+   "elettori_f": 352,
+   "elettori": 689
+  },
+  {
+   "numero": 6,
+   "scuola": "Sant’Anna",
+   "gruppo": "Redentore / Santi Apostoli",
+   "ubicazione": "SCUOLA ELEM. \"SANT'ANNA\" VIA ERCOLE COMERIO, 10",
+   "elettori_m": 385,
+   "elettori_f": 403,
+   "elettori": 788
+  },
+  {
+   "numero": 7,
+   "scuola": "Sant’Anna",
+   "gruppo": "Redentore / Santi Apostoli",
+   "ubicazione": "SCUOLA ELEM. \"SANT'ANNA\" VIA ERCOLE COMERIO, 10",
+   "elettori_m": 359,
+   "elettori_f": 390,
+   "elettori": 749
+  },
+  {
+   "numero": 8,
+   "scuola": "Sant’Anna",
+   "gruppo": "Redentore / Santi Apostoli",
+   "ubicazione": "SCUOLA ELEM. \"SANT'ANNA\" VIA ERCOLE COMERIO, 10",
+   "elettori_m": 424,
+   "elettori_f": 394,
+   "elettori": 818
+  },
+  {
+   "numero": 9,
+   "scuola": "Beata Giuliana – Puricelli",
+   "gruppo": "Beata Giuliana",
+   "ubicazione": "SC. ELEM. BEATA GIULIANA VIA MARCO MINGHETTI, 20",
+   "elettori_m": 388,
+   "elettori_f": 401,
+   "elettori": 789
+  },
+  {
+   "numero": 10,
+   "scuola": "Beata Giuliana – Puricelli",
+   "gruppo": "Beata Giuliana",
+   "ubicazione": "SC. ELEM. BEATA GIULIANA VIA MARCO MINGHETTI, 20",
+   "elettori_m": 371,
+   "elettori_f": 372,
+   "elettori": 743
+  },
+  {
+   "numero": 11,
+   "scuola": "Beata Giuliana – Puricelli",
+   "gruppo": "Beata Giuliana",
+   "ubicazione": "SC. ELEM. BEATA GIULIANA VIA MARCO MINGHETTI, 20",
+   "elettori_m": 520,
+   "elettori_f": 496,
+   "elettori": 1016
+  },
+  {
+   "numero": 12,
+   "scuola": "Beata Giuliana – Puricelli",
+   "gruppo": "Beata Giuliana",
+   "ubicazione": "SC. ELEM. BEATA GIULIANA VIA MARCO MINGHETTI, 20",
+   "elettori_m": 392,
+   "elettori_f": 426,
+   "elettori": 818
+  },
+  {
+   "numero": 13,
+   "scuola": "Beata Giuliana – Puricelli",
+   "gruppo": "Beata Giuliana",
+   "ubicazione": "SC. ELEM. BEATA GIULIANA VIA MARCO MINGHETTI, 20",
+   "elettori_m": 436,
+   "elettori_f": 477,
+   "elettori": 913
+  },
+  {
+   "numero": 14,
+   "scuola": "Marco Polo",
+   "gruppo": "Redentore / Santi Apostoli",
+   "ubicazione": "SC. ELEM. \"M. POLO\" VIA CAVALIER CARLO AZIMONTI, 28",
+   "elettori_m": 314,
+   "elettori_f": 354,
+   "elettori": 668
+  },
+  {
+   "numero": 15,
+   "scuola": "Marco Polo",
+   "gruppo": "Redentore / Santi Apostoli",
+   "ubicazione": "SC. ELEM. \"M. POLO\" VIA CAVALIER CARLO AZIMONTI, 28",
+   "elettori_m": 282,
+   "elettori_f": 300,
+   "elettori": 582
+  },
+  {
+   "numero": 16,
+   "scuola": "Marco Polo",
+   "gruppo": "Redentore / Santi Apostoli",
+   "ubicazione": "SC. ELEM. \"M. POLO\" VIA CAVALIER CARLO AZIMONTI, 28",
+   "elettori_m": 351,
+   "elettori_f": 363,
+   "elettori": 714
+  },
+  {
+   "numero": 17,
+   "scuola": "Ospedale di Circolo",
+   "gruppo": "Sezioni speciali (ospedale e istituto La Provvidenza)",
+   "ubicazione": "OSPEDALE DI CIRCOLO BUSTO A. PIAZZALE GIUSEPPE SOLARO, 3",
+   "elettori_m": 1,
+   "elettori_f": 0,
+   "elettori": 1
+  },
+  {
+   "numero": 18,
+   "scuola": "Luigi Morelli",
+   "gruppo": "Redentore / Santi Apostoli",
+   "ubicazione": "SC. ELEM. \"L. MORELLI\" VIA TOCE, 14",
+   "elettori_m": 487,
+   "elettori_f": 450,
+   "elettori": 937
+  },
+  {
+   "numero": 19,
+   "scuola": "Luigi Morelli",
+   "gruppo": "Redentore / Santi Apostoli",
+   "ubicazione": "SC. ELEM.\"L. MORELLI\" VIA TOCE, 14",
+   "elettori_m": 429,
+   "elettori_f": 433,
+   "elettori": 862
+  },
+  {
+   "numero": 20,
+   "scuola": "Luigi Morelli",
+   "gruppo": "Redentore / Santi Apostoli",
+   "ubicazione": "SC. ELEM. \"L. MORELLI\" VIA TOCE, 14",
+   "elettori_m": 331,
+   "elettori_f": 359,
+   "elettori": 690
+  },
+  {
+   "numero": 21,
+   "scuola": "Luigi Morelli",
+   "gruppo": "Redentore / Santi Apostoli",
+   "ubicazione": "SC. ELEM. \"L. MORELLI\" VIA TOCE, 14",
+   "elettori_m": 439,
+   "elettori_f": 451,
+   "elettori": 890
+  },
+  {
+   "numero": 22,
+   "scuola": "Luigi Morelli",
+   "gruppo": "Redentore / Santi Apostoli",
+   "ubicazione": "SC. ELEM. \"L. MORELLI\" VIA TOCE, 14",
+   "elettori_m": 391,
+   "elettori_f": 398,
+   "elettori": 789
+  },
+  {
+   "numero": 23,
+   "scuola": "Istituto La Provvidenza",
+   "gruppo": "Sezioni speciali (ospedale e istituto La Provvidenza)",
+   "ubicazione": "ISTITUTO \"LA PROVVIDENZA\" VIA SAN GIOVANNI BOSCO, 3",
+   "elettori_m": 43,
+   "elettori_f": 172,
+   "elettori": 215
+  },
+  {
+   "numero": 24,
+   "scuola": "Nicolò Tommaseo",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "ubicazione": "SC. ELEM. \"N. TOMMASEO\" VIA RAFFAELLO SANZIO, 9 A",
+   "elettori_m": 332,
+   "elettori_f": 374,
+   "elettori": 706
+  },
+  {
+   "numero": 25,
+   "scuola": "Nicolò Tommaseo",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "ubicazione": "SC. ELEM. \"N. TOMMASEO\" VIA RAFFAELLO SANZIO, 9 A",
+   "elettori_m": 405,
+   "elettori_f": 498,
+   "elettori": 903
+  },
+  {
+   "numero": 26,
+   "scuola": "Nicolò Tommaseo",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "ubicazione": "SC. ELEM.\"N. TOMMASEO\" VIA RAFFAELLO SANZIO, 9 A",
+   "elettori_m": 355,
+   "elettori_f": 373,
+   "elettori": 728
+  },
+  {
+   "numero": 27,
+   "scuola": "Nicolò Tommaseo",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "ubicazione": "SC. ELEM. \"N. TOMMASEO\" VIA RAFFAELLO SANZIO, 9 A",
+   "elettori_m": 456,
+   "elettori_f": 474,
+   "elettori": 930
+  },
+  {
+   "numero": 28,
+   "scuola": "G. Bertacchi",
+   "gruppo": "Sant’Edoardo",
+   "ubicazione": "SC. ELEM. \"G. BERTACCHI\" VIA IPPOLITO PINDEMONTE, 2",
+   "elettori_m": 401,
+   "elettori_f": 453,
+   "elettori": 854
+  },
+  {
+   "numero": 29,
+   "scuola": "G. Bertacchi",
+   "gruppo": "Sant’Edoardo",
+   "ubicazione": "SC. ELEM. \"G. BERTACCHI\" VIA IPPOLITO PINDEMONTE, 2",
+   "elettori_m": 546,
+   "elettori_f": 572,
+   "elettori": 1118
+  },
+  {
+   "numero": 30,
+   "scuola": "G. Bertacchi",
+   "gruppo": "Sant’Edoardo",
+   "ubicazione": "SC. ELEM. \"G. BERTACCHI\" VIA IPPOLITO PINDEMONTE, 2",
+   "elettori_m": 378,
+   "elettori_f": 398,
+   "elettori": 776
+  },
+  {
+   "numero": 31,
+   "scuola": "G. Bertacchi",
+   "gruppo": "Sant’Edoardo",
+   "ubicazione": "SC. ELEM.\"G. BERTACCHI\" VIA IPPOLITO PINDEMONTE, 2",
+   "elettori_m": 403,
+   "elettori_f": 465,
+   "elettori": 868
+  },
+  {
+   "numero": 32,
+   "scuola": "G. Bertacchi",
+   "gruppo": "Sant’Edoardo",
+   "ubicazione": "SC. ELEM. \"G. BERTACCHI\" VIA IPPOLITO PINDEMONTE, 2",
+   "elettori_m": 311,
+   "elettori_f": 378,
+   "elettori": 689
+  },
+  {
+   "numero": 33,
+   "scuola": "G. Bertacchi",
+   "gruppo": "Sant’Edoardo",
+   "ubicazione": "SC. ELEM. \"G. BERTACCHI\" VIA IPPOLITO PINDEMONTE, 2",
+   "elettori_m": 378,
+   "elettori_f": 459,
+   "elettori": 837
+  },
+  {
+   "numero": 34,
+   "scuola": "Liceo artistico Paolo Candiani",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "ubicazione": "LICEO ARTISTICO VIA LUCIANO MANARA, 10",
+   "elettori_m": 468,
+   "elettori_f": 557,
+   "elettori": 1025
+  },
+  {
+   "numero": 35,
+   "scuola": "Liceo artistico Paolo Candiani",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "ubicazione": "LICEO ARTISTICO VIA LUCIANO MANARA, 10",
+   "elettori_m": 341,
+   "elettori_f": 391,
+   "elettori": 732
+  },
+  {
+   "numero": 36,
+   "scuola": "Liceo artistico Paolo Candiani",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "ubicazione": "LICEO ARTISTICO VIA LUCIANO MANARA, 10",
+   "elettori_m": 330,
+   "elettori_f": 395,
+   "elettori": 725
+  },
+  {
+   "numero": 37,
+   "scuola": "Liceo artistico Paolo Candiani",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "ubicazione": "LICEO ARTISTICO VIA LUCIANO MANARA, 10",
+   "elettori_m": 346,
+   "elettori_f": 404,
+   "elettori": 750
+  },
+  {
+   "numero": 38,
+   "scuola": "Primaria Edmondo De Amicis",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "ubicazione": "SCUOLA ELEM. \"DE AMICIS\" VIA DANTE ALIGHIERI, 5",
+   "elettori_m": 352,
+   "elettori_f": 417,
+   "elettori": 769
+  },
+  {
+   "numero": 39,
+   "scuola": "Primaria Edmondo De Amicis",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "ubicazione": "SCUOLA ELEM. \"DE AMICIS\" VIA DANTE ALIGHIERI, 5",
+   "elettori_m": 316,
+   "elettori_f": 368,
+   "elettori": 684
+  },
+  {
+   "numero": 40,
+   "scuola": "Primaria Edmondo De Amicis",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "ubicazione": "SCUOLA ELEM. \"DE AMICIS\" VIA DANTE ALIGHIERI, 5",
+   "elettori_m": 430,
+   "elettori_f": 456,
+   "elettori": 886
+  },
+  {
+   "numero": 41,
+   "scuola": "Primaria Edmondo De Amicis",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "ubicazione": "SCUOLA ELEM. \"DE AMICIS\" VIA DANTE ALIGHIERI, 5",
+   "elettori_m": 339,
+   "elettori_f": 382,
+   "elettori": 721
+  },
+  {
+   "numero": 42,
+   "scuola": "Primaria Edmondo De Amicis",
+   "gruppo": "Centro / Zona Stazione / Frati",
+   "ubicazione": "SCUOLA ELEM. \"DE AMICIS\" VIA DANTE ALIGHIERI, 5",
+   "elettori_m": 367,
+   "elettori_f": 417,
+   "elettori": 784
+  },
+  {
+   "numero": 43,
+   "scuola": "Pontida, via Pontida",
+   "gruppo": "San Michele / Centro Nord",
+   "ubicazione": "SC. ELEM. \"PONTIDA\" VIA PONTIDA, 1",
+   "elettori_m": 399,
+   "elettori_f": 447,
+   "elettori": 846
+  },
+  {
+   "numero": 44,
+   "scuola": "Pontida, via Pontida",
+   "gruppo": "San Michele / Centro Nord",
+   "ubicazione": "SC. ELEM. \"PONTIDA\" VIA PONTIDA, 1",
+   "elettori_m": 400,
+   "elettori_f": 442,
+   "elettori": 842
+  },
+  {
+   "numero": 45,
+   "scuola": "Pontida, via Pontida",
+   "gruppo": "San Michele / Centro Nord",
+   "ubicazione": "SC. ELEM. \"PONTIDA\" VIA PONTIDA, 1",
+   "elettori_m": 487,
+   "elettori_f": 549,
+   "elettori": 1036
+  },
+  {
+   "numero": 46,
+   "scuola": "Pontida, via Pontida",
+   "gruppo": "San Michele / Centro Nord",
+   "ubicazione": "SC. ELEM. \"PONTIDA\" VIA PONTIDA, 1",
+   "elettori_m": 472,
+   "elettori_f": 513,
+   "elettori": 985
+  },
+  {
+   "numero": 47,
+   "scuola": "Pontida, via Pontida",
+   "gruppo": "San Michele / Centro Nord",
+   "ubicazione": "SC. ELEM. \"PONTIDA\" VIA PONTIDA, 1",
+   "elettori_m": 401,
+   "elettori_f": 454,
+   "elettori": 855
+  },
+  {
+   "numero": 48,
+   "scuola": "Pontida, via Pontida",
+   "gruppo": "San Michele / Centro Nord",
+   "ubicazione": "SC. ELEM. \"PONTIDA\" VIA PONTIDA, 1",
+   "elettori_m": 407,
+   "elettori_f": 410,
+   "elettori": 817
+  },
+  {
+   "numero": 49,
+   "scuola": "Pontida, viale Montello",
+   "gruppo": "San Michele / Centro Nord",
+   "ubicazione": "SC. ELEM. \"PONTIDA\" VIALE MONTELLO, 11",
+   "elettori_m": 435,
+   "elettori_f": 520,
+   "elettori": 955
+  },
+  {
+   "numero": 50,
+   "scuola": "Pontida, viale Montello",
+   "gruppo": "San Michele / Centro Nord",
+   "ubicazione": "SC. ELEM. \"PONTIDA\" VIALE MONTELLO, 11",
+   "elettori_m": 421,
+   "elettori_f": 451,
+   "elettori": 872
+  },
+  {
+   "numero": 51,
+   "scuola": "Pontida, viale Montello",
+   "gruppo": "San Michele / Centro Nord",
+   "ubicazione": "SC. ELEM. \"PONTIDA\" VIALE MONTELLO, 11",
+   "elettori_m": 374,
+   "elettori_f": 429,
+   "elettori": 803
+  },
+  {
+   "numero": 52,
+   "scuola": "Sandro Pertini",
+   "gruppo": "Beata Giuliana",
+   "ubicazione": "SC. ELEM. \"S. PERTINI\" VIA GIOACCHINO ROSSINI, 115",
+   "elettori_m": 372,
+   "elettori_f": 407,
+   "elettori": 779
+  },
+  {
+   "numero": 53,
+   "scuola": "Sandro Pertini",
+   "gruppo": "Beata Giuliana",
+   "ubicazione": "SC. ELEM. \"S. PERTINI\" VIA GIOACCHINO ROSSINI, 115",
+   "elettori_m": 444,
+   "elettori_f": 486,
+   "elettori": 930
+  },
+  {
+   "numero": 54,
+   "scuola": "Sandro Pertini",
+   "gruppo": "Beata Giuliana",
+   "ubicazione": "SC. ELEM. \"S. PERTINI\" VIA GIOACCHINO ROSSINI, 115",
+   "elettori_m": 294,
+   "elettori_f": 346,
+   "elettori": 640
+  },
+  {
+   "numero": 55,
+   "scuola": "Sandro Pertini",
+   "gruppo": "Beata Giuliana",
+   "ubicazione": "SC. ELEM. \"S. PERTINI\" VIA GIOACCHINO ROSSINI, 115",
+   "elettori_m": 384,
+   "elettori_f": 400,
+   "elettori": 784
+  },
+  {
+   "numero": 56,
+   "scuola": "Sandro Pertini",
+   "gruppo": "Beata Giuliana",
+   "ubicazione": "SC. ELEM. \"S. PERTINI\" VIA GIOACCHINO ROSSINI, 115",
+   "elettori_m": 309,
+   "elettori_f": 335,
+   "elettori": 644
+  },
+  {
+   "numero": 57,
+   "scuola": "Giovanni Pascoli",
+   "gruppo": "Madonna Regina",
+   "ubicazione": "SC. ELEM. \"G. PASCOLI\" VIA SAMARATE, 110",
+   "elettori_m": 483,
+   "elettori_f": 492,
+   "elettori": 975
+  },
+  {
+   "numero": 58,
+   "scuola": "Giovanni Pascoli",
+   "gruppo": "Madonna Regina",
+   "ubicazione": "SC. ELEM. \"G. PASCOLI\" VIA SAMARATE, 110",
+   "elettori_m": 489,
+   "elettori_f": 545,
+   "elettori": 1034
+  },
+  {
+   "numero": 59,
+   "scuola": "Giovanni Pascoli",
+   "gruppo": "Madonna Regina",
+   "ubicazione": "SC. ELEM. \"G. PASCOLI\" VIA SAMARATE, 110",
+   "elettori_m": 415,
+   "elettori_f": 413,
+   "elettori": 828
+  },
+  {
+   "numero": 60,
+   "scuola": "Giovanni Pascoli",
+   "gruppo": "Madonna Regina",
+   "ubicazione": "SC. ELEM. \"G. PASCOLI\" VIA SAMARATE, 110",
+   "elettori_m": 413,
+   "elettori_f": 423,
+   "elettori": 836
+  },
+  {
+   "numero": 61,
+   "scuola": "Giovanni Pascoli",
+   "gruppo": "Madonna Regina",
+   "ubicazione": "SC. ELEM. \"G. PASCOLI\" VIA SAMARATE, 110",
+   "elettori_m": 447,
+   "elettori_f": 451,
+   "elettori": 898
+  },
+  {
+   "numero": 62,
+   "scuola": "Giovanni Pascoli",
+   "gruppo": "Madonna Regina",
+   "ubicazione": "SC. ELEM. \"G. PASCOLI\" VIA SAMARATE, 110",
+   "elettori_m": 343,
+   "elettori_f": 371,
+   "elettori": 714
+  },
+  {
+   "numero": 63,
+   "scuola": "Ada Negri",
+   "gruppo": "Sacconago",
+   "ubicazione": "SC. ELEM. \"A. NEGRI\" PIAZZA GIOVANNI VENTITREESIMO, 1",
+   "elettori_m": 290,
+   "elettori_f": 307,
+   "elettori": 597
+  },
+  {
+   "numero": 64,
+   "scuola": "Ada Negri",
+   "gruppo": "Sacconago",
+   "ubicazione": "SC. ELEM. \"A. NEGRI\" PIAZZA GIOVANNI VENTITREESIMO, 1",
+   "elettori_m": 318,
+   "elettori_f": 395,
+   "elettori": 713
+  },
+  {
+   "numero": 65,
+   "scuola": "Ada Negri",
+   "gruppo": "Sacconago",
+   "ubicazione": "SC. ELEM. \"A. NEGRI\" PIAZZA GIOVANNI VENTITREESIMO, 1",
+   "elettori_m": 335,
+   "elettori_f": 380,
+   "elettori": 715
+  },
+  {
+   "numero": 66,
+   "scuola": "Ada Negri",
+   "gruppo": "Sacconago",
+   "ubicazione": "SC. ELEM. \"A. NEGRI\" PIAZZA GIOVANNI VENTITREESIMO, 1",
+   "elettori_m": 281,
+   "elettori_f": 279,
+   "elettori": 560
+  },
+  {
+   "numero": 67,
+   "scuola": "Ada Negri",
+   "gruppo": "Sacconago",
+   "ubicazione": "SC. ELEM. \"A. NEGRI\" PIAZZA GIOVANNI VENTITREESIMO, 1",
+   "elettori_m": 393,
+   "elettori_f": 410,
+   "elettori": 803
+  },
+  {
+   "numero": 68,
+   "scuola": "Galilei / Parini",
+   "gruppo": "Sacconago",
+   "ubicazione": "SC. M. \"GALILEI/PARINI\" VIA GUGLIELMO QUADRELLI, 2",
+   "elettori_m": 283,
+   "elettori_f": 310,
+   "elettori": 593
+  },
+  {
+   "numero": 69,
+   "scuola": "Galilei / Parini",
+   "gruppo": "Sacconago",
+   "ubicazione": "SC. M. \"GALILEI/PARINI\" VIA GUGLIELMO QUADRELLI, 2",
+   "elettori_m": 374,
+   "elettori_f": 372,
+   "elettori": 746
+  },
+  {
+   "numero": 70,
+   "scuola": "Galilei / Parini",
+   "gruppo": "Sacconago",
+   "ubicazione": "SC. M. \"GALILEI/PARINI\" VIA GUGLIELMO QUADRELLI, 2",
+   "elettori_m": 471,
+   "elettori_f": 529,
+   "elettori": 1000
+  },
+  {
+   "numero": 71,
+   "scuola": "Galilei / Parini",
+   "gruppo": "Sacconago",
+   "ubicazione": "SC. M. \"GALILEI/PARINI\" VIA GUGLIELMO QUADRELLI, 2",
+   "elettori_m": 424,
+   "elettori_f": 451,
+   "elettori": 875
+  },
+  {
+   "numero": 72,
+   "scuola": "G. Rossi",
+   "gruppo": "Borsano",
+   "ubicazione": "SC. ELEM. \"G. ROSSI\" VIA GIULIANI E DALMATI, 1",
+   "elettori_m": 492,
+   "elettori_f": 499,
+   "elettori": 991
+  },
+  {
+   "numero": 73,
+   "scuola": "G. Rossi",
+   "gruppo": "Borsano",
+   "ubicazione": "SC. ELEM. \"G. ROSSI\" VIA GIULIANI E DALMATI, 1",
+   "elettori_m": 455,
+   "elettori_f": 447,
+   "elettori": 902
+  },
+  {
+   "numero": 74,
+   "scuola": "G. Rossi",
+   "gruppo": "Borsano",
+   "ubicazione": "SC. ELEM. \"G. ROSSI\" VIA GIULIANI E DALMATI, 1",
+   "elettori_m": 425,
+   "elettori_f": 431,
+   "elettori": 856
+  },
+  {
+   "numero": 75,
+   "scuola": "G. Rossi",
+   "gruppo": "Borsano",
+   "ubicazione": "SC. ELEM. \"G. ROSSI\" VIA GIULIANI E DALMATI, 1",
+   "elettori_m": 376,
+   "elettori_f": 399,
+   "elettori": 775
+  },
+  {
+   "numero": 76,
+   "scuola": "G. Rossi",
+   "gruppo": "Borsano",
+   "ubicazione": "SC. ELEM. \"G. ROSSI\" VIA GIULIANI E DALMATI, 1",
+   "elettori_m": 467,
+   "elettori_f": 477,
+   "elettori": 944
+  },
+  {
+   "numero": 77,
+   "scuola": "G. Rossi",
+   "gruppo": "Borsano",
+   "ubicazione": "SC. ELEM. \"G. ROSSI\" VIA GIULIANI E DALMATI, 1",
+   "elettori_m": 316,
+   "elettori_f": 365,
+   "elettori": 681
+  },
+  {
+   "numero": 78,
+   "scuola": "Biagio Bellotti",
+   "gruppo": "Sant’Edoardo",
+   "ubicazione": "SC. MEDIA \"B. BELLOTTI\" VIA BUSONA, 14",
+   "elettori_m": 346,
+   "elettori_f": 333,
+   "elettori": 679
+  },
+  {
+   "numero": 79,
+   "scuola": "Biagio Bellotti",
+   "gruppo": "Sant’Edoardo",
+   "ubicazione": "SC. MEDIA \"B. BELLOTTI\" VIA BUSONA, 14",
+   "elettori_m": 378,
+   "elettori_f": 432,
+   "elettori": 810
+  },
+  {
+   "numero": 80,
+   "scuola": "Biagio Bellotti",
+   "gruppo": "Sant’Edoardo",
+   "ubicazione": "SC. MEDIA \"B. BELLOTTI\" VIA BUSONA, 14",
+   "elettori_m": 429,
+   "elettori_f": 480,
+   "elettori": 909
+  },
+  {
+   "numero": 81,
+   "scuola": "Biagio Bellotti",
+   "gruppo": "Sant’Edoardo",
+   "ubicazione": "SC. MEDIA \"B. BELLOTTI\" VIA BUSONA, 14",
+   "elettori_m": 459,
+   "elettori_f": 468,
+   "elettori": 927
+  }
+ ]
+}

@@ -525,3 +525,30 @@ td { color: #212529; }
     .filter-name-tag { font-size: 0.8rem; padding: 5px 8px; }
     .filter-operator-select, .filter-value-input { font-size: 0.8rem; }
 }
+
+/* Popolazione (popolazione.html) */
+.population h2 { margin-top: 0; }
+.population-intro { max-width: 760px; }
+.population-figures { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 16px 0 24px; }
+.population-figure { background: #fff; border: 1px solid #e3e3e3; border-radius: 4px; padding: 12px 15px; }
+.population-figure p { margin: 0; }
+.population-figure-value { font-size: 1.6em; font-weight: 700; font-variant-numeric: tabular-nums; }
+.population-figure-label { font-weight: 600; }
+.population-section { margin-bottom: 28px; }
+.population-section h3 { font-size: 1.15em; margin: 0 0 6px; }
+.population-table caption { text-align: left; font-weight: 600; padding: 6px 0; caption-side: top; }
+.population-table .num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.population-table tbody th { background: #fff; font-weight: 600; }
+.population-table td a { color: #0056b3; }
+.population-bar-cell { display: inline-flex; align-items: center; justify-content: flex-end; gap: 8px; }
+.population-bar-track { width: 90px; flex: none; }
+.population-bar { display: block; height: 12px; background: #2a78d6; border-radius: 0 4px 4px 0; min-width: 2px; }
+.population-section summary { cursor: pointer; font-weight: 600; font-size: 1.05em; padding: 6px 0; }
+.population-section summary:focus-visible { outline: 2px solid #0d5bb8; outline-offset: 2px; }
+#population-schools td:last-child { min-width: 260px; }
+@media (max-width: 600px) {
+    /* Sul telefono restano gruppo, elettori e residenti stimati: sezioni e quota sono nel file scaricabile */
+    #population-groups th:nth-child(2), #population-groups td:nth-child(2),
+    #population-groups th:nth-child(4), #population-groups td:nth-child(4) { display: none; }
+    .population-bar-track { width: 48px; }
+}
