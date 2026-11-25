@@ -332,9 +332,8 @@ body {
 .map-filter.news-filter { align-items: flex-start; flex-wrap: nowrap; margin-bottom: 10px; }
 .news-filter .map-source-label { line-height: 40px; }
 .news-filter-options { display: flex; flex-wrap: nowrap; gap: 8px; flex: 1 1 0; min-width: 0; overflow-x: auto; padding: 2px 2px 6px; scrollbar-width: thin; }
-.news-filter-options label { flex: none; }
 .news-filter-text { display: block; max-width: 12em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.news-filter-options label { position: relative; cursor: pointer; }
+.news-filter-options label { flex: none; position: relative; cursor: pointer; }
 .news-filter-options input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .news-filter-options label > span { display: inline-flex; white-space: nowrap; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; font-weight: 400;
     border: 1px solid #8a8984; border-radius: 20px; background: #fff; color: #222; }

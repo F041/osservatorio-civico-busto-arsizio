@@ -14,7 +14,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from conciliazione import carica_mappa, compatta, quadrati, raggruppa  # noqa: E402
+from conciliazione import aggancia_seguiti, carica_mappa, compatta, quadrati, raggruppa  # noqa: E402
 
 # Decisioni dell'utente del 24/11/2026: soglia 2, perché i fatti nelle notizie sono pochi e sparsi su molte vie (le
 # segnalazioni dei cittadini restano a 3); periodo scelto a mano sulla mappa, fino a un anno indietro
@@ -46,7 +46,7 @@ def costruisci(righe, mappa, adesso):
     oggi = adesso.date()
     inizio = oggi - timedelta(days=FINESTRA_GIORNI)
     fatti = []
-    for gruppo in raggruppa(episodi_validi(righe, mappa, inizio, oggi), mappa):
+    for gruppo in aggancia_seguiti(raggruppa(episodi_validi(righe, mappa, inizio, oggi), mappa)):
         # Il fatto va sulla via nominata da più articoli; a pari merito (due vie dello stesso incrocio) sulla più
         # corta, la più precisa
         per_via = {}

@@ -113,16 +113,13 @@ def raggruppa(episodi, mappa):
     gruppi = {}
     for i, e in enumerate(episodi):
         gruppi.setdefault(radice(i), []).append(e)
-    return aggancia_seguiti(list(gruppi.values()))
+    return list(gruppi.values())
 
 
 def aggancia_seguiti(gruppi):
     """Un fatto raccontato solo da articoli senza data (vale il giorno di pubblicazione) è spesso un seguito non
     riconosciuto: se nei GIORNI_SEGUITO giorni prima c'è un fatto dello stesso tipo nella stessa via, si unisce a quello,
-    il più vicino."""
-    # La prova (valutazione/punteggio.py) lascia episodi senza data: lì non si aggancia niente
-    if any(not e.get('data') for g in gruppi for e in g):
-        return gruppi
+    il più vicino. Serve che ogni episodio abbia una data (build_notizie mette quella di pubblicazione)."""
     senza = lambda g: all(e.get('senza_data') for e in g)
     giorno = lambda g: date.fromisoformat(min(e['data'] for e in g))
     # In ordine di giorno, i fatti datati prima: un seguito si aggancia anche a un fatto senza data uscito prima

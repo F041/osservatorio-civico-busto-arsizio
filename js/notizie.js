@@ -66,6 +66,13 @@ function metaLinea(linee) {
     return linea[Math.floor(linea.length / 2)];
 }
 const PRESET = [['1m', '1 mese', 30], ['3m', '3 mesi', 91], ['6m', '6 mesi', 182], ['tutto', 'Tutto', Infinity]];
+// Periodo con cui si apre la vista
+const PREDEFINITO = '6m';
+// Misure dei gruppi di icone sulla mappa, come in css/style.css (.news-pin 24 px, gap 2 px), più un margine:
+// servono a capire quali gruppi si accavallano
+const ICONA_PASSO = 26;
+const ICONA_ALTEZZA = 30;
+const ICONA_SOPRA_LUOGO = 40;
 const MIN_GIORNI = 7;
 
 // Quattro intensità di una sola tinta, dalla più chiara, tutte con contrasto >= 3:1 sul fondo della mappa
@@ -136,7 +143,7 @@ function navigatore(dati, cambia) {
         massimo = Math.max(1, ...settimane);
     }
     calcolaSerie(dati.fatti);
-    let da = Math.max(d0, d1 - 182);
+    let da = Math.max(d0, d1 - PRESET.find(([valore]) => valore === PREDEFINITO)[2]);
     let a = d1;
 
     const blocco = crea('div', 'news-nav-block');
@@ -152,6 +159,7 @@ function navigatore(dati, cambia) {
         input.type = 'radio';
         input.name = 'news-period';
         input.value = valore;
+        input.checked = valore === PREDEFINITO;
         input.addEventListener('change', () => imposta(Math.max(d0, d1 - giorni), d1, valore));
         label.append(input, crea('span', '', testo));
         gruppo.append(label);
@@ -280,7 +288,6 @@ function navigatore(dati, cambia) {
     return {
         blocco,
         riassunto,
-        avvia: () => imposta(da, a, '6m'),
         serie: fatti => { calcolaSerie(fatti); disegnaFondo(); },
         periodo: () => [da, a],
     };
@@ -305,7 +312,8 @@ export function creaVistaNotizie(dati, mappa, leggiMappa, mapDiv) {
         const messi = [];
         for (const { marker, quante, luogo } of icone) {
             const p = map.latLngToLayerPoint(marker.getLatLng());
-            const box = { x: p.x - quante * 13 - 3, y: p.y - (luogo ? 40 : 15), w: quante * 26 + 6, h: 30 };
+            const w = quante * ICONA_PASSO + 6;
+            const box = { x: p.x - w / 2, y: p.y - (luogo ? ICONA_SOPRA_LUOGO : ICONA_ALTEZZA / 2), w, h: ICONA_ALTEZZA };
             const urta = messi.some(m => box.x < m.x + m.w && m.x < box.x + box.w && box.y < m.y + m.h && m.y < box.y + box.h);
             if (urta) stratoIcone.removeLayer(marker);
             else { stratoIcone.addLayer(marker); messi.push(box); }
@@ -577,9 +585,8 @@ export function creaVistaNotizie(dati, mappa, leggiMappa, mapDiv) {
         }
         elenco.append(tabella);
     }
-    // Si parte dagli ultimi sei mesi; i dati della mappa servono subito per inquadrare le vie
-    disegna(Math.max(giorno(dati.da), giorno(dati.a) - 182), giorno(dati.a));
-    nav.avvia();
+    // Si disegna subito il periodo predefinito: i limiti delle vie servono per inquadrare la mappa
+    disegna(...nav.periodo());
 
     const limitiTutti = () => {
         const tutti = [...segni.values()].map(s => s.limiti);

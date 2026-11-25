@@ -254,8 +254,16 @@ function mapCard(data, mappa, notizie, applicaVista) {
     reset.addEventListener('click', () => { mostra(''); select.focus(); });
     mostra(new URLSearchParams(location.search).get('mostra') ?? '');
 
+    // La vista Notizie è facoltativa: se i suoi dati sono rotti la pagina resta con le sole segnalazioni
+    let vista = null;
     if (notizie) {
-        const vista = creaVistaNotizie(notizie, mappa, () => map, mapDiv);
+        try {
+            vista = creaVistaNotizie(notizie, mappa, () => map, mapDiv);
+        } catch (err) {
+            console.error('Vista Notizie non disponibile', err);
+        }
+    }
+    if (vista) {
         vista.pannello.hidden = true;
         vista.filtro.hidden = true;
         section.append(vista.pannello);
@@ -307,8 +315,10 @@ function mapCard(data, mappa, notizie, applicaVista) {
 Promise.all([
     fetch('data/sicurezza.json').then(response => { if (!response.ok) throw new Error(`HTTP ${response.status}`); return response.json(); }),
     caricaMappa(),
-    // Facoltativo: senza questo file la pagina mostra solo le segnalazioni
-    fetch('data/notizie.json').then(response => (response.ok ? response.json() : null)).catch(() => null),
+    // Facoltativo: senza questo file, o con una struttura diversa da quella di build_notizie.py, solo le segnalazioni
+    fetch('data/notizie.json').then(response => (response.ok ? response.json() : null))
+        .then(n => (n && Array.isArray(n.fatti) && [n.da, n.a, n.generato].every(v => typeof v === 'string') ? n : null))
+        .catch(() => null),
 ])
     .then(([data, mappa, notizie]) => {
         overview.replaceChildren();
