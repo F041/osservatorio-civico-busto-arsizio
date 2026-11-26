@@ -19,7 +19,8 @@ Fonti e scelte, verificate a novembre 2026 (tra parentesi quanto copriva ogni el
 - VareseNews: il feed del tag Busto è vietato dal robots.txt (/*/feed/$). Si legge il feed generale,
   tenendo la categoria "Busto Arsizio/Altomilanese" (circa 20 ore), e la pagina del tag Busto per i
   restanti (circa 2 giorni, senza data né riassunto).
-I documenti più vecchi di CONSERVAZIONE_GIORNI vengono cancellati, come le segnalazioni.
+Gli articoli usciti da più di CONSERVAZIONE_GIORNI (o raccolti da più di tanto, se manca la data di uscita) vengono
+cancellati: il link contiene il titolo, spesso con nomi di persone.
 """
 import hashlib
 import html
@@ -35,7 +36,9 @@ from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 
 USER_AGENT = 'OsservatorioCivicoBusto/0.1 (+https://f041.github.io/osservatorio-civico-busto-arsizio/)'
-CONSERVAZIONE_GIORNI = 365
+# Decisione dell'utente del 26/11/2026: 24 mesi dall'uscita dell'articolo, scritto in privacy.html. Ne dipendono il periodo
+# della mappa (build_notizie.py) e il recupero dello storico (valutazione/storico_2026.py)
+CONSERVAZIONE_GIORNI = 730
 MAX_SOMMARIO = 500
 CAMPI_SALVATI = ('fonte', 'url', 'pubblicato', 'visto')
 PROJECT_ID = 'osservatorio-civico-busto'
@@ -196,7 +199,13 @@ def gia_salvati(client, articoli):
 
 def cancella_scaduti(client, limite):
     from google.cloud.firestore_v1.base_query import FieldFilter
-    scaduti = [d.reference for d in client.collection(COLLEZIONE).where(filter=FieldFilter('visto', '<', limite)).stream()]
+    # Conta l'uscita dell'articolo: un articolo vecchio recuperato oggi non deve restare altri 24 mesi. Senza data di
+    # uscita conta il giorno della raccolta
+    collezione = client.collection(COLLEZIONE)
+    scaduti = {d.id: d.reference for campo in ('pubblicato', 'visto')
+               for d in collezione.where(filter=FieldFilter(campo, '<', limite)).stream()
+               if campo == 'pubblicato' or not (d.to_dict() or {}).get('pubblicato')}
+    scaduti = list(scaduti.values())
     for blocco in a_blocchi(scaduti):
         scrittura = client.batch()
         for riferimento in blocco:

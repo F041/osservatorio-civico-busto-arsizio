@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Recupero degli ultimi 365 giorni (all'inizio solo il 2026, da qui i nomi dei file) per Malpensa24, Prealpina e VareseNews, poi testi e analisi. Rilanciato, riparte da dove era.
+# Recupero del periodo tenuto dalla raccolta, 24 mesi (all'inizio solo il 2026, da qui i nomi dei file), per Malpensa24, Prealpina e VareseNews, poi testi e analisi. Rilanciato, riparte da dove era.
 # Uso, da Git Bash nella cartella del repo: bash valutazione/recupero_veloci.sh
 # L'avanzamento finisce anche in valutazione/dati/veloci-2026.log
 set -u
@@ -15,7 +15,7 @@ passo() { echo "== $(date '+%d/%m %H:%M') $*"; }
 passo "1. copia locale dell'elenco attuale (date già note)"
 py $FS python -I valutazione/storico_2026.py esporta "$D/articoli-2026.jsonl"
 
-passo "2. elenco dal 01/01"
+passo "2. elenco dall'inizio del periodo"
 py $FS python -I valutazione/storico_2026.py veloci "$D/articoli-2026.jsonl"
 
 passo "3. copia locale dell'elenco nuovo"

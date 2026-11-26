@@ -7,8 +7,8 @@ Uso, dalla cartella del repo:
   ... storico_2026.py ilbustese
   ... storico_2026.py esporta valutazione/dati/articoli-2026.jsonl
 
-Il recupero copre gli ultimi 365 giorni, quanti ne mostra la mappa (FINESTRA_GIORNI in scripts/build_notizie.py): nato
-per il 2026, il 25/11/2026 è stato allungato fino al 25/11/2025. I nomi dei file restano quelli del 2026.
+Il recupero copre quanto la raccolta tiene gli articoli e mostra la mappa (CONSERVAZIONE_GIORNI in
+scripts/raccogli_notizie.py, 24 mesi dal 26/11/2026). Nato per il 2026, da qui i nomi dei file.
 veloci: Malpensa24, VareseNews e Prealpina dall'inizio della finestra, in un solo giro (qualche ora per Prealpina).
 ilbustese: l'archivio un giorno alla volta, dal 25/08 (i giorni dopo sono già nell'elenco) indietro fino all'inizio
   della finestra.
@@ -31,7 +31,7 @@ sys.path.insert(0, str(QUI.parent / 'scripts'))
 import raccogli_notizie as r  # noqa: E402
 import storico_notizie as s  # noqa: E402
 
-INIZIO = date.today() - timedelta(days=365)
+INIZIO = date.today() - timedelta(days=r.CONSERVAZIONE_GIORNI)
 DAL = f'{INIZIO.isoformat()}T00:00:00+00:00'
 ILBUSTESE_DA = date(2026, 8, 25)
 ILBUSTESE_FINO = INIZIO

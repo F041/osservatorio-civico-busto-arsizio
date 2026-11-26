@@ -88,7 +88,7 @@ Decisioni prese con l'utente a novembre 2026:
   mancano, verificato il 25/11/2026). La mappa mostra i nomi, mai confini stimati. Icone dei tipi: Lucide (ISC), nel filtro, nelle tabelle e
   sulla mappa (una per tipo, affiancate sulla stessa via; quelle che si accavallano si nascondono, prima le vie con più fatti).
 - Dati della vista: `scripts/conciliazione.py` unisce gli episodi, `scripts/build_notizie.py` scrive i fatti
-  (via, giorno, tipo, link) degli ultimi 365 giorni, quanti ne tiene la raccolta. Il navigatore del periodo sotto la
+  (via, giorno, tipo, link) degli ultimi 24 mesi, quanti ne tiene la raccolta (CONSERVAZIONE_GIORNI in raccogli_notizie.py). Il navigatore del periodo sotto la
   mappa (1 mese, 3 mesi, 6 mesi, Tutto, o maniglie trascinabili) conta le vie nel browser. Che i singoli fatti
   siano leggibili nel file, sotto la soglia, va bene (decisione dell'utente del 25/11/2026). `data/notizie.json` non va mai nel
   repo: si genera durante la pubblicazione del sito (decisione del 24/11/2026), così i link spariscono davvero
@@ -97,7 +97,8 @@ Decisioni prese con l'utente a novembre 2026:
   dell'archivio; feed e mappa del sito no). Non fingersi un browser: si scarica da solo, a parte e con calma.
   Prealpina: le mappe del sito più vecchie non hanno date, si leggono dalla pagina dell'articolo.
 - Revisione umana: gli episodi nuovi arrivano in una pull request, pubblicati solo dopo l'approvazione.
-- Dati personali: mai nomi o età, solo i campi dello schema e il link; cancellazione dopo 12 mesi.
+- Dati personali: mai nomi o età, solo i campi dello schema e il link. Articoli e link si cancellano 24 mesi dopo l'uscita
+  (decisione dell'utente del 26/11/2026, scritta in privacy.html; le segnalazioni restano a 12 mesi).
   Link agli articoli solo nel dettaglio della singola via. Soglia 2 per le notizie (decisione dell'utente del
   24/11/2026: fatti pochi e sparsi), 3 per le segnalazioni dei cittadini.
 - Diritto d'autore: il testo serve solo a estrarre i fatti, non si ripubblica né si conserva.
@@ -108,8 +109,8 @@ Decisioni prese con l'utente a novembre 2026:
 - Storico per la prova: `scripts/storico_notizie.py` recupera a mano gli ultimi N giorni dagli archivi delle testate
   nella stessa collezione della raccolta (994 articoli per i 30 giorni fino al 13/11/2026). Copia locale per le
   prove: `python scripts/raccogli_notizie.py --esporta valutazione/dati/articoli.jsonl`.
-  Gli ultimi 365 giorni, quanti ne mostra la mappa (dal 25/11/2026; prima solo il 2026, da qui i nomi dei file):
+  Gli ultimi 24 mesi, quanti ne mostra la mappa (dal 26/11/2026; prima solo il 2026, da qui i nomi dei file):
   `bash valutazione/recupero_veloci.sh` per Malpensa24, Prealpina e VareseNews;
   `bash valutazione/riprendi_ilbustese.sh` per ilBustese, che richiede più giorni: si ferma quando si vuole e riparte
   da dove era. Anteprima locale: `valutazione/episodi_anteprima.py`, poi `scripts/build_notizie.py`.
-- La nuova fonte va spiegata in "Come funziona e privacy".
+- La nuova fonte è spiegata in "Come funziona e privacy" (26/11/2026): se cambia qualcosa, aggiorna anche quel testo.

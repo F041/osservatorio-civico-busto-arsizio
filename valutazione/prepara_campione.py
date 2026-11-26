@@ -15,7 +15,7 @@ Nuovi: gli articoli raccolti dopo i campioni precedenti, mai usati per scrivere 
 Storico90: gli articoli dello storico a 90 giorni non presenti in nessun file precedente (id v001...).
 Storico150: lo storico dal 26/06; `... storico150 ilbustese` per ilBustese da solo (id x...), senza testata per le
 altre (id w...). ilBustese rallenta molto le richieste in blocco e si scarica a parte.
-Storico2026: gli ultimi 365 giorni non ancora scaricati (prima solo il 2026, da qui il nome), dal più recente; `... storico2026 ilbustese` per ilBustese (id y + 10
+Storico2026: il periodo tenuto dalla raccolta non ancora scaricato (prima solo il 2026, da qui il nome), dal più recente; `... storico2026 ilbustese` per ilBustese (id y + 10
 cifre del link), senza testata per le altre (id z...). Si può interrompere e rilanciare: riparte da dove era.
 I testi finiscono in valutazione/dati/, esclusa da git: servono solo alla prova e poi si cancellano.
 """
@@ -33,7 +33,7 @@ from pathlib import Path
 import trafilatura
 
 sys.path.insert(0, str(Path(__file__).parents[1] / 'scripts'))
-from raccogli_notizie import scarica_entro  # noqa: E402
+from raccogli_notizie import CONSERVAZIONE_GIORNI, scarica_entro  # noqa: E402
 
 SEME = 20261113
 DATI = Path(__file__).parent / 'dati'
@@ -81,10 +81,10 @@ def main(percorso, quale='80', fonti=''):
         gia = gia_scelti('campione.jsonl', 'campione-arricchito.jsonl', 'testi-resto.jsonl', 'testi-nuovi.jsonl')
         scelti, uscita, prefisso = [a for a in articoli if a['url'] not in gia], DATI / 'testi-storico90.jsonl', 'v'
     elif quale == 'storico2026':
-        # Gli ultimi 365 giorni, in più giri: l'id viene dal link e non dalla posizione nell'elenco, così resta lo stesso anche se
+        # Il periodo tenuto dalla raccolta (CONSERVAZIONE_GIORNI), in più giri: l'id viene dal link e non dalla posizione nell'elenco, così resta lo stesso anche se
         # l'elenco cresce fra un giro e l'altro. Si scaricano prima i più recenti
         solo_ilbustese = fonti == 'ilbustese'
-        inizio = (date.today() - timedelta(days=365)).isoformat()
+        inizio = (date.today() - timedelta(days=CONSERVAZIONE_GIORNI)).isoformat()
         uscita = DATI / f"testi-storico2026-{'ilbustese' if solo_ilbustese else 'altre'}.jsonl"
         gia = gia_scelti(*(p.name for p in DATI.glob('*.jsonl')
                            if p.name.startswith(('testi-', 'campione')) and p.name != uscita.name))

@@ -15,11 +15,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from conciliazione import aggancia_seguiti, carica_mappa, compatta, quadrati, raggruppa  # noqa: E402
+from raccogli_notizie import CONSERVAZIONE_GIORNI  # noqa: E402
 
 # Decisioni dell'utente del 24/11/2026: soglia 2, perché i fatti nelle notizie sono pochi e sparsi su molte vie (le
-# segnalazioni dei cittadini restano a 3); periodo scelto a mano sulla mappa, fino a un anno indietro
+# segnalazioni dei cittadini restano a 3); periodo scelto a mano sulla mappa. La mappa arriva indietro quanto la raccolta tiene gli articoli (24 mesi)
 SOGLIA = 2
-FINESTRA_GIORNI = 365
+FINESTRA_GIORNI = CONSERVAZIONE_GIORNI
 RIASSUNTI = ('prealpina.it/video/tg/',)
 
 

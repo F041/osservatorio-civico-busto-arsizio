@@ -59,6 +59,18 @@
                 Nascondiamo anche i numeri che si potrebbero ricavare per sottrazione da quelli visibili.
                 Le singole segnalazioni non sono mai pubblicate.</p>
 
+            <h2>I fatti raccontati dai giornali</h2>
+            <p>La mappa ha una seconda fonte, separata dalle segnalazioni: i fatti raccontati da quattro testate locali,
+                ilBustese, Malpensa24, Prealpina e VareseNews. Ogni giorno raccogliamo l'elenco dei loro articoli: testata, link e date.</p>
+            <p>Gli articoli che nominano Busto e una sua via o un suo luogo li legge un modello linguistico, Claude di Anthropic.
+                Ne ricava solo i campi della mappa: tipo di fatto, giorno, fascia oraria e via. Il testo serve solo a questo:
+                non lo conserviamo e non lo pubblichiamo. Una persona controlla i fatti trovati prima che vadano sul sito.</p>
+            <p>Per ogni fatto pubblichiamo via, giorno, tipo e link agli articoli che lo raccontano. Sulla mappa compaiono
+                solo le vie con almeno 2 fatti nel periodo scelto. Non pubblichiamo nomi, età o altri dettagli sulle persone.
+                I conteggi delle notizie non si sommano mai a quelli delle segnalazioni.</p>
+            <p>Il link di un articolo contiene di solito il titolo, che a volte nomina le persone coinvolte. Per questo
+                l'elenco degli articoli sta fuori dal codice pubblico del sito e i link si cancellano 24 mesi dopo l'uscita dell'articolo.</p>
+
             <h2>Dove sono conservati i dati e per quanto</h2>
             <p>Su Google Firebase (Cloud Firestore), con i server a Milano. Google tratta i dati per nostro conto come responsabile del trattamento,
                 secondo i suoi termini per il trattamento dei dati. Per consegnare la richiesta, i server di Google ricevono anche dati tecnici
@@ -69,6 +81,8 @@
                 Valgono le <a href="https://policies.google.com/privacy?hl=it" target="_blank" rel="noopener">norme sulla privacy</a>
                 e i <a href="https://policies.google.com/terms?hl=it" target="_blank" rel="noopener">termini di servizio</a> di Google.</p>
             <p>Le singole segnalazioni vengono cancellate automaticamente dopo 12 mesi. I conteggi già pubblicati restano.</p>
+            <p>L'elenco degli articoli dei giornali sta nello stesso database, in una raccolta che il sito non può leggere.
+                Ogni articolo e il suo link vengono cancellati in automatico 24 mesi dopo l'uscita.</p>
 
             <h2>Perché e su quale base</h2>
             <p>Per descrivere, in forma aggregata, dove e quando a Busto Arsizio ci si sente insicuri, a fini di informazione civica.
@@ -78,6 +92,7 @@
             <p>Le segnalazioni non contengono dati che ti identificano, quindi non possiamo ritrovare la tua per mostrarla, correggerla o cancellarla
                 (art. 11 GDPR). Puoi comunque scriverci per qualsiasi domanda e hai diritto di proporre reclamo al
                 <a href="https://www.garanteprivacy.it" target="_blank" rel="noopener">Garante per la protezione dei dati personali</a>.</p>
+            <p>Se un articolo collegato dalla mappa parla di te, puoi chiederci di togliere il suo link prima dei 24 mesi.</p>
 
             <h2>Chi è il titolare</h2>
             <p>[Nome e cognome o associazione] – contatto: [email].</p>
