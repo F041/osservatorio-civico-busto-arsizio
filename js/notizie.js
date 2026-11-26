@@ -91,14 +91,10 @@ function crea(tag, classe, testo) {
     return el;
 }
 
-// Tipi con almeno `soglia` fatti. Se i tipi nascosti sommassero a meno della soglia, chi sottrae dal totale
-// ricaverebbe un numero sotto soglia: in quel caso si nasconde anche il tipo visibile più piccolo
-function tipiPubblici(conteggi, totale, soglia) {
-    const visibili = Object.entries(conteggi).filter(([, n]) => n >= soglia).sort((x, y) => y[1] - x[1]);
-    const nascosti = totale - visibili.reduce((s, [, n]) => s + n, 0);
-    if (visibili.length && nascosti > 0 && nascosti < soglia) visibili.pop();
-    return visibili;
-}
+// Gli allagamenti non sono reati: "Tutti" li lascia fuori, si vedono solo scegliendo il loro tipo (decisione
+// dell'utente del 26/11/2026)
+const A_PARTE = new Set(['allagamento']);
+const diTipo = (fatti, tipo) => fatti.filter(f => (tipo ? f.tipo === tipo : !A_PARTE.has(f.tipo)));
 
 // Vie e luoghi con almeno `soglia` fatti tra i giorni `da` e `a` compresi
 function vieNelPeriodo(fatti, da, a, soglia) {
@@ -121,7 +117,8 @@ function vieNelPeriodo(fatti, da, a, soglia) {
             fatti: lista.length,
             da: giorni[0],
             a: giorni[giorni.length - 1],
-            tipi: tipiPubblici(conteggi, lista.length, soglia),
+            // Tutti i tipi, anche con un fatto solo: i singoli fatti sono già nel file (decisione dell'utente del 26/11/2026)
+            tipi: Object.entries(conteggi).sort((x, y) => y[1] - x[1]),
             articoli: [...articoli.values()].sort((x, y) => (y.data + y.fonte).localeCompare(x.data + x.fonte)),
         });
     }
@@ -142,7 +139,7 @@ function navigatore(dati, cambia) {
         for (const f of fatti) settimane[tra(Math.floor((giorno(f.data) - d0) / 7), 0, settimane.length - 1)] += 1;
         massimo = Math.max(1, ...settimane);
     }
-    calcolaSerie(dati.fatti);
+    calcolaSerie(diTipo(dati.fatti, ''));
     let da = Math.max(d0, d1 - PRESET.find(([valore]) => valore === PREDEFINITO)[2]);
     let a = d1;
 
@@ -355,7 +352,8 @@ export function creaVistaNotizie(dati, mappa, leggiMappa, mapDiv) {
     scelte.setAttribute('role', 'radiogroup');
     scelte.setAttribute('aria-labelledby', etichettaFiltro.id);
     const presenti = new Set(dati.fatti.map(f => f.tipo));
-    const opzioni = [['', 'Tutti'], ...Object.entries(TIPI).filter(([id]) => presenti.has(id))];
+    const tipiPresenti = Object.entries(TIPI).filter(([id]) => presenti.has(id));
+    const opzioni = [['', 'Tutti'], ...tipiPresenti.filter(([id]) => !A_PARTE.has(id)), ...tipiPresenti.filter(([id]) => A_PARTE.has(id))];
     const radio = opzioni.map(([id, testo]) => {
         const label = crea('label');
         const input = crea('input');
@@ -368,14 +366,16 @@ export function creaVistaNotizie(dati, mappa, leggiMappa, mapDiv) {
         if (id) nome.append(icona(id));
         const parole = crea('span', 'news-filter-text', TIPI_BREVI[id] ?? testo);
         nome.append(parole);
-        if (id) label.title = testo;
+        label.title = id ? testo : 'Tutti i tipi, tranne gli allagamenti';
+        // Gli allagamenti stanno in fondo, separati dai tipi che contano in "Tutti"
+        if (A_PARTE.has(id)) label.className = 'news-filter-apart';
         label.append(input, nome);
         scelte.append(label);
         return input;
     });
     filtro.append(etichettaFiltro, scelte);
     let tipoScelto = '';
-    const fattiScelti = () => (tipoScelto ? dati.fatti.filter(f => f.tipo === tipoScelto) : dati.fatti);
+    const fattiScelti = () => diTipo(dati.fatti, tipoScelto);
     function scegli(id) {
         tipoScelto = id;
         for (const r of radio) r.checked = r.value === id;
@@ -454,13 +454,13 @@ export function creaVistaNotizie(dati, mappa, leggiMappa, mapDiv) {
         for (const [t, n] of righe) {
             const riga = tabella.insertRow();
             // Con un tipo scelto gli altri restano come contesto, in grigio: la mappa e il riassunto contano solo quello
-            const spento = Boolean(tipoScelto) && t !== tipoScelto;
+            const spento = tipoScelto ? t !== tipoScelto : A_PARTE.has(t);
             if (spento) riga.className = 'news-type-off';
             const intestazione = crea('th');
             intestazione.scope = 'row';
             const bottone = crea('button', 'link-button');
             bottone.type = 'button';
-            bottone.title = tipoScelto === t ? 'Torna a tutti i fatti' : 'Mostra solo questo tipo sulla mappa';
+            bottone.title = tipoScelto === t ? 'Torna a tutti i tipi' : 'Mostra solo questo tipo sulla mappa';
             bottone.setAttribute('aria-pressed', String(tipoScelto === t));
             bottone.append(conIcona(t, TIPI[t] ?? t));
             bottone.addEventListener('click', () => scegli(tipoScelto === t ? '' : t));
@@ -484,8 +484,10 @@ export function creaVistaNotizie(dati, mappa, leggiMappa, mapDiv) {
         const nelPeriodo = fatti.filter(f => giorno(f.data) >= da && giorno(f.data) <= a);
         const quanteVie = new Set(nelPeriodo.map(f => f.via)).size;
         const tipo = tipoScelto ? ` (${TIPI[tipoScelto].toLowerCase()})` : '';
+        const esclusi = !tipoScelto && dati.fatti.some(f => A_PARTE.has(f.tipo) && giorno(f.data) >= da && giorno(f.data) <= a)
+            ? ', senza contare gli allagamenti' : '';
         nav.riassunto.textContent = `Dal ${formatDate(iso(da))} al ${formatDate(iso(a))}: ${quantiFatti(nelPeriodo.length)}` +
-            `${tipo} in tutta Busto, in ${integer.format(quanteVie)} ${quanteVie === 1 ? 'via o luogo' : 'vie e luoghi'}.`;
+            `${tipo} in tutta Busto, in ${integer.format(quanteVie)} ${quanteVie === 1 ? 'via o luogo' : 'vie e luoghi'}${esclusi}.`;
         pannello.dispatchEvent(new CustomEvent('periodo', { detail: { da: iso(da), a: iso(a) } }));
         disegnaTipi(da, a);
         const vie = vieNelPeriodo(fatti, da, a, dati.soglia);

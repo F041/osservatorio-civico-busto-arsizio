@@ -80,7 +80,9 @@ Decisioni prese con l'utente a novembre 2026:
   stazione o col treno fermo a Busto (decisione dell'utente); commenti e reazioni a un fatto già raccontato sono seguiti.
   I rifiuti abbandonati restano in "Vandalismo o degrado" (decisione dell'utente del 25/11/2026). Categoria
   "Allagamento" solo per le notizie (sottopassi, strade o piazze allagate con pericolo o disagi); gli altri danni del
-  maltempo, le buche e i guasti no. Sulla mappa si separano dai reati col filtro "Mostra".
+  maltempo, le buche e i guasti no. Sulla mappa si separano dai reati col filtro "Mostra": "Tutti" li esclude e
+  si vedono solo scegliendo "Allagamento" (decisione dell'utente del 26/11/2026). Nel dettaglio di una via e sulle icone
+  compaiono tutti i tipi, anche con un fatto solo (stessa data).
 - Mappa: selettore "Fonte" con due viste, una alla volta e mai sovrapposte. Segnalazioni (predefinita) con i quadrati,
   Notizie (`js/notizie.js`, `?vista=notizie`) con vie evidenziate e un punto per parchi e stazioni. Senza
   `data/notizie.json` il selettore non compare. I conteggi delle due fonti non si sommano mai.
