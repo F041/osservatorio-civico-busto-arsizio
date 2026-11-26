@@ -11,6 +11,7 @@ salvate. Se il file di uscita esiste già, salta gli articoli fatti senza errori
 """
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -106,16 +107,27 @@ def main():
     print(f'{len(da_fare)} articoli da analizzare con {arg.modello}')
 
     cartella = tempfile.mkdtemp(prefix='prova-notizie-')
-    with open(arg.uscita, 'w', encoding='utf-8', newline='\n') as f, ThreadPoolExecutor(arg.paralleli) as pool:
-        for r in fatte:
-            f.write(json.dumps(r, ensure_ascii=False) + '\n')
-        for r in pool.map(lambda a: analizza(a, arg.modello, prompt, stradario, cartella), da_fare):
-            f.write(json.dumps(r, ensure_ascii=False) + '\n')
-            f.flush()
-            est = r['estrazione']
-            stato = ('filtrato' if est is None else 'ERRORE ' + est['errore'][:80] if 'errore' in est
-                     else f"episodi={len(est['risposta']['episodi'])} in {est['secondi']}s")
-            print(f"{r['id']} {stato}", flush=True)
+    # Si scrive in un file a parte che sostituisce quello vecchio solo alla fine: il 26/11/2026 il disco pieno ha
+    # svuotato il file delle risposte, che veniva riscritto da capo. Con un errore di scrittura il file vecchio resta
+    # com'era; con un'interruzione (Ctrl+C) si tiene quello che è già stato analizzato
+    nuovo = Path(arg.uscita + '.nuovo')
+    try:
+        with open(nuovo, 'w', encoding='utf-8', newline='\n') as f, ThreadPoolExecutor(arg.paralleli) as pool:
+            for r in fatte:
+                f.write(json.dumps(r, ensure_ascii=False) + '\n')
+            for r in pool.map(lambda a: analizza(a, arg.modello, prompt, stradario, cartella), da_fare):
+                f.write(json.dumps(r, ensure_ascii=False) + '\n')
+                f.flush()
+                est = r['estrazione']
+                stato = ('filtrato' if est is None else 'ERRORE ' + est['errore'][:80] if 'errore' in est
+                         else f"episodi={len(est['risposta']['episodi'])} in {est['secondi']}s")
+                print(f"{r['id']} {stato}", flush=True)
+    except OSError:
+        nuovo.unlink(missing_ok=True)
+        raise
+    finally:
+        if nuovo.exists():
+            os.replace(nuovo, arg.uscita)
 
 
 if __name__ == '__main__':
