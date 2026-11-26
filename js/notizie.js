@@ -65,6 +65,8 @@ function metaLinea(linee) {
     const linea = linee.reduce((x, y) => (y.length > x.length ? y : x));
     return linea[Math.floor(linea.length / 2)];
 }
+// Spazio minimo fra due nomi di mese sotto il navigatore, in pixel: "gen 2026" ne occupa circa 45
+const ETICHETTA_MESE_MIN = 52;
 const PRESET = [['1m', '1 mese', 30], ['3m', '3 mesi', 91], ['6m', '6 mesi', 182], ['tutto', 'Tutto', Infinity]];
 // Periodo con cui si apre la vista
 const PREDEFINITO = '6m';
@@ -198,12 +200,16 @@ function navigatore(dati, cambia) {
         const linea = `M0,${y(settimane[0]).toFixed(1)} L${punti.join(' L')} L${W},${y(settimane[settimane.length - 1]).toFixed(1)}`;
         let mesi = '';
         const inizio = new Date(d0 * GIORNO);
+        // Con tanti mesi in poco spazio i nomi si sovrappongono: uno ogni `passo` mesi, gennaio sempre compreso
+        const pixelAlMese = W / (durata / 30.4);
+        const passo = [1, 2, 3, 6, 12].find(p => p * pixelAlMese >= ETICHETTA_MESE_MIN) ?? 12;
         for (let m = new Date(Date.UTC(inizio.getUTCFullYear(), inizio.getUTCMonth() + 1, 1)); m.getTime() / GIORNO <= d1;
             m = new Date(Date.UTC(m.getUTCFullYear(), m.getUTCMonth() + 1, 1))) {
             const xm = x(m.getTime() / GIORNO).toFixed(1);
+            mesi += `<line x1="${xm}" x2="${xm}" y1="0" y2="${H}" class="news-nav-grid"/>`;
+            if (m.getUTCMonth() % passo) continue;
             const testo = m.getUTCMonth() === 0 ? `${nomeMese.format(m)} ${m.getUTCFullYear()}` : nomeMese.format(m);
-            mesi += `<line x1="${xm}" x2="${xm}" y1="0" y2="${H}" class="news-nav-grid"/>` +
-                `<text x="${(+xm + 4).toFixed(1)}" y="${H - 5}" class="news-nav-month">${testo}</text>`;
+            mesi += `<text x="${(+xm + 4).toFixed(1)}" y="${H - 5}" class="news-nav-month">${testo}</text>`;
         }
         fondo.innerHTML = `${mesi}<path d="${linea} L${W},${H} L0,${H} Z" class="news-nav-area"/>` +
             `<path d="${linea}" class="news-nav-line"/>`;
