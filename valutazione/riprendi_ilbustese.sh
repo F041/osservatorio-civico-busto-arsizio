@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# Recupero degli ultimi 365 giorni di ilBustese (all'inizio solo il 2026), in più giorni. Si può fermare quando si vuole (Ctrl+C o spegnendo il PC): rilanciato,
+# Recupero di ilBustese per il periodo tenuto dalla raccolta, 24 mesi (all'inizio solo il 2026, da qui i nomi dei file), in più giorni. Si può fermare quando si vuole (Ctrl+C o spegnendo il PC): rilanciato,
 # riparte da dove era. Il sito rallenta le richieste in blocco, quindi una richiesta alla volta.
+# L'elenco legge al massimo 100 giorni per giro, per la quota giornaliera di Firestore (vedi storico_2026.py): lanciarlo
+# dopo le 9 e una volta al giorno finché l'elenco non è completo.
 # Uso, da Git Bash nella cartella del repo: bash valutazione/riprendi_ilbustese.sh
 # L'avanzamento finisce anche in valutazione/dati/ilbustese-2026.log
 set -u
@@ -19,11 +21,11 @@ analisi() {
 }
 
 {
-passo "1. elenco dell'archivio, un giorno alla volta dal 25/08 al 01/01"
+passo "1. elenco dell'archivio, un giorno alla volta, al massimo 100 giorni"
 py $FS python -I valutazione/storico_2026.py ilbustese
 
-passo "2. copia locale dell'elenco"
-py $FS python -I valutazione/storico_2026.py esporta "$D/articoli-2026-ilbustese.jsonl"
+passo "2. copia locale dell'elenco di ilBustese"
+py $FS python -I valutazione/storico_2026.py esporta "$D/articoli-2026-ilbustese.jsonl" ilbustese
 
 passo "3. testi, dai più recenti; ogni ora l'analisi di quelli già scaricati"
 py --with trafilatura python -I valutazione/prepara_campione.py "$D/articoli-2026-ilbustese.jsonl" storico2026 ilbustese &

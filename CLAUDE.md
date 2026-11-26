@@ -115,4 +115,8 @@ Decisioni prese con l'utente a novembre 2026:
   `bash valutazione/recupero_veloci.sh` per Malpensa24, Prealpina e VareseNews;
   `bash valutazione/riprendi_ilbustese.sh` per ilBustese, che richiede più giorni: si ferma quando si vuole e riparte
   da dove era. Anteprima locale: `valutazione/episodi_anteprima.py`, poi `scripts/build_notizie.py`.
+- Firestore è sul piano gratuito: 50.000 letture e 20.000 scritture al giorno, azzerate alle 9 italiane, condivise con
+  la raccolta delle 14:28. Il 26/11/2026 il recupero le ha finite e la raccolta è fallita (429 Quota exceeded).
+  Un'esportazione completa legge tutta la collezione (oltre 10.000 documenti): farne poche, meglio di una testata sola
+  (`storico_2026.py esporta <file> <fonte>`). Il recupero di ilBustese legge al massimo 100 giorni per giro.
 - La nuova fonte è spiegata in "Come funziona e privacy" (26/11/2026): se cambia qualcosa, aggiorna anche quel testo.
