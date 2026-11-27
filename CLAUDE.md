@@ -98,7 +98,8 @@ Decisioni prese con l'utente a novembre 2026:
 - Storico: ilBustese rallenta di proposito le richieste in blocco (circa 30 secondi per pagina degli articoli e
   dell'archivio; feed e mappa del sito no). Non fingersi un browser: si scarica da solo, a parte e con calma.
   Prealpina: le mappe del sito più vecchie non hanno date, si leggono dalla pagina dell'articolo.
-- Revisione umana: gli episodi nuovi arrivano in una pull request, pubblicati solo dopo l'approvazione.
+- Revisione umana a posteriori (decisione dell'utente del 27/11/2026): i fatti vanno sul sito subito; quelli nuovi
+  arrivano in una pull request (una al giorno, o che si allunga finché non viene approvata) e l'utente toglie quelli sbagliati.
 - Dati personali: mai nomi o età, solo i campi dello schema e il link. Articoli e link si cancellano 24 mesi dopo l'uscita
   (decisione dell'utente del 26/11/2026, scritta in privacy.html; le segnalazioni restano a 12 mesi).
   Link agli articoli solo nel dettaglio della singola via. Soglia 2 per le notizie (decisione dell'utente del
