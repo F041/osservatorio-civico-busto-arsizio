@@ -1,8 +1,8 @@
 # Osservatorio civico Busto Arsizio
 
 Sito statico su GitHub Pages (https://f041.github.io/osservatorio-civico-busto-arsizio/), pubblicato
-dal ramo `main`. Due sezioni: Pagamenti (dati dal repo della pipeline, aggiornati da
-`update_database_from_release.yml`) e Sicurezza (segnalazioni anonime). Lingua del sito e dei commit: italiano.
+dal ramo `main`. Tre sezioni: Sicurezza (segnalazioni anonime), Pagamenti (dati dal repo della pipeline, aggiornati da
+`update_database_from_release.yml`) e Popolazione (residenti stimati per gruppo di quartieri). Lingua del sito e dei commit: italiano.
 
 ## Dove stanno le cose
 - Sicurezza: `index.html` (panoramica), `segnala.html` (modulo), `prossimi-passi.html`, `privacy.html`;
@@ -18,6 +18,14 @@ dal ramo `main`. Due sezioni: Pagamenti (dati dal repo della pipeline, aggiornat
 - Notizie: `scripts/raccogli_notizie.py` (workflow `notizie.yml`, ogni giorno alle 4:41 UTC) scrive
   nella collezione Firestore `notizie_articoli`, chiusa al sito: solo testata, link e date. Mai nel repo, che è
   pubblico: i link contengono i titoli, con nomi di persone. Ogni elenco letto deve coprire più di un giorno.
+
+- Popolazione: `popolazione.html`, `js/popolazione.js`, dati in `data/popolazione.json` da `scripts/build_popolazione.py`
+  (elettori per sezione dai file XML dell'Ufficio elettorale, residenti dal servizio del bilancio mensile ISTAT, tutto
+  scaricato a ogni esecuzione). Dati pubblici e aggregati: stanno nel repo, non su Firestore, così git ne tiene la storia.
+  Metodo e attribuzioni delle scuole ai gruppi vengono dal foglio dell'utente (novembre 2026); le due "secondo la
+  traccia" restano così per sua decisione. Confini dei quartieri: il Comune non li pubblica; le zone OMI dell'Agenzia
+  delle Entrate sono fasce di mercato (centro, semicentro, periferia), non quartieri; quelle di immobiliare.it sono di un
+  portale commerciale e non si riusano.
 
 ## Regole fisse
 - Mai salvare in locale, mostrare in chat o committare segreti: chiave segreta di reCAPTCHA, account di servizio,
