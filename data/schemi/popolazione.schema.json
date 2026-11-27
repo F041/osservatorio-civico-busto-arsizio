@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://f041.github.io/osservatorio-civico-busto-arsizio/data/schemi/popolazione.schema.json",
+  "title": "Residenti stimati per gruppo di quartieri",
+  "description": "Struttura di data/popolazione.json, scritto da scripts/build_popolazione.py. Gli elettori di ogni sezione vengono dall'Ufficio elettorale del Comune, i residenti dal bilancio demografico mensile ISTAT. I residenti di un gruppo sono una stima: elettori del gruppo per k.",
+  "type": "object",
+  "required": ["generato", "residenti", "consultazione", "k", "gruppi", "plessi", "sezioni"],
+  "additionalProperties": false,
+  "properties": {
+    "generato": { "type": "string", "format": "date-time", "description": "Momento in cui il file è stato scritto, in UTC." },
+    "residenti": {
+      "type": "object",
+      "description": "Residenti di tutto il Comune secondo ISTAT.",
+      "required": ["mese", "valore", "provvisorio", "fonte", "link", "mesi"],
+      "additionalProperties": false,
+      "properties": {
+        "mese": { "$ref": "#/$defs/mese", "description": "Ultimo mese pubblicato da ISTAT, usato per la stima." },
+        "valore": { "type": "integer", "x-unita": "persone", "description": "Residenti a fine mese nel mese indicato." },
+        "provvisorio": { "type": "boolean", "description": "true se ISTAT indica il dato come provvisorio. Il dato definitivo arriva con il bilancio annuale." },
+        "fonte": { "type": "string", "description": "Nome della fonte." },
+        "link": { "type": "string", "format": "uri", "description": "Pagina della fonte." },
+        "mesi": {
+          "type": "array",
+          "description": "Tutti i mesi pubblicati dell'anno in corso (a gennaio, dell'anno prima), dal più vecchio.",
+          "items": {
+            "type": "object",
+            "required": ["mese", "residenti", "provvisorio"],
+            "additionalProperties": false,
+            "properties": {
+              "mese": { "$ref": "#/$defs/mese", "description": "Mese." },
+              "residenti": { "type": "integer", "x-unita": "persone", "description": "Residenti a fine mese." },
+              "provvisorio": { "type": "boolean", "description": "true se il dato è provvisorio." }
+            }
+          }
+        }
+      }
+    },
+    "consultazione": {
+      "type": "object",
+      "description": "Consultazione elettorale da cui vengono gli elettori per sezione.",
+      "required": ["nome", "data", "aggiornamento", "fonte", "link_sezioni", "link_comune", "elettori", "elettori_m", "elettori_f"],
+      "additionalProperties": false,
+      "properties": {
+        "nome": { "type": "string", "description": "Nome della consultazione." },
+        "data": { "type": "string", "format": "date", "description": "Primo giorno di voto." },
+        "aggiornamento": { "type": "string", "pattern": "^[0-9]{2}/[0-9]{2}/[0-9]{4}-[0-9]{2}\\.[0-9]{2}$", "description": "Ultimo aggiornamento dei dati sul sito dei risultati, nel formato GG/MM/AAAA-hh.mm come lo scrive la fonte." },
+        "fonte": { "type": "string", "description": "Nome della fonte. I dati sono ufficiosi." },
+        "link_sezioni": { "type": "string", "format": "uri", "description": "File XML con gli elettori di ogni sezione." },
+        "link_comune": { "type": "string", "format": "uri", "description": "File XML con gli elettori di tutto il Comune." },
+        "elettori": { "type": "integer", "x-unita": "persone", "description": "Elettori del Comune." },
+        "elettori_m": { "type": "integer", "x-unita": "persone", "description": "Elettori maschi del Comune." },
+        "elettori_f": { "type": "integer", "x-unita": "persone", "description": "Elettrici del Comune." }
+      }
+    },
+    "k": { "type": "number", "x-unita": "residenti per elettore", "description": "Residenti del Comune diviso elettori del Comune, arrotondato a 6 decimali." },
+    "gruppi": {
+      "type": "array",
+      "description": "Gruppi di quartieri, nell'ordine della pagina.",
+      "items": {
+        "type": "object",
+        "required": ["nome", "sezioni", "elettori", "quota_elettori", "residenti_stimati"],
+        "additionalProperties": false,
+        "properties": {
+          "nome": { "type": "string", "description": "Nome del gruppo." },
+          "sezioni": { "type": "integer", "x-unita": "sezioni", "description": "Sezioni elettorali che contano per il gruppo." },
+          "elettori": { "type": "integer", "x-unita": "persone", "description": "Elettori delle sezioni del gruppo." },
+          "quota_elettori": { "type": "number", "minimum": 0, "maximum": 1, "x-unita": "frazione (0-1)", "description": "Elettori del gruppo diviso elettori del Comune, arrotondato a 4 decimali." },
+          "residenti_stimati": { "type": "integer", "x-unita": "persone", "description": "Elettori del gruppo per k, arrotondati a interi che sommano esattamente i residenti del Comune (metodo dei resti maggiori). Dove vivono più minorenni o più stranieri, che non votano, i residenti veri sono di più." }
+        }
+      }
+    },
+    "plessi": {
+      "type": "array",
+      "description": "Scuole e sedi dove si vota, con il gruppo per cui contano.",
+      "items": {
+        "type": "object",
+        "required": ["nome", "seggio", "sezioni", "zona", "gruppo", "criterio", "nota", "fonte", "elettori"],
+        "additionalProperties": false,
+        "properties": {
+          "nome": { "type": "string", "description": "Nome della scuola o della sede." },
+          "seggio": { "type": "string", "description": "Ubicazione del seggio come scritta nel prospetto dell'Ufficio elettorale." },
+          "sezioni": { "type": "array", "items": { "type": "integer" }, "minItems": 2, "maxItems": 2, "description": "Prima e ultima sezione della scuola." },
+          "zona": { "type": "string", "description": "Quartiere o zona della scuola." },
+          "gruppo": { "type": "string", "description": "Gruppo per cui contano le sezioni della scuola (un nome di gruppi)." },
+          "criterio": { "type": "string", "enum": ["Scuola nel quartiere", "Aggregazione", "Indirizzo", "Confine", "A parte"], "description": "Come è stato scelto il gruppo. La colonna Perché della pagina Popolazione lo mostra insieme alla nota." },
+          "nota": { "type": "string", "description": "Spiegazione della scelta." },
+          "fonte": { "type": "string", "description": "Pagina usata per la scelta." },
+          "elettori": { "type": "integer", "x-unita": "persone", "description": "Elettori delle sezioni della scuola." }
+        }
+      }
+    },
+    "sezioni": {
+      "type": "array",
+      "description": "Tutte le sezioni elettorali, in ordine di numero.",
+      "items": {
+        "type": "object",
+        "required": ["numero", "scuola", "gruppo", "ubicazione", "elettori_m", "elettori_f", "elettori"],
+        "additionalProperties": false,
+        "properties": {
+          "numero": { "type": "integer", "description": "Numero della sezione." },
+          "scuola": { "type": "string", "description": "Scuola o sede (un nome di plessi)." },
+          "gruppo": { "type": "string", "description": "Gruppo per cui conta la sezione." },
+          "ubicazione": { "type": "string", "description": "Ubicazione del seggio come scritta nel prospetto." },
+          "elettori_m": { "type": "integer", "x-unita": "persone", "description": "Elettori maschi della sezione." },
+          "elettori_f": { "type": "integer", "x-unita": "persone", "description": "Elettrici della sezione." },
+          "elettori": { "type": "integer", "x-unita": "persone", "description": "Elettori della sezione." }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "mese": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}$", "description": "Mese nel formato AAAA-MM." }
+  }
+}
