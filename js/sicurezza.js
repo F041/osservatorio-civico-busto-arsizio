@@ -1,6 +1,6 @@
 // Panoramica Sicurezza: legge i conteggi aggregati da scripts/build_sicurezza.py (data/sicurezza.json)
 import { CATEGORIE, FASCE, FATTORI, DENUNCIA } from './sicurezza-config.js';
-import { caricaMappa, creaMappa, confiniCella, descriviCella } from './mappa.js';
+import { caricaMappa, creaMappa, confiniCella, descriviCella, altreRighe, menoMovimento } from './mappa.js';
 import { creaVistaNotizie } from './notizie.js';
 import { integer, formatDate } from './formato.js';
 
@@ -194,7 +194,7 @@ function creaVistaSegnalazioni(data, mappa, leggiMappa, mapDiv) {
         const table = document.createElement('table');
         table.className = 'bar-table zone-table';
         table.createCaption().textContent = valore ? `Zone con più segnalazioni ${nome}` : 'Zone con più segnalazioni';
-        for (const [id, n] of celle.slice(0, 10)) {
+        const aggiungiRiga = ([id, n]) => {
             const row = table.insertRow();
             const label = document.createElement('th');
             label.scope = 'row';
@@ -207,7 +207,7 @@ function creaVistaSegnalazioni(data, mappa, leggiMappa, mapDiv) {
                 const rect = rettangoli.get(id);
                 leggiMappa().fitBounds(rect.getBounds(), { maxZoom: 16 });
                 rect.openTooltip(rect.getBounds().getCenter());
-                mapDiv.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                mapDiv.scrollIntoView({ block: 'nearest', behavior: menoMovimento() ? 'auto' : 'smooth' });
             });
             label.append(button);
             row.append(label);
@@ -221,8 +221,11 @@ function creaVistaSegnalazioni(data, mappa, leggiMappa, mapDiv) {
             const numCell = row.insertCell();
             numCell.className = 'num';
             numCell.textContent = integer.format(n);
-        }
+            return row;
+        };
+        celle.slice(0, 10).forEach(aggiungiRiga);
         tableWrap.append(table);
+        altreRighe(tableWrap, celle.slice(10), aggiungiRiga, `Mostra tutte le ${integer.format(celle.length)} zone`);
     }
 
     select.addEventListener('change', () => mostra(select.value));
@@ -246,6 +249,7 @@ function mapCard(data, mappa, notizie, applicaVista) {
 
     const mapDiv = document.createElement('div');
     mapDiv.className = 'overview-map';
+    mapDiv.setAttribute('role', 'region');
     mapDiv.setAttribute('aria-label', 'Mappa delle zone con più segnalazioni; gli stessi dati sono nella tabella sotto');
     let map = null;
     const segnalazioni = creaVistaSegnalazioni(data, mappa, () => map, mapDiv);

@@ -2,7 +2,7 @@
 // Ha un segno diverso dalle segnalazioni (linee e punti al posto dei quadrati) e i suoi numeri non si sommano mai a quelli.
 // Sotto la mappa un navigatore come quelli dei grafici dei prezzi: l'area dei fatti per settimana su tutto lo storico e
 // due maniglie per scegliere il periodo. Conteggi, soglia e tipi si calcolano qui, sul periodo scelto.
-import { punti } from './mappa.js';
+import { punti, altreRighe } from './mappa.js';
 import { integer, formatDate } from './formato.js';
 
 const L = window.L;
@@ -570,7 +570,7 @@ export function creaVistaNotizie(dati, mappa, leggiMappa, mapDiv) {
         dettaglio.replaceChildren(crea('p', 'safety-muted', 'Tocca una via sulla mappa o nell\'elenco per vedere i fatti e gli articoli.'));
         const tabella = crea('table', 'bar-table zone-table');
         tabella.createCaption().textContent = 'Vie e luoghi con più fatti nel periodo';
-        for (const voce of visibili.slice(0, 10)) {
+        const aggiungiRiga = voce => {
             const riga = tabella.insertRow();
             const intestazione = crea('th');
             intestazione.scope = 'row';
@@ -589,8 +589,12 @@ export function creaVistaNotizie(dati, mappa, leggiMappa, mapDiv) {
             const numero = riga.insertCell();
             numero.className = 'num';
             numero.textContent = integer.format(voce.fatti);
-        }
+            return riga;
+        };
+        visibili.slice(0, 10).forEach(aggiungiRiga);
         elenco.append(tabella);
+        // Le vie oltre le prime 10 si aprono anche senza mouse: sulla mappa si sceglie solo col puntatore
+        altreRighe(elenco, visibili.slice(10), aggiungiRiga, `Mostra tutte le ${integer.format(visibili.length)} vie e luoghi`);
     }
     // Si disegna subito il periodo predefinito: i limiti delle vie servono per inquadrare la mappa
     disegna(...nav.periodo());

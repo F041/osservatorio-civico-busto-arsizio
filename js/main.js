@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let db = null;
     let caricando = false;
+    let focusPrima = null;
     const stato = { pagina: 1, perPagina: parseInt(righePerPagina.value, 10), totale: 0, pagine: 1, ordine: 'DataMandato', verso: 'DESC' };
     // Filtri aperti: tipo -> { operatore: <select>, valore: <input> }
     const filtri = new Map();
@@ -56,10 +57,19 @@ document.addEventListener('DOMContentLoaded', () => {
         caricando = attivo;
         spinner.hidden = !attivo;
         statoCaricamento.hidden = true;
+        if (attivo && document.activeElement && document.activeElement !== document.body) focusPrima = document.activeElement;
         document.querySelectorAll('.page-controls-bar :is(button, input), #active-filters-area :is(button, input, select), .pagination :is(button, input, select)')
             .forEach(el => { el.disabled = attivo; });
         filtriAttivi.classList.toggle('controls-disabled', attivo);
-        if (!attivo) aggiornaPagine(corpoTabella.rows.length);
+        if (!attivo) {
+            aggiornaPagine(corpoTabella.rows.length);
+            // I controlli disattivati durante la query perdono il focus: torna dov'era o su un controllo vicino
+            if (focusPrima && (!document.activeElement || document.activeElement === document.body)) {
+                const vicini = focusPrima.closest('.pagination') ? [focusPrima, inputPagina, righePerPagina] : [focusPrima, ricerca];
+                vicini.find(el => el.isConnected && !el.disabled && !el.hidden)?.focus();
+            }
+            focusPrima = null;
+        }
     }
 
     function apriMenu(aperto) {
@@ -75,6 +85,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function aggiornaFreccia() {
         intestazioneImporto.classList.remove('sort-asc', 'sort-desc');
         if (stato.ordine === 'ImportoEuro') intestazioneImporto.classList.add(stato.verso === 'ASC' ? 'sort-asc' : 'sort-desc');
+        // Per i lettori di schermo: quale colonna ordina la tabella e in che verso
+        for (const th of intestazioneImporto.parentElement.children) th.removeAttribute('aria-sort');
+        const colonna = intestazioneImporto.parentElement.children[COLONNE.indexOf(stato.ordine)];
+        colonna?.setAttribute('aria-sort', stato.verso === 'ASC' ? 'ascending' : 'descending');
     }
 
     function aggiungiFiltro(tipo, nome) {
@@ -87,6 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         togli.className = 'filter-name-tag';
         togli.dataset.removeFilter = tipo;
         togli.title = `Rimuovi filtro ${nome}`;
+        togli.setAttribute('aria-label', `Rimuovi filtro ${nome}`);
         const croce = document.createElement('span');
         croce.className = 'remove-icon';
         croce.textContent = '×';
@@ -94,12 +109,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const operatore = document.createElement('select');
         operatore.className = 'filter-operator-select';
         operatore.id = `${tipo}-filter-operator`;
+        operatore.setAttribute('aria-label', `Condizione per ${nome}`);
         operatore.append(...def.operatori.map(([valore, testo]) => new Option(testo, valore)));
         const valore = document.createElement('input');
         valore.type = def.tipo;
         valore.className = 'filter-value-input';
         valore.id = `${tipo}-filter-value`;
         valore.placeholder = def.esempio;
+        valore.setAttribute('aria-label', `Valore per ${nome}`);
         if (def.passo) valore.step = def.passo;
         riquadro.append(togli, operatore, valore);
         filtriAttivi.append(riquadro);
@@ -109,7 +126,9 @@ document.addEventListener('DOMContentLoaded', () => {
         operatore.addEventListener('change', aggiornaPulsanti);
         valore.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); cerca(); } });
         valore.focus();
-        menuFiltri.querySelector(`a[data-filter-type="${tipo}"]`)?.classList.add('disabled');
+        const voce = menuFiltri.querySelector(`a[data-filter-type="${tipo}"]`);
+        voce?.classList.add('disabled');
+        voce?.setAttribute('aria-disabled', 'true');
         apriMenu(false);
         aggiornaPulsanti();
     }
@@ -117,7 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function togliFiltro(tipo) {
         filtriAttivi.querySelector(`.active-filter-item[data-filter-type="${tipo}"]`)?.remove();
         filtri.delete(tipo);
-        menuFiltri.querySelector(`a[data-filter-type="${tipo}"]`)?.classList.remove('disabled');
+        const voce = menuFiltri.querySelector(`a[data-filter-type="${tipo}"]`);
+        voce?.classList.remove('disabled');
+        voce?.removeAttribute('aria-disabled');
         aggiornaPulsanti();
     }
 
@@ -237,9 +258,20 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', e => {
         if (!apriFiltri.contains(e.target) && !menuFiltri.contains(e.target)) apriMenu(false);
     });
+    // Esc chiude il menu dei filtri e riporta il focus sul pulsante che l'ha aperto
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && !menuFiltri.hidden) {
+            const dentro = menuFiltri.contains(document.activeElement);
+            apriMenu(false);
+            if (dentro || document.activeElement === apriFiltri) apriFiltri.focus();
+        }
+    });
     filtriAttivi.addEventListener('click', e => {
         const togli = e.target.closest('button[data-remove-filter]');
-        if (togli) togliFiltro(togli.dataset.removeFilter);
+        if (!togli) return;
+        togliFiltro(togli.dataset.removeFilter);
+        // Il pulsante premuto sparisce: il focus va su "Aggiungi Filtro" invece di perdersi
+        apriFiltri.focus();
     });
     reimposta.addEventListener('click', reimpostaTutto);
     applica.addEventListener('click', cerca);
