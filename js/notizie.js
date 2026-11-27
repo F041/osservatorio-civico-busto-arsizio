@@ -436,12 +436,17 @@ export function creaVistaNotizie(dati, mappa, leggiMappa, mapDiv) {
         dettaglio.replaceChildren(...parti);
     }
 
+    // Dall'elenco si va alla via sulla mappa; dalla mappa al dettaglio, che sta sotto il navigatore e spesso fuori
+    // schermo: lo scorrimento minimo lo porta in vista e lascia visibile quanta più mappa possibile
     function seleziona(voce, centra) {
         evidenzia(voce.n);
         mostraDettaglio(voce);
+        const behavior = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
         if (centra) {
             leggiMappa().fitBounds(segni.get(voce.n).limiti, { maxZoom: 16, padding: [30, 30] });
-            mapDiv.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            mapDiv.scrollIntoView({ block: 'nearest', behavior });
+        } else {
+            dettaglio.scrollIntoView({ block: 'nearest', behavior });
         }
     }
 
