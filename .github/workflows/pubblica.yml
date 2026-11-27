@@ -56,8 +56,11 @@ jobs:
         with:
           path: .
 
-      # Una sola pull request aperta alla volta: se c'è già si allunga, altrimenti ne parte una nuova da main
+      # Una sola pull request aperta alla volta: se c'è già si allunga, altrimenti ne parte una nuova da main.
+      # Se non riesce, il sito si pubblica lo stesso. Serve l'impostazione del repo "Allow GitHub Actions to create
+      # and approve pull requests" (Settings > Actions > General)
       - name: Pull request di revisione
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
