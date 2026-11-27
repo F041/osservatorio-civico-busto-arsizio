@@ -12,8 +12,12 @@ py() { uv run --no-project --python 3.12 "$@" 2>&1 | grep --line-buffered -v -i 
 passo() { echo "== $(date '+%d/%m %H:%M') $*"; }
 
 {
-passo "1. copia locale dell'elenco attuale (date già note)"
-py $FS python -I valutazione/storico_2026.py esporta "$D/articoli-2026.jsonl"
+# Ogni copia completa legge tutta la collezione (oltre 10.000 letture della quota giornaliera, vedi storico_2026.py):
+# quella del giro precedente basta per le date già note
+if [ ! -s "$D/articoli-2026.jsonl" ]; then
+  passo "1. copia locale dell'elenco attuale (date già note)"
+  py $FS python -I valutazione/storico_2026.py esporta "$D/articoli-2026.jsonl"
+fi
 
 passo "2. elenco dall'inizio del periodo"
 py $FS python -I valutazione/storico_2026.py veloci "$D/articoli-2026.jsonl"
