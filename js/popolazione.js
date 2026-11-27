@@ -1,9 +1,8 @@
 // Pagina Popolazione: residenti stimati per gruppo di quartieri, da data/popolazione.json (scripts/build_popolazione.py)
-const intero = new Intl.NumberFormat('it-IT');
+import { integer, formatDate } from './formato.js';
 const decimale = new Intl.NumberFormat('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const percento = new Intl.NumberFormat('it-IT', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const nomeMese = new Intl.DateTimeFormat('it-IT', { month: 'long', year: 'numeric', timeZone: 'UTC' });
-const formatDate = s => s.slice(0, 10).split('-').reverse().join('/');
 const fineMese = mese => nomeMese.format(new Date(`${mese}-01T00:00:00Z`));
 
 function crea(tag, classe, testo) {
@@ -57,7 +56,7 @@ function conBarra(valore, massimo) {
     const barra = crea('span', 'population-bar');
     barra.style.width = `${(valore / massimo) * 100}%`;
     binario.append(barra);
-    contenitore.append(binario, crea('span', '', intero.format(valore)));
+    contenitore.append(binario, crea('span', '', integer.format(valore)));
     return contenitore;
 }
 
@@ -66,8 +65,8 @@ function mostra(d) {
     const c = d.consultazione;
     const provvisorio = r.provvisorio ? ', dato provvisorio' : '';
     document.getElementById('population-figures').append(
-        cifra(intero.format(r.valore), 'residenti a Busto', `ISTAT, fine ${fineMese(r.mese)}${provvisorio}`),
-        cifra(intero.format(c.elettori), 'elettori', `${c.nome}`),
+        cifra(integer.format(r.valore), 'residenti a Busto', `ISTAT, fine ${fineMese(r.mese)}${provvisorio}`),
+        cifra(integer.format(c.elettori), 'elettori', `${c.nome}`),
         cifra(decimale.format(d.k), 'residenti per elettore', 'il rapporto usato per la stima'),
     );
 
@@ -75,7 +74,7 @@ function mostra(d) {
     tabella(document.getElementById('population-groups'),
         `A fine ${fineMese(r.mese)}, dagli elettori della consultazione di ${nomeMese.format(new Date(`${c.data.slice(0, 7)}-01T00:00:00Z`))}`,
         [['Gruppo di quartieri'], ['Sezioni', true], ['Elettori', true], ['Quota', true], ['Residenti stimati', true]],
-        d.gruppi.map(g => [g.nome, g.sezioni, intero.format(g.elettori), percento.format(g.quota_elettori),
+        d.gruppi.map(g => [g.nome, g.sezioni, integer.format(g.elettori), percento.format(g.quota_elettori),
             conBarra(g.residenti_stimati, massimo)]));
 
     tabella(document.getElementById('population-schools'), 'Scuole e sedi dove si vota',
@@ -84,14 +83,14 @@ function mostra(d) {
             const perche = crea('span');
             perche.append(`${p.nota} `, link(p.fonte, 'Fonte'));
             const sezioni = p.sezioni[0] === p.sezioni[1] ? String(p.sezioni[0]) : `${p.sezioni[0]}–${p.sezioni[1]}`;
-            return [p.nome, sezioni, p.zona, p.gruppo, intero.format(p.elettori), perche];
+            return [p.nome, sezioni, p.zona, p.gruppo, integer.format(p.elettori), perche];
         }));
 
     document.getElementById('sezioni-titolo').textContent = `Elettori di tutte le ${d.sezioni.length} sezioni`;
     tabella(document.getElementById('population-sections'), `Elettori per sezione, ${c.nome}`,
         [['Sezione'], ['Scuola o sede'], ['Gruppo'], ['Uomini', true], ['Donne', true], ['Totale', true]],
-        d.sezioni.map(s => [s.numero, s.scuola, s.gruppo, intero.format(s.elettori_m), intero.format(s.elettori_f),
-            intero.format(s.elettori)]));
+        d.sezioni.map(s => [s.numero, s.scuola, s.gruppo, integer.format(s.elettori_m), integer.format(s.elettori_f),
+            integer.format(s.elettori)]));
 
     const metodo = document.getElementById('population-method');
     const voce = (...parti) => { const li = crea('li'); li.append(...parti); metodo.append(li); };
