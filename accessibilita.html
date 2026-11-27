@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Accessibilità - Osservatorio civico Busto Arsizio</title>
+    <meta name="description" content="Quanto è accessibile il sito dell'Osservatorio civico Busto Arsizio, cosa non funziona ancora e come segnalarlo.">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+    <header class="main-header">
+        <div class="container header-content">
+            <img src="img/stemma.png" alt="Stemma Comune Busto Arsizio" class="header-logo" width="67" height="80">
+            <div class="header-text">
+                <h1 class="main-title">Osservatorio civico <span class="location-name">Busto Arsizio</span></h1>
+                <p class="sub-title">Accessibilità</p>
+            </div>
+            <nav class="header-nav" aria-label="Sezioni del sito">
+                <a href="index.html">Sicurezza</a>
+                <a href="pagamenti.html">Pagamenti</a>
+                <a href="popolazione.html">Popolazione</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="contenuto" tabindex="-1" class="container page-content open-data">
+        <h2>Accessibilità</h2>
+        <p>Il sito deve funzionare anche con la sola tastiera, con un lettore di schermo e con il testo ingrandito.
+            Lo controlliamo con le regole <a href="https://www.w3.org/Translations/WCAG21-it/" target="_blank" rel="noopener">WCAG 2.1</a>
+            al livello AA, le stesse richieste dalla norma europea EN 301 549.</p>
+
+        <h3 id="stato">A che punto siamo</h3>
+        <p>Il sito è <strong>parzialmente conforme</strong>. L'ultimo controllo è del 27 novembre 2026, su tutte le pagine,
+            a schermo largo e su telefono:</p>
+        <ul class="facts">
+            <li>controllo automatico con axe-core, contrasto dei colori compreso: nessun errore;</li>
+            <li>prova con la tastiera: menu, filtri, tabella dei pagamenti, cruscotto e mappa.</li>
+        </ul>
+
+        <h3 id="limiti">Cosa manca</h3>
+        <ul class="facts">
+            <li>Non abbiamo ancora provato il sito con un lettore di schermo vero, come NVDA o VoiceOver.
+                Un controllo automatico trova solo una parte dei problemi.</li>
+            <li>La mappa è pensata per chi la vede: da tastiera si ingrandisce e si sposta,
+                ma leggerla senza vederla resta faticoso.</li>
+        </ul>
+
+        <h3 id="segnala">Se qualcosa non funziona</h3>
+        <p>Apri una segnalazione su GitHub:
+            <a href="https://github.com/F041/osservatorio-civico-busto-arsizio/issues/new" target="_blank" rel="noopener">nuova segnalazione</a>.
+            Serve un account GitHub gratuito. Scrivi la pagina, cosa volevi fare e cosa usi (per esempio lettore di schermo o tastiera).
+            Non pubblichiamo un indirizzo email per evitare lo spam.</p>
+
+        <h3 id="chi">Chi cura il sito</h3>
+        <p>L'Osservatorio è un progetto di Gabriele, fatto a titolo personale e senza fondi pubblici. Non è un sito della
+            pubblica amministrazione, quindi la direttiva europea 2016/2102 e la legge Stanca non si applicano:
+            seguiamo comunque le loro regole.</p>
+    </main>
+
+    <footer class="main-footer">
+        <a href="https://github.com/F041/osservatorio-civico-busto-arsizio" target="_blank" rel="noopener" class="footer-link" title="Vai al repository GitHub">
+            <svg height="24" width="24" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.01.08-2.12 0 0 .67-.21 2.2.82a7.65 7.65 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.11.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
+            <span>Progetto su GitHub</span>
+        </a>
+        <a href="privacy.html" class="footer-link">Privacy</a>
+        <a href="accessibilita.html" class="footer-link">Accessibilità</a>
+    </footer>
+</body>
+</html>

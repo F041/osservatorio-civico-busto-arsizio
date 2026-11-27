@@ -21,6 +21,8 @@
                 "name": "Pagamenti del Comune di Busto Arsizio dal 2017 al 2025",
                 "description": "I pagamenti del Comune di Busto Arsizio, un mandato di pagamento per riga, dal 3 gennaio 2017 al 30 settembre 2025. Per ogni riga: numero e data del mandato, beneficiario, importo in euro, descrizione, codice fiscale e partita IVA quando il Comune li riporta. I dati vengono dai prospetti trimestrali che il Comune pubblica in Amministrazione trasparente. Database SQLite; il CSV si genera dalla pagina Scarica dati.",
                 "url": "https://f041.github.io/osservatorio-civico-busto-arsizio/dati-aperti.html#pagamenti",
+                "license": "https://creativecommons.org/licenses/by/4.0/",
+                "creator": { "@type": "Person", "name": "Gabriele" },
                 "inLanguage": "it",
                 "keywords": ["Busto Arsizio", "pagamenti", "mandati di pagamento", "spesa pubblica", "Amministrazione trasparente", "comune"],
                 "isAccessibleForFree": true,
@@ -61,6 +63,8 @@
                 "name": "Pagamenti del Comune di Busto Arsizio per categoria e beneficiario",
                 "description": "Totali dei pagamenti del Comune di Busto Arsizio per anno e per categoria di beneficiario (partecipate, enti controllati e vigilati, altri enti pubblici, personale e fisco, privati), con i beneficiari che hanno ricevuto di più. Calcolati dal database dei pagamenti: sono i numeri della pagina Cruscotto.",
                 "url": "https://f041.github.io/osservatorio-civico-busto-arsizio/dati-aperti.html#cruscotto",
+                "license": "https://creativecommons.org/licenses/by/4.0/",
+                "creator": { "@type": "Person", "name": "Gabriele" },
                 "inLanguage": "it",
                 "keywords": ["Busto Arsizio", "pagamenti", "società partecipate", "beneficiari", "spesa pubblica"],
                 "isAccessibleForFree": true,
@@ -89,6 +93,8 @@
                 "name": "Residenti stimati per gruppo di quartieri di Busto Arsizio",
                 "description": "Elettori di ogni sezione elettorale di Busto Arsizio, residenti del Comune secondo ISTAT e la stima dei residenti per gruppo di quartieri. La stima moltiplica gli elettori di ogni gruppo per il rapporto tra residenti ed elettori del Comune. Ogni scuola dove si vota conta per un gruppo, con il criterio della scelta.",
                 "url": "https://f041.github.io/osservatorio-civico-busto-arsizio/dati-aperti.html#popolazione",
+                "license": "https://creativecommons.org/licenses/by/4.0/",
+                "creator": { "@type": "Person", "name": "Gabriele" },
                 "inLanguage": "it",
                 "keywords": ["Busto Arsizio", "popolazione", "residenti", "quartieri", "sezioni elettorali", "elettori"],
                 "isAccessibleForFree": true,
@@ -120,6 +126,8 @@
                 "name": "Segnalazioni di insicurezza a Busto Arsizio: conteggi degli ultimi 90 giorni",
                 "description": "Conteggi delle segnalazioni anonime fatte dai cittadini sul sito negli ultimi 90 giorni: per quadrato della mappa di circa 250 metri, per tipo di episodio, fascia oraria, fattori e denuncia. Le singole segnalazioni non sono pubblicate e i conteggi sotto 3 sono nascosti. Si ricalcola ogni notte.",
                 "url": "https://f041.github.io/osservatorio-civico-busto-arsizio/dati-aperti.html#sicurezza",
+                "license": "https://creativecommons.org/licenses/by/4.0/",
+                "creator": { "@type": "Person", "name": "Gabriele" },
                 "inLanguage": "it",
                 "keywords": ["Busto Arsizio", "sicurezza urbana", "segnalazioni", "percezione di insicurezza", "mappa"],
                 "isAccessibleForFree": true,
@@ -144,7 +152,9 @@
                 "@type": "DataCatalog",
                 "@id": "#catalogo",
                 "name": "Osservatorio civico Busto Arsizio",
-                "url": "https://f041.github.io/osservatorio-civico-busto-arsizio/dati-aperti.html"
+                "url": "https://f041.github.io/osservatorio-civico-busto-arsizio/dati-aperti.html",
+                "license": "https://creativecommons.org/licenses/by/4.0/",
+                "creator": { "@type": "Person", "name": "Gabriele" }
             },
             {
                 "@type": "Place",
@@ -176,7 +186,8 @@
     <main id="contenuto" tabindex="-1" class="container page-content open-data">
         <h2>Dati aperti</h2>
         <p>Qui trovi i file che il sito pubblica: da dove vengono, quando cambiano e cosa vuol dire ogni campo.
-            Si scaricano senza registrazione.</p>
+            Si scaricano senza registrazione e si possono riusare con la licenza
+            <a href="#licenza">CC BY 4.0</a>.</p>
         <p>Ogni dizionario esiste anche come file per i programmi: Table Schema per la tabella dei pagamenti,
             JSON Schema per i file JSON. Nel codice della pagina ci sono i metadati dei dataset nel vocabolario schema.org,
             quello che leggono i motori di ricerca.</p>
@@ -266,6 +277,16 @@
         </ul>
         <div class="table-responsive-wrapper" data-schema="data/schemi/sicurezza.schema.json" data-titolo="Campi di sicurezza.json"></div>
 
+        <h3 id="licenza">Licenza</h3>
+        <p>I file di questa pagina sono rilasciati con licenza
+            <a href="https://creativecommons.org/licenses/by/4.0/deed.it" target="_blank" rel="noopener">Creative Commons Attribuzione 4.0</a> (CC BY 4.0):
+            puoi copiarli, modificarli e usarli anche per scopi commerciali, se citi la fonte.
+            Per esempio: «Fonte: Osservatorio civico Busto Arsizio, f041.github.io/osservatorio-civico-busto-arsizio».</p>
+        <p>Due eccezioni. La mappa dei quadrati, <code>data/mappa.json</code>, viene da OpenStreetMap e resta con la sua
+            licenza <a href="https://opendatacommons.org/licenses/odbl/" target="_blank" rel="noopener">ODbL</a>.
+            Per i dati delle fonti (Comune, ISTAT, risultati elettorali) valgono le condizioni scritte sopra, sezione per sezione.</p>
+        <p>Il codice del sito ha una licenza diversa, MIT: è nel <a href="https://github.com/F041/osservatorio-civico-busto-arsizio/blob/main/LICENSE" target="_blank" rel="noopener">file LICENSE</a> del repository.</p>
+
         <h3 id="formati">Formati e riferimenti</h3>
         <p>Tutti i file sono in formati aperti e leggibili dai programmi: JSON in UTF-8, CSV e SQLite. Le date seguono la ISO 8601
             (AAAA-MM-GG) e gli orari di calcolo sono in UTC.</p>
@@ -281,6 +302,7 @@
             <span>Progetto su GitHub</span>
         </a>
         <a href="privacy.html" class="footer-link">Privacy</a>
+        <a href="accessibilita.html" class="footer-link">Accessibilità</a>
     </footer>
     <script type="module" src="js/dati-aperti.js"></script>
 </body>

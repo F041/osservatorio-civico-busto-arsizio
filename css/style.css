@@ -680,3 +680,9 @@ td { color: #212529; }
     .dictionary-table tbody th { min-width: 0; }
     .dictionary-table code { font-size: 0.8em; overflow-wrap: anywhere; }
 }
+
+/* Footer con tre link: sul telefono più stretti, per restare su una riga */
+@media (max-width: 480px) {
+    .main-footer { gap: 18px; }
+    .footer-link { font-size: 1em; gap: 6px; }
+}

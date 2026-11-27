@@ -44,6 +44,9 @@ dal ramo `main`. Tre sezioni: Sicurezza (segnalazioni anonime), Pagamenti (dati 
   né dettagli senza fonte.
 - Interfaccia e mappe: usa ux-heuristics; per colori e grafici dataviz, con `validate_palette.js`.
 - Controlla il risultato con screenshot a 1280 px e 390 px prima di dire che è fatto.
+- Se cambiano i campi di uno script `build_*`, aggiorna lo schema in `data/schemi/` e il dizionario in `dati-aperti.html`.
+- Dati del sito: licenza CC BY 4.0 (`data/mappa.json` resta ODbL, da OpenStreetMap). Il codice è MIT.
+- Contatti: niente email sul sito (spam). Le segnalazioni passano dalle issue di GitHub.
 
 ## Verifiche
 - Regole Firestore: `firebase emulators:exec --only firestore --project demo-osservatorio "node tests/regole/regole.test.mjs firestore.rules"`
