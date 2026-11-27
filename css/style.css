@@ -6,13 +6,21 @@ body {
     color: #333;
     font-size: 1rem; /* Base 16px di default */
     line-height: 1.5;
-    padding-bottom: 80px;
+    padding-bottom: max(80px, 4.5em);
 }
+html { scroll-padding-bottom: max(90px, 5em); }
 /* L'attributo hidden vince anche sulle regole che danno un display all'elemento */
 [hidden] { display: none !important; }
+.skip-link { position: absolute; left: 8px; top: -100px; z-index: 2000; background: #fff; color: #0d5bb8; padding: 8px 14px;
+    border: 2px solid #0d5bb8; border-radius: 4px; font-weight: 600; }
+.skip-link:focus { top: 8px; }
+#contenuto:focus { outline: none; }
+/* Testo per i lettori di schermo, non visibile */
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
 .container {
-    width: 95%;
+    width: min(95%, calc(100% - 30px)); /* 95% più il padding non deve superare la pagina */
     max-width: 1400px; 
     margin: 0 auto;
     padding: 0 15px;
@@ -57,6 +65,7 @@ body {
 .header-nav {
     margin-left: auto; 
     display: flex; 
+    flex-wrap: wrap;
     align-items: center;
 }
 .header-nav a {
@@ -102,7 +111,7 @@ body {
 }
 .control-button-style {
     padding: 6px 12px;
-    border: 1px solid #ccc;
+    border: 1px solid #8a8984;
     border-radius: 4px;
     font-size: 0.9rem; /* Unificato font-size per bottoni di controllo */
     cursor: pointer;
@@ -132,7 +141,7 @@ body {
 .main-search-input {
     flex-grow: 1;
     padding: 7px 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #8a8984;
     border-radius: 4px;
     font-size: 0.9em;
 }
@@ -166,7 +175,7 @@ body {
     align-items: stretch; 
 }
 .apply-button {
-    background-color: #007bff; color: white; border-color: #007bff; font-weight: bold;
+    background-color: #0069d9; color: white; border-color: #0069d9; font-weight: bold;
 }
 .apply-button:hover { background-color: #0056b3; border-color: #0056b3; }
 #reset-all-filters-button {
@@ -186,13 +195,13 @@ body {
 .filter-name-tag .remove-icon { font-weight: bold; font-size: 1.1em; line-height: 1; }
 .filter-name-tag:hover { background-color: #5a6268; }
 .filter-operator-select, .filter-value-input {
-    padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px;
+    padding: 6px 8px; border: 1px solid #8a8984; border-radius: 4px;
     font-size: 0.875em; background-color: #fff; box-sizing: border-box;
 }
 .filter-operator-select { min-width: 110px; }
 .filter-value-input { width: 150px; }
 .filter-value-input[type="number"] { width: 100px; }
-.filter-value-input::placeholder { color: #999; }
+.filter-value-input::placeholder { color: #6b6a66; }
 
 /* Status Messages */
 .status-messages { 
@@ -240,7 +249,7 @@ body {
 .year-chart .chart-hit { fill: transparent; }
 .year-chart .chart-col:hover .chart-hit, .year-chart .chart-col:focus-visible .chart-hit { fill: rgba(0, 0, 0, 0.04); }
 .year-chart .chart-col:focus-visible .chart-hit { stroke: #52514e; stroke-width: 1; }
-.chart-tooltip { position: absolute; z-index: 2; pointer-events: none; background: #fff; border: 1px solid #c3c2b7; border-radius: 4px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12); padding: 8px 10px; font-size: 0.8125em; white-space: nowrap; }
+.chart-tooltip { position: absolute; z-index: 2; background: #fff; border: 1px solid #c3c2b7; border-radius: 4px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12); padding: 8px 10px; font-size: 0.8125em; white-space: nowrap; }
 .chart-tooltip[hidden] { display: none; }
 .chart-tooltip .tt-title { font-weight: 600; margin-bottom: 4px; }
 .chart-tooltip .tt-row { display: flex; align-items: center; gap: 6px; color: #52514e; }
@@ -298,7 +307,8 @@ body {
 .choice-list label:has(input:checked) { background: #e9f1fb; }
 .choice-list input { margin: 3px 0 0; flex: none; }
 .choice-list .choice-desc { display: block; color: #52514e; font-size: 0.85em; }
-.report-form select, .report-form input[type="date"], .report-form input[type="search"] { font: inherit; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; background: #fff; }
+.report-form select, .report-form input[type="date"], .report-form input[type="search"] { font: inherit; padding: 6px 8px; border: 1px solid #8a8984; border-radius: 4px; background: #fff; }
+.report-form input[type="date"]:focus-within { outline: 2px solid #0d5bb8; outline-offset: 1px; }
 .report-form .field-row { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; margin-bottom: 6px; }
 .report-form .field-row label { font-weight: 600; min-width: 5.5em; }
 .consent { display: flex; gap: 8px; align-items: flex-start; margin: 0 0 15px; }
@@ -357,7 +367,7 @@ body {
 .map-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
 .map-filter[hidden] { display: none; }
 .map-filter label { font-weight: 600; }
-.map-filter select { font: inherit; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; background: #fff; min-width: 0; max-width: 100%; }
+.map-filter select { font: inherit; padding: 6px 8px; border: 1px solid #8a8984; border-radius: 4px; background: #fff; min-width: 0; max-width: 100%; }
 .map-filter-hint { margin: 6px 0 10px; }
 /* Selettore Segnalazioni / Notizie e pannello della vista Notizie (js/notizie.js) */
 .map-source { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 10px; }
@@ -425,6 +435,7 @@ body {
 .table-responsive-wrapper {
     overflow-x: auto; width: 100%; margin-bottom: 20px; 
 }
+.table-responsive-wrapper:focus-visible { outline: 2px solid #0d5bb8; outline-offset: 2px; }
 table { 
     width: 100%; border-collapse: collapse; margin-bottom: 0; /* Rimosso margin-bottom dalla tabella, gestito dal wrapper */
     background-color: #fff; border: 1px solid #ddd; font-size: 0.875em;
@@ -453,6 +464,7 @@ td { color: #212529; }
     /* font-size: 1rem; Rimosso, eredita da th */
 }
 .sortable-header:hover { background-color: #e8e8e8; }
+.sort-button { padding: 0; border: 0; background: none; font: inherit; color: inherit; text-align: inherit; cursor: pointer; }
 .sort-arrow {
     display: inline-block; width: 0; height: 0;
     margin-left: 7px; vertical-align: middle; 
@@ -476,11 +488,11 @@ td { color: #212529; }
 }
 .pagination button, .pagination input[type="number"], .pagination select {
     margin: 0 2px; padding: 6px 10px; font-size: 0.9rem; /* Coerenza font-size */
-    border: 1px solid #ccc; border-radius: 4px; vertical-align: middle; 
+    border: 1px solid #8a8984; border-radius: 4px; vertical-align: middle; 
 }
 .pagination input[type="number"]#page-input { width: 50px; text-align: center; }
 .pagination select#rows-per-page { padding-right: 25px; }
-.pagination button { background-color: #fff; color: #007bff; cursor: pointer; transition: background-color 0.15s ease-in-out; }
+.pagination button { background-color: #fff; color: #0069d9; cursor: pointer; transition: background-color 0.15s ease-in-out; }
 .pagination button:hover { background-color: #e9ecef; }
 .pagination button:disabled { color: #6c757d; background-color: #f8f9fa; opacity: 0.65; cursor: not-allowed; }
 .pagination .page-indicator, .pagination .rows-per-page-label { 
@@ -536,7 +548,7 @@ td { color: #212529; }
 .download-item p { font-size: 0.95rem; color: #555; line-height: 1.6; }
 .download-button {
     display: inline-block; margin-top: 15px; padding: 10px 20px;
-    background-color: #007bff; color: white; text-decoration: none;
+    background-color: #0069d9; color: white; text-decoration: none;
     border-radius: 4px; font-weight: 600; transition: background-color 0.2s;
     font-size: 0.9rem; /* Coerenza con altri bottoni */
 }
@@ -560,7 +572,7 @@ td { color: #212529; }
     .section-nav a { padding: 8px 10px; }
     .report-map { height: 320px; }
     .overview-map { height: 360px; }
-    .container { padding: 0 10px; }
+    .container { padding: 0 10px; width: min(95%, calc(100% - 20px)); }
     .main-header .header-content {
         flex-direction: column; align-items: center; text-align: center; gap: 10px;
     }
@@ -607,6 +619,7 @@ td { color: #212529; }
         padding: 5px 10px; /* Riduci padding bottoni */
     }
     .filter-name-tag { font-size: 0.8rem; padding: 5px 8px; }
+    .nowrap { white-space: normal; overflow-wrap: anywhere; }
     .filter-operator-select, .filter-value-input { font-size: 0.8rem; }
 }
 
@@ -635,4 +648,17 @@ td { color: #212529; }
     #population-groups th:nth-child(2), #population-groups td:nth-child(2),
     #population-groups th:nth-child(4), #population-groups td:nth-child(4) { display: none; }
     .population-bar-track { width: 48px; }
+}
+
+/* Schermi bassi (telefono in orizzontale, zoom al 400%): il footer segue la pagina invece di coprirne una parte */
+@media (max-height: 480px) {
+    .main-footer { position: static; }
+    body { padding-bottom: 0; }
+    html { scroll-padding-bottom: 0; }
+}
+
+/* Chi chiede meno movimento al sistema: niente animazioni né transizioni */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 }

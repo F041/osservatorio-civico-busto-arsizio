@@ -1,6 +1,8 @@
 // Mappa di Busto Arsizio disegnata da data/mappa.json (scripts/build_mappa.py), senza tessere da server esterni:
 // nessuno riceve la zona che chi segnala sta guardando. Leaflet è caricato come script classico (vendor/leaflet).
 const L = window.L;
+// Chi chiede meno movimento al sistema: la mappa cambia vista senza animazioni
+export const menoMovimento = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 let datiMappa;
 export function caricaMappa() {
@@ -106,13 +108,37 @@ function metaVia(g, via) {
     return [g.lat0 + linea[i] / g.scala, g.lon0 + linea[i + 1] / g.scala];
 }
 
+// Tabelle sotto le mappe: le prime righe subito, le altre con un pulsante. Così ogni zona o via della mappa si
+// raggiunge anche da tastiera e con il lettore di schermo (WCAG 1.1.1, 2.1.1)
+export function altreRighe(contenitore, resto, aggiungiRiga, testo) {
+    if (!resto.length) return;
+    const pulsante = document.createElement('button');
+    pulsante.type = 'button';
+    pulsante.className = 'link-button';
+    pulsante.textContent = testo;
+    pulsante.addEventListener('click', () => {
+        const righe = resto.map(aggiungiRiga);
+        pulsante.remove();
+        righe[0]?.querySelector('button')?.focus();
+    });
+    contenitore.append(pulsante);
+}
+
 export function creaMappa(element, data, { griglia = true, tenue = false } = {}) {
     const g = data.griglia;
     const confine = punti(g, data.confine);
     const limiti = L.latLngBounds(confine);
+    const fermo = menoMovimento();
     const map = L.map(element, {
         renderer: L.canvas({ padding: 0.5 }), minZoom: 12, maxZoom: 18, zoomSnap: 0.5,
-        maxBounds: limiti.pad(0.3), scrollWheelZoom: false,
+        maxBounds: limiti.pad(0.3), scrollWheelZoom: false, zoomControl: false,
+        zoomAnimation: !fermo, fadeAnimation: !fermo, markerZoomAnimation: !fermo,
+    });
+    // Pulsanti dello zoom in italiano, come il resto della pagina (WCAG 3.1.2)
+    L.control.zoom({ zoomInTitle: 'Ingrandisci', zoomOutTitle: 'Riduci' }).addTo(map);
+    // Esc chiude il riquadro aperto passando sopra una zona o una via (WCAG 1.4.13)
+    document.addEventListener('keydown', ev => {
+        if (ev.key === 'Escape') map.eachLayer(layer => { if (layer.isTooltipOpen?.()) layer.closeTooltip(); });
     });
     // Il fondo (confine, vie, ferrovie, griglia) ha un pane suo, sotto i nomi dei quartieri; i dati restano sopra
     map.createPane('fondo').style.zIndex = 300;

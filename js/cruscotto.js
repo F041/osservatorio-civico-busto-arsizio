@@ -138,14 +138,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const barWidth = Math.min(24, band * 0.6);
         const selected = periodSelect.value;
 
-        const svg = svgElement('svg', { width, height, role: 'img',
+        // Un gruppo con un nome, non un'immagine: dentro ci sono le colonne, pulsanti raggiungibili da tastiera
+        const svg = svgElement('svg', { width, height, role: 'group',
             'aria-label': `Spesa per anno e categoria, ${years[0]}–${years[years.length - 1]}. I valori sono nella tabella sotto il grafico.` });
 
         for (let tick = 0; tick <= yMax + step / 2; tick += step) {
             const y = Math.round(yScale(tick)) + 0.5;
             svg.append(svgElement('line', { x1: margin.left, x2: width - margin.right, y1: y, y2: y,
                 stroke: tick === 0 ? '#c3c2b7' : '#e1e0d9', 'stroke-width': 1 }));
-            const label = svgElement('text', { x: margin.left - 8, y: y + 4, 'text-anchor': 'end', fill: '#52514e', 'font-size': 12 });
+            const label = svgElement('text', { x: margin.left - 8, y: y + 4, 'text-anchor': 'end', fill: '#52514e', 'font-size': 12, 'aria-hidden': 'true' });
             label.textContent = `${integer.format(tick / 1e6)} mln €`;
             svg.append(label);
         }
@@ -155,8 +156,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const center = margin.left + band * (i + 0.5);
             const x = center - barWidth / 2;
             const dimmed = selected !== 'tutti' && selected !== year;
-            const column = svgElement('g', { class: 'chart-col', tabindex: 0,
-                'aria-label': `${periodLabel(year)}: ${formatMillions(stats.totale)}` });
+            const column = svgElement('g', { class: 'chart-col', tabindex: 0, role: 'button', 'data-anno': year,
+                'aria-pressed': String(selected === year), 'aria-label': `${periodLabel(year)}: ${formatMillions(stats.totale)}` });
             column.append(svgElement('rect', { class: 'chart-hit', x: center - band / 2 + 1, y: margin.top, width: band - 2, height: plotHeight, rx: 4 }));
 
             // Pila dal basso; 2px di spazio tra i segmenti, angoli arrotondati solo in cima
@@ -182,9 +183,9 @@ document.addEventListener('DOMContentLoaded', () => {
             label.textContent = isPartialYear(year) ? `${year}*` : year;
             column.append(label);
 
-            column.addEventListener('mouseenter', () => showYearTooltip(year, column));
+            column.addEventListener('mouseenter', () => { clearTimeout(hideTimer); showYearTooltip(year, column); });
             column.addEventListener('focus', () => showYearTooltip(year, column));
-            column.addEventListener('mouseleave', () => { yearTooltip.hidden = true; });
+            column.addEventListener('mouseleave', hideTooltipSoon);
             column.addEventListener('blur', () => { yearTooltip.hidden = true; });
             const selectYear = () => {
                 periodSelect.value = periodSelect.value === year ? 'tutti' : year;
@@ -197,9 +198,24 @@ document.addEventListener('DOMContentLoaded', () => {
             svg.append(column);
         });
 
+        // Dopo il clic o Invio su un anno il grafico si ridisegna: il focus resta sulla stessa colonna
+        const focusedYear = document.activeElement?.closest?.('#year-chart .chart-col')?.dataset.anno;
         yearChart.querySelector('svg')?.remove();
         yearChart.prepend(svg);
+        if (focusedYear) svg.querySelector(`.chart-col[data-anno="${focusedYear}"]`)?.focus();
     }
+
+    // Il tooltip resta aperto se il puntatore ci passa sopra, e si chiude con Esc (WCAG 1.4.13)
+    let hideTimer = null;
+    function hideTooltipSoon() {
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(() => { yearTooltip.hidden = true; }, 300);
+    }
+    yearTooltip.addEventListener('mouseenter', () => clearTimeout(hideTimer));
+    yearTooltip.addEventListener('mouseleave', hideTooltipSoon);
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') { clearTimeout(hideTimer); yearTooltip.hidden = true; }
+    });
 
     function render() {
         const period = periodSelect.value;

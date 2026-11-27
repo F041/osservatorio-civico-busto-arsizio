@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <a class="skip-link" href="#contenuto">Vai al contenuto</a>
     <header class="main-header">
         <div class="container header-content">
             <img src="img/stemma.png" alt="Stemma Comune Busto Arsizio" class="header-logo" width="67" height="80">
@@ -28,7 +29,7 @@
         </div>
     </header>
 
-    <div class="container page-content population">
+    <main id="contenuto" tabindex="-1" class="container page-content population">
         <h2>Residenti stimati per gruppo di quartieri</h2>
         <p class="population-intro">ISTAT pubblica i residenti di tutto il Comune, non dei singoli quartieri. Li stimiamo dagli
             elettori di ogni sezione elettorale: serviranno a confrontare i numeri delle altre sezioni del sito con la
@@ -40,7 +41,7 @@
 
             <section class="population-section" aria-labelledby="gruppi-titolo">
                 <h3 id="gruppi-titolo">Residenti stimati per gruppo</h3>
-                <div class="table-responsive-wrapper"><table id="population-groups" class="population-table"></table></div>
+                <div class="table-responsive-wrapper" tabindex="0" role="region" aria-label="Tabella dei residenti stimati per gruppo"><table id="population-groups" class="population-table"></table></div>
             </section>
 
             <section class="population-section" aria-labelledby="scuole-titolo">
@@ -52,7 +53,7 @@
             <section class="population-section">
                 <details>
                     <summary id="sezioni-titolo">Elettori di tutte le sezioni</summary>
-                    <div class="table-responsive-wrapper"><table id="population-sections" class="population-table"></table></div>
+                    <div class="table-responsive-wrapper" tabindex="0" role="region" aria-label="Tabella degli elettori per sezione"><table id="population-sections" class="population-table"></table></div>
                 </details>
             </section>
 
@@ -63,7 +64,7 @@
                     Cosa vuol dire ogni campo e le licenze delle fonti: <a href="dati-aperti.html#popolazione">Dati aperti</a>.</p>
             </section>
         </div>
-    </div>
+    </main>
 
     <footer class="main-footer">
         <a href="https://github.com/F041/osservatorio-civico-busto-arsizio" target="_blank" rel="noopener" class="footer-link" title="Vai al repository GitHub">

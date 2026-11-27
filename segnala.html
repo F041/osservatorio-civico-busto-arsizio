@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <a class="skip-link" href="#contenuto">Vai al contenuto</a>
     <header class="main-header">
         <div class="container header-content">
             <img src="img/stemma.png" alt="Stemma Comune Busto Arsizio" class="header-logo" width="67" height="80">
@@ -36,7 +37,8 @@
         </div>
     </nav>
 
-    <div class="container page-content">
+    <main id="contenuto" tabindex="-1" class="container page-content">
+        <h2 class="visually-hidden">Fai una segnalazione</h2>
         <div class="emergency-note report-form" role="note">
             <strong>In caso di pericolo chiama il 112.</strong> Questa segnalazione è anonima, non è una denuncia
             e nessuno la legge in tempo reale: serve a contare dove e quando ci si sente insicuri.
@@ -74,7 +76,7 @@
                     <p class="field-label" id="place-cells-label">In quale tratto?</p>
                     <div class="choice-list" id="choices-cella" role="radiogroup" aria-labelledby="place-cells-label"></div>
                 </div>
-                <div class="report-map" id="report-map" aria-label="Mappa di Busto Arsizio: tocca un quadrato per sceglierlo"></div>
+                <div class="report-map" id="report-map" role="region" aria-label="Mappa di Busto Arsizio: tocca un quadrato per sceglierlo, oppure cerca la via nel campo qui sopra"></div>
                 <p class="cell-chosen" id="cell-chosen" aria-live="polite">Nessun quadrato scelto: cerca una via o tocca la mappa.</p>
             </fieldset>
 
@@ -104,7 +106,7 @@
             <p><strong>Grazie, la segnalazione è stata registrata.</strong> Comparirà nei conteggi della panoramica entro un giorno.</p>
             <p><a href="index.html">Vai alla panoramica</a> · <a href="segnala.html">Fai un'altra segnalazione</a></p>
         </div>
-    </div>
+    </main>
 
     <footer class="main-footer">
         <a href="https://github.com/F041/osservatorio-civico-busto-arsizio" target="_blank" rel="noopener" class="footer-link" title="Vai al repository GitHub">
