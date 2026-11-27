@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Dati aperti - Osservatorio civico Busto Arsizio</title>
+    <meta name="description" content="I file pubblicati dall'Osservatorio civico Busto Arsizio: fonte, aggiornamento, formato e significato di ogni campo.">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .open-data { max-width: 900px; }
+        .open-data h2 { margin-top: 36px; }
+        .open-data .facts { padding-left: 20px; }
+        .open-data .facts li { margin-bottom: 6px; }
+        .open-data code { font-size: 0.92em; overflow-wrap: anywhere; }
+        .dictionary-table { font-size: 0.92em; margin-top: 4px; }
+        .dictionary-table caption { text-align: left; font-weight: 600; padding: 6px 0; caption-side: top; }
+        .dictionary-table tbody th { background: #fff; font-weight: 400; min-width: 9em; }
+        .dictionary-table code { overflow-wrap: normal; }
+        .dictionary-table td:nth-child(2) { white-space: nowrap; }
+        .summary-table td a, .summary-table th a { overflow-wrap: anywhere; }
+        @media (max-width: 600px) {
+            .dictionary-table td:nth-child(2) { white-space: normal; }
+            .dictionary-table tbody th { min-width: 0; }
+            .dictionary-table code { font-size: 0.8em; overflow-wrap: anywhere; }
+        }
+    </style>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Dataset",
+                "@id": "https://f041.github.io/osservatorio-civico-busto-arsizio/dati-aperti.html#pagamenti",
+                "name": "Pagamenti del Comune di Busto Arsizio dal 2017 al 2025",
+                "description": "I pagamenti del Comune di Busto Arsizio, un mandato di pagamento per riga, dal 3 gennaio 2017 al 30 settembre 2025. Per ogni riga: numero e data del mandato, beneficiario, importo in euro, descrizione, codice fiscale e partita IVA quando il Comune li riporta. I dati vengono dai prospetti trimestrali che il Comune pubblica in Amministrazione trasparente. Database SQLite; il CSV si genera dalla pagina Scarica dati.",
+                "url": "https://f041.github.io/osservatorio-civico-busto-arsizio/dati-aperti.html#pagamenti",
+                "inLanguage": "it",
+                "keywords": ["Busto Arsizio", "pagamenti", "mandati di pagamento", "spesa pubblica", "Amministrazione trasparente", "comune"],
+                "isAccessibleForFree": true,
+                "temporalCoverage": "2017-01-03/2025-09-30",
+                "spatialCoverage": { "@id": "#busto-arsizio" },
+                "isBasedOn": "https://bustoarsizio.trasparenza-valutazione-merito.it/web/trasparenza/papca-g/-/papca/igrid/36236",
+                "includedInDataCatalog": { "@id": "#catalogo" },
+                "variableMeasured": [
+                    { "@type": "PropertyValue", "name": "NumeroMandato", "description": "Numero del mandato di pagamento, progressivo dentro l'anno" },
+                    { "@type": "PropertyValue", "name": "Anno", "description": "Anno del mandato" },
+                    { "@type": "PropertyValue", "name": "DataMandato", "description": "Data del mandato (ISO 8601)" },
+                    { "@type": "PropertyValue", "name": "CIG", "description": "Codice identificativo di gara, vuoto nel database attuale" },
+                    { "@type": "PropertyValue", "name": "Beneficiario", "description": "Nome del beneficiario" },
+                    { "@type": "PropertyValue", "name": "ImportoEuro", "description": "Importo pagato", "unitText": "EUR" },
+                    { "@type": "PropertyValue", "name": "DescrizioneMandato", "description": "Descrizione o causale del pagamento" },
+                    { "@type": "PropertyValue", "name": "NomeFileOrigine", "description": "File del Comune da cui viene la riga" },
+                    { "@type": "PropertyValue", "name": "CodiceFiscale", "description": "Codice fiscale del beneficiario, quando presente" },
+                    { "@type": "PropertyValue", "name": "PartitaIVA", "description": "Partita IVA del beneficiario, quando presente" }
+                ],
+                "distribution": [
+                    {
+                        "@type": "DataDownload",
+                        "name": "Database SQLite, tabella pagamenti",
+                        "contentUrl": "https://f041.github.io/osservatorio-civico-busto-arsizio/busto_pagamenti.db",
+                        "encodingFormat": "application/vnd.sqlite3"
+                    }
+                ],
+                "subjectOf": {
+                    "@type": "CreativeWork",
+                    "name": "Table Schema della tabella pagamenti",
+                    "url": "https://f041.github.io/osservatorio-civico-busto-arsizio/data/schemi/pagamenti.tableschema.json",
+                    "encodingFormat": "application/json"
+                }
+            },
+            {
+                "@type": "Dataset",
+                "@id": "https://f041.github.io/osservatorio-civico-busto-arsizio/dati-aperti.html#cruscotto",
+                "name": "Pagamenti del Comune di Busto Arsizio per categoria e beneficiario",
+                "description": "Totali dei pagamenti del Comune di Busto Arsizio per anno e per categoria di beneficiario (partecipate, enti controllati e vigilati, altri enti pubblici, personale e fisco, privati), con i beneficiari che hanno ricevuto di più. Calcolati dal database dei pagamenti: sono i numeri della pagina Cruscotto.",
+                "url": "https://f041.github.io/osservatorio-civico-busto-arsizio/dati-aperti.html#cruscotto",
+                "inLanguage": "it",
+                "keywords": ["Busto Arsizio", "pagamenti", "società partecipate", "beneficiari", "spesa pubblica"],
+                "isAccessibleForFree": true,
+                "temporalCoverage": "2017-01-03/2025-09-30",
+                "spatialCoverage": { "@id": "#busto-arsizio" },
+                "isBasedOn": "https://f041.github.io/osservatorio-civico-busto-arsizio/dati-aperti.html#pagamenti",
+                "includedInDataCatalog": { "@id": "#catalogo" },
+                "distribution": [
+                    {
+                        "@type": "DataDownload",
+                        "name": "File JSON",
+                        "contentUrl": "https://f041.github.io/osservatorio-civico-busto-arsizio/data/cruscotto.json",
+                        "encodingFormat": "application/json"
+                    }
+                ],
+                "subjectOf": {
+                    "@type": "CreativeWork",
+                    "name": "JSON Schema di cruscotto.json",
+                    "url": "https://f041.github.io/osservatorio-civico-busto-arsizio/data/schemi/cruscotto.schema.json",
+                    "encodingFormat": "application/schema+json"
+                }
+            },
+            {
+                "@type": "Dataset",
+                "@id": "https://f041.github.io/osservatorio-civico-busto-arsizio/dati-aperti.html#popolazione",
+                "name": "Residenti stimati per gruppo di quartieri di Busto Arsizio",
+                "description": "Elettori di ogni sezione elettorale di Busto Arsizio, residenti del Comune secondo ISTAT e la stima dei residenti per gruppo di quartieri. La stima moltiplica gli elettori di ogni gruppo per il rapporto tra residenti ed elettori del Comune. Ogni scuola dove si vota conta per un gruppo, con il criterio della scelta.",
+                "url": "https://f041.github.io/osservatorio-civico-busto-arsizio/dati-aperti.html#popolazione",
+                "inLanguage": "it",
+                "keywords": ["Busto Arsizio", "popolazione", "residenti", "quartieri", "sezioni elettorali", "elettori"],
+                "isAccessibleForFree": true,
+                "spatialCoverage": { "@id": "#busto-arsizio" },
+                "isBasedOn": [
+                    "https://demo.istat.it/app/?i=D7B&l=it",
+                    "https://elezionibustoarsizio.risele.it/web2603/referendum/AFFLSEZ_1_12026_R4.xml",
+                    "https://elezionibustoarsizio.risele.it/web2603/referendum/AFFLTOT_1_12026.xml"
+                ],
+                "includedInDataCatalog": { "@id": "#catalogo" },
+                "distribution": [
+                    {
+                        "@type": "DataDownload",
+                        "name": "File JSON",
+                        "contentUrl": "https://f041.github.io/osservatorio-civico-busto-arsizio/data/popolazione.json",
+                        "encodingFormat": "application/json"
+                    }
+                ],
+                "subjectOf": {
+                    "@type": "CreativeWork",
+                    "name": "JSON Schema di popolazione.json",
+                    "url": "https://f041.github.io/osservatorio-civico-busto-arsizio/data/schemi/popolazione.schema.json",
+                    "encodingFormat": "application/schema+json"
+                }
+            },
+            {
+                "@type": "Dataset",
+                "@id": "https://f041.github.io/osservatorio-civico-busto-arsizio/dati-aperti.html#sicurezza",
+                "name": "Segnalazioni di insicurezza a Busto Arsizio: conteggi degli ultimi 90 giorni",
+                "description": "Conteggi delle segnalazioni anonime fatte dai cittadini sul sito negli ultimi 90 giorni: per quadrato della mappa di circa 250 metri, per tipo di episodio, fascia oraria, fattori e denuncia. Le singole segnalazioni non sono pubblicate e i conteggi sotto 3 sono nascosti. Si ricalcola ogni notte.",
+                "url": "https://f041.github.io/osservatorio-civico-busto-arsizio/dati-aperti.html#sicurezza",
+                "inLanguage": "it",
+                "keywords": ["Busto Arsizio", "sicurezza urbana", "segnalazioni", "percezione di insicurezza", "mappa"],
+                "isAccessibleForFree": true,
+                "spatialCoverage": { "@id": "#busto-arsizio" },
+                "includedInDataCatalog": { "@id": "#catalogo" },
+                "distribution": [
+                    {
+                        "@type": "DataDownload",
+                        "name": "File JSON",
+                        "contentUrl": "https://f041.github.io/osservatorio-civico-busto-arsizio/data/sicurezza.json",
+                        "encodingFormat": "application/json"
+                    }
+                ],
+                "subjectOf": {
+                    "@type": "CreativeWork",
+                    "name": "JSON Schema di sicurezza.json",
+                    "url": "https://f041.github.io/osservatorio-civico-busto-arsizio/data/schemi/sicurezza.schema.json",
+                    "encodingFormat": "application/schema+json"
+                }
+            },
+            {
+                "@type": "DataCatalog",
+                "@id": "#catalogo",
+                "name": "Osservatorio civico Busto Arsizio",
+                "url": "https://f041.github.io/osservatorio-civico-busto-arsizio/dati-aperti.html"
+            },
+            {
+                "@type": "Place",
+                "@id": "#busto-arsizio",
+                "name": "Busto Arsizio (VA), Italia",
+                "geo": { "@type": "GeoShape", "box": "45.568 8.804 45.6445 8.884" }
+            }
+        ]
+    }
+    </script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="container header-content">
+            <img src="img/stemma.png" alt="Stemma Comune Busto Arsizio" class="header-logo" width="67" height="80">
+            <div class="header-text">
+                <h1 class="main-title">Osservatorio civico <span class="location-name">Busto Arsizio</span></h1>
+                <p class="sub-title">Dati aperti</p>
+            </div>
+            <nav class="header-nav" aria-label="Sezioni del sito">
+                <a href="index.html">Sicurezza</a>
+                <a href="pagamenti.html">Pagamenti</a>
+                <a href="popolazione.html">Popolazione</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container page-content open-data">
+        <h1>Dati aperti</h1>
+        <p>Qui trovi i file che il sito pubblica: da dove vengono, quando cambiano e cosa vuol dire ogni campo.
+            Si scaricano senza registrazione.</p>
+        <p>Ogni dizionario esiste anche come file per i programmi: Table Schema per la tabella dei pagamenti,
+            JSON Schema per i file JSON. Nel codice della pagina ci sono i metadati dei dataset nel vocabolario schema.org,
+            quello che leggono i motori di ricerca.</p>
+
+        <div class="table-responsive-wrapper">
+            <table class="summary-table" aria-label="I file pubblicati">
+                <thead><tr><th scope="col">Dati</th><th scope="col">File</th><th scope="col">Aggiornati</th></tr></thead>
+                <tbody>
+                    <tr><th scope="row"><a href="#pagamenti">Pagamenti del Comune</a></th><td><a href="busto_pagamenti.db" download="pagamenti_busto_arsizio.db">busto_pagamenti.db</a> (SQLite), CSV da <a href="dati.html">Scarica dati</a></td><td><span data-aggiornamento="pagamenti">…</span></td></tr>
+                    <tr><th scope="row"><a href="#cruscotto">Pagamenti per categoria e beneficiario</a></th><td><a href="data/cruscotto.json" download="cruscotto_busto_arsizio.json">cruscotto.json</a></td><td><span data-aggiornamento="cruscotto">…</span></td></tr>
+                    <tr><th scope="row"><a href="#popolazione">Residenti stimati per gruppo di quartieri</a></th><td><a href="data/popolazione.json" download="popolazione_busto_arsizio.json">popolazione.json</a></td><td><span data-aggiornamento="popolazione">…</span></td></tr>
+                    <tr><th scope="row"><a href="#sicurezza">Segnalazioni di Sicurezza, conteggi</a></th><td><a href="data/sicurezza.json" download="sicurezza_busto_arsizio.json">sicurezza.json</a></td><td><span data-aggiornamento="sicurezza">…</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2 id="pagamenti">Pagamenti del Comune</h2>
+        <ul class="facts">
+            <li>Un pagamento per riga, <span data-periodo="cruscotto">dal 2017 al 2025</span>. Dal quarto trimestre 2025 il Comune
+                pubblica solo importi aggregati, senza mandato né beneficiario: quei trimestri non ci sono.</li>
+            <li>File: <a href="busto_pagamenti.db" download="pagamenti_busto_arsizio.db">busto_pagamenti.db</a>, database SQLite con la tabella
+                <code>pagamenti</code>. Il CSV con le stesse colonne si genera in <a href="dati.html">Scarica dati</a>.</li>
+            <li>Aggiornamento: il primo giorno di ogni mese il sito scarica il database dalla
+                <a href="https://github.com/F041/osservatorio-statistico-bustoarsizio-tubatura-dati" target="_blank" rel="noopener">pipeline che raccoglie i prospetti</a>
+                e lo pubblica se è cambiato. Ultimo cambiamento: <span data-aggiornamento="pagamenti">…</span>.</li>
+            <li>Fonte: Comune di Busto Arsizio, Amministrazione trasparente,
+                <a href="https://bustoarsizio.trasparenza-valutazione-merito.it/web/trasparenza/papca-g/-/papca/igrid/36236" target="_blank" rel="noopener">Dati sui pagamenti</a>
+                (un prospetto Excel per trimestre).</li>
+            <li>Riutilizzo della fonte: l'<a href="https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2013-03-14;33~art7" target="_blank" rel="noopener">articolo 7 del d.lgs. 33/2013</a>
+                rende riutilizzabili i dati pubblicati per obbligo in Amministrazione trasparente, con l'obbligo di citare la fonte e di rispettarne l'integrità.
+                Il portale dei pagamenti non indica una licenza. Le <a href="https://www.comune.bustoarsizio.va.it/it/legal_notices" target="_blank" rel="noopener">note legali del Comune</a>
+                danno la licenza CC BY 4.0 ai dati del sito www.comune.bustoarsizio.va.it; non abbiamo verificato che valga anche per il portale.</li>
+            <li>Dati personali: alcuni beneficiari sono persone fisiche, con il nome e a volte il codice fiscale.
+                Secondo le <a href="https://www.garanteprivacy.it/web/guest/home/docweb/-/docweb-display/docweb/3134436" target="_blank" rel="noopener">linee guida del Garante privacy</a>,
+                i dati personali pubblicati per trasparenza non sono riutilizzabili da chiunque per qualsiasi scopo:
+                vanno usati per fini compatibili e nel rispetto delle norme sulla protezione dei dati personali.</li>
+            <li>Schema per i programmi: <a href="data/schemi/pagamenti.tableschema.json">pagamenti.tableschema.json</a> (Table Schema).</li>
+        </ul>
+        <div class="table-responsive-wrapper" data-schema="data/schemi/pagamenti.tableschema.json" data-titolo="Colonne della tabella pagamenti e del CSV"></div>
+        <p class="safety-muted">Il CSV segue la <a href="https://www.rfc-editor.org/rfc/rfc4180" target="_blank" rel="noopener">RFC 4180</a>:
+            codifica UTF-8 con BOM (così Excel legge gli accenti), separatore virgola, virgolette doppie solo intorno ai campi che contengono
+            virgole, virgolette o a capo, righe chiuse da CRLF e una riga di intestazione. Numeri con il punto decimale, senza separatore
+            delle migliaia. Un campo vuoto è un valore assente.</p>
+
+        <h2 id="cruscotto">Pagamenti per categoria e beneficiario</h2>
+        <ul class="facts">
+            <li>Totali per anno e per categoria di beneficiario, e i beneficiari che hanno ricevuto di più. Sono i numeri della pagina
+                <a href="cruscotto.html">Cruscotto</a>, calcolati dal database dei pagamenti.</li>
+            <li>File: <a href="data/cruscotto.json" download="cruscotto_busto_arsizio.json">cruscotto.json</a> (JSON).</li>
+            <li>Aggiornamento: si ricalcola quando cambia il database dei pagamenti. Ultimo calcolo: <span data-aggiornamento="cruscotto">…</span>.</li>
+            <li>Fonte: il database dei pagamenti qui sopra. Le categorie vengono dalle regole di
+                <a href="https://github.com/F041/osservatorio-civico-busto-arsizio/blob/main/scripts/build_cruscotto.py" target="_blank" rel="noopener">scripts/build_cruscotto.py</a>,
+                basate sugli elenchi di Amministrazione trasparente &gt; Enti controllati.</li>
+            <li>Schema per i programmi: <a href="data/schemi/cruscotto.schema.json">cruscotto.schema.json</a> (JSON Schema).</li>
+        </ul>
+        <div class="table-responsive-wrapper" data-schema="data/schemi/cruscotto.schema.json" data-titolo="Campi di cruscotto.json"></div>
+
+        <h2 id="popolazione">Residenti stimati per gruppo di quartieri</h2>
+        <ul class="facts">
+            <li>Elettori di ogni sezione elettorale, residenti del Comune secondo ISTAT e la stima dei residenti per gruppo di quartieri.
+                Il metodo è spiegato nella pagina <a href="popolazione.html">Popolazione</a>.</li>
+            <li>File: <a href="data/popolazione.json" download="popolazione_busto_arsizio.json">popolazione.json</a> (JSON).</li>
+            <li>Aggiornamento: lo rigeneriamo a mano con
+                <a href="https://github.com/F041/osservatorio-civico-busto-arsizio/blob/main/scripts/build_popolazione.py" target="_blank" rel="noopener">scripts/build_popolazione.py</a>,
+                che scarica di nuovo le due fonti. Ultima volta: <span data-aggiornamento="popolazione">…</span>.</li>
+            <li>Residenti: ISTAT, <a href="https://demo.istat.it/app/?i=D7B&amp;l=it" target="_blank" rel="noopener">bilancio demografico mensile</a>.
+                Le <a href="https://www.istat.it/note-legali/" target="_blank" rel="noopener">note legali ISTAT</a>, a cui rimanda anche demo.istat.it,
+                danno la licenza CC BY 4.0 ai contenuti pubblicati, salvo diversa indicazione.</li>
+            <li>Elettori: Comune di Busto Arsizio, Ufficio elettorale, dati ufficiosi del referendum del 22 e 23 marzo 2026
+                (file XML per <a href="https://elezionibustoarsizio.risele.it/web2603/referendum/AFFLSEZ_1_12026_R4.xml" target="_blank" rel="noopener">sezione</a>
+                e per <a href="https://elezionibustoarsizio.risele.it/web2603/referendum/AFFLTOT_1_12026.xml" target="_blank" rel="noopener">Comune</a>).
+                Licenza non verificata: il sito dei risultati non ne indica una.</li>
+            <li>Schema per i programmi: <a href="data/schemi/popolazione.schema.json">popolazione.schema.json</a> (JSON Schema).</li>
+        </ul>
+        <div class="table-responsive-wrapper" data-schema="data/schemi/popolazione.schema.json" data-titolo="Campi di popolazione.json"></div>
+
+        <h2 id="sicurezza">Segnalazioni di Sicurezza, conteggi</h2>
+        <ul class="facts">
+            <li>Conteggi delle segnalazioni anonime fatte con il modulo <a href="segnala.html">Segnala</a> negli ultimi 90 giorni:
+                per quadrato della mappa, tipo, fascia oraria, fattori e denuncia. Le singole segnalazioni non sono mai pubblicate e i numeri sotto 3 sono nascosti.
+                I dettagli sono in <a href="privacy.html">Come funziona e privacy</a>.</li>
+            <li>File: <a href="data/sicurezza.json" download="sicurezza_busto_arsizio.json">sicurezza.json</a> (JSON).</li>
+            <li>Aggiornamento: ogni notte. Ultimo calcolo: <span data-aggiornamento="sicurezza">…</span>.</li>
+            <li>Fonte: le segnalazioni inviate a questo sito. I quadrati sono quelli della mappa in <code>data/mappa.json</code>,
+                disegnata con i dati di <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> (licenza ODbL).</li>
+            <li>Schema per i programmi: <a href="data/schemi/sicurezza.schema.json">sicurezza.schema.json</a> (JSON Schema).</li>
+        </ul>
+        <div class="table-responsive-wrapper" data-schema="data/schemi/sicurezza.schema.json" data-titolo="Campi di sicurezza.json"></div>
+
+        <h2 id="formati">Formati e riferimenti</h2>
+        <p>Tutti i file sono in formati aperti e leggibili dai programmi: JSON in UTF-8, CSV e SQLite. Le date seguono la ISO 8601
+            (AAAA-MM-GG) e gli orari di calcolo sono in UTC.</p>
+        <p>Per formati, schemi e metadati seguiamo le
+            <a href="https://www.agid.gov.it/sites/default/files/repository_files/lg-open-data_v.1.0_1.pdf" target="_blank" rel="noopener">linee guida AgID sui dati aperti</a>
+            (versione 1.0, 2023), che indicano Table Schema per il CSV e JSON Schema per il JSON, e il vocabolario
+            <a href="https://schema.org/Dataset" target="_blank" rel="noopener">schema.org Dataset</a> per i metadati.</p>
+    </div>
+
+    <footer class="main-footer">
+        <a href="https://github.com/F041/osservatorio-civico-busto-arsizio" target="_blank" rel="noopener" class="footer-link" title="Vai al repository GitHub">
+            <svg height="24" width="24" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.01.08-2.12 0 0 .67-.21 2.2.82a7.65 7.65 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.11.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
+            <span>Progetto su GitHub</span>
+        </a>
+        <a href="privacy.html" class="footer-link">Privacy</a>
+    </footer>
+    <script type="module" src="js/dati-aperti.js"></script>
+</body>
+</html>

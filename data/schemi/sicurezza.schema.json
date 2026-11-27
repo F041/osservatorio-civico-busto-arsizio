@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://f041.github.io/osservatorio-civico-busto-arsizio/data/schemi/sicurezza.schema.json",
+  "title": "Conteggi delle segnalazioni di Sicurezza",
+  "description": "Struttura di data/sicurezza.json, calcolato ogni notte da scripts/build_sicurezza.py. Solo conteggi degli ultimi 90 giorni, mai le singole segnalazioni. I conteggi da 1 alla soglia meno uno non sono pubblicati.",
+  "type": "object",
+  "required": ["generato", "finestra_giorni", "da", "a", "soglia", "totale", "celle", "celle_per", "categorie", "fasce", "fattori", "denuncia"],
+  "additionalProperties": false,
+  "properties": {
+    "generato": { "type": "string", "format": "date-time", "description": "Momento del calcolo, in UTC." },
+    "finestra_giorni": { "type": "integer", "x-unita": "giorni", "description": "Lunghezza del periodo contato." },
+    "da": { "type": "string", "format": "date", "description": "Primo giorno del periodo. Contano le segnalazioni con il giorno dell'episodio da questa data in poi." },
+    "a": { "type": "string", "format": "date", "description": "Giorno del calcolo, ultimo del periodo." },
+    "soglia": { "type": "integer", "x-unita": "segnalazioni", "description": "Soglia di pubblicazione. Un conteggio da 1 alla soglia meno uno non è pubblicato: vale null o, per i quadrati, manca." },
+    "totale": { "type": "integer", "minimum": 0, "x-unita": "segnalazioni", "description": "Segnalazioni del periodo in tutta la città." },
+    "celle": {
+      "type": "object",
+      "description": "Segnalazioni per quadrato della mappa, dal più segnalato. Compaiono solo i quadrati con almeno soglia segnalazioni.",
+      "x-chiave": "quadrato",
+      "propertyNames": { "$ref": "#/$defs/codiceQuadrato" },
+      "additionalProperties": { "type": "integer", "x-unita": "segnalazioni", "description": "Segnalazioni nel quadrato." }
+    },
+    "celle_per": {
+      "type": "object",
+      "description": "Gli stessi quadrati per una sola voce alla volta, per i filtri della mappa. Due voci insieme non si incrociano mai. Per tipo e fascia, se le voci nascoste di un quadrato si potessero ricavare per sottrazione dal totale, si nasconde anche la voce visibile più piccola.",
+      "required": ["categoria", "fascia", "fattori"],
+      "additionalProperties": false,
+      "properties": {
+        "categoria": { "$ref": "#/$defs/quadratiPerVoce", "description": "Per ogni tipo di episodio (chiavi di categorie), i quadrati con almeno soglia segnalazioni di quel tipo." },
+        "fascia": { "$ref": "#/$defs/quadratiPerVoce", "description": "Per ogni fascia oraria (chiavi di fasce), i quadrati con almeno soglia segnalazioni in quella fascia." },
+        "fattori": { "$ref": "#/$defs/quadratiPerVoce", "description": "Per ogni fattore (chiavi di fattori), i quadrati con almeno soglia segnalazioni che lo indicano." }
+      }
+    },
+    "categorie": {
+      "type": "object",
+      "description": "Segnalazioni del periodo per tipo di episodio, in tutta la città. Ogni segnalazione ha un tipo solo.",
+      "required": ["insicurezza", "furto", "molestia", "aggressione", "vandalismo", "altro"],
+      "additionalProperties": false,
+      "properties": {
+        "insicurezza": { "$ref": "#/$defs/conteggio", "description": "Sensazione di insicurezza: nessun episodio preciso." },
+        "furto": { "$ref": "#/$defs/conteggio", "description": "Furto o tentato furto." },
+        "molestia": { "$ref": "#/$defs/conteggio", "description": "Molestia: commenti, insulti, pedinamento, contatti indesiderati." },
+        "aggressione": { "$ref": "#/$defs/conteggio", "description": "Aggressione o minaccia." },
+        "vandalismo": { "$ref": "#/$defs/conteggio", "description": "Vandalismo o degrado, compresi i rifiuti abbandonati." },
+        "altro": { "$ref": "#/$defs/conteggio", "description": "Altro." }
+      }
+    },
+    "fasce": {
+      "type": "object",
+      "description": "Segnalazioni del periodo per fascia oraria dell'episodio. Ogni segnalazione ha una fascia sola.",
+      "required": ["mattina", "pomeriggio", "sera", "notte"],
+      "additionalProperties": false,
+      "properties": {
+        "mattina": { "$ref": "#/$defs/conteggio", "description": "Dalle 6 alle 12." },
+        "pomeriggio": { "$ref": "#/$defs/conteggio", "description": "Dalle 12 alle 18." },
+        "sera": { "$ref": "#/$defs/conteggio", "description": "Dalle 18 alle 22." },
+        "notte": { "$ref": "#/$defs/conteggio", "description": "Dalle 22 alle 6." }
+      }
+    },
+    "fattori": {
+      "type": "object",
+      "description": "Segnalazioni del periodo che indicano ciascun fattore. Una segnalazione può indicarne più di uno o nessuno: la somma non è il totale.",
+      "required": ["illuminazione", "isolata", "persone-moleste", "degrado", "trasporti", "nessuno-intorno"],
+      "additionalProperties": false,
+      "properties": {
+        "illuminazione": { "$ref": "#/$defs/conteggio", "description": "Poca illuminazione." },
+        "isolata": { "$ref": "#/$defs/conteggio", "description": "Zona isolata o poco frequentata." },
+        "persone-moleste": { "$ref": "#/$defs/conteggio", "description": "Persone moleste o aggressive." },
+        "degrado": { "$ref": "#/$defs/conteggio", "description": "Degrado o sporcizia." },
+        "trasporti": { "$ref": "#/$defs/conteggio", "description": "Fermata, stazione o parcheggio." },
+        "nessuno-intorno": { "$ref": "#/$defs/conteggio", "description": "Nessuno a cui chiedere aiuto." }
+      }
+    },
+    "denuncia": {
+      "type": "object",
+      "description": "Segnalazioni del periodo per risposta alla domanda sulla denuncia.",
+      "required": ["si", "no", "non-dico"],
+      "additionalProperties": false,
+      "properties": {
+        "si": { "$ref": "#/$defs/conteggio", "description": "Ha sporto denuncia." },
+        "no": { "$ref": "#/$defs/conteggio", "description": "Non ha sporto denuncia." },
+        "non-dico": { "$ref": "#/$defs/conteggio", "description": "Preferisce non dirlo." }
+      }
+    }
+  },
+  "$defs": {
+    "conteggio": {
+      "type": ["integer", "null"],
+      "minimum": 0,
+      "x-unita": "segnalazioni",
+      "description": "Numero di segnalazioni. null vuol dire da 1 alla soglia meno uno, non pubblicato."
+    },
+    "codiceQuadrato": {
+      "type": "string",
+      "pattern": "^r[0-9]{2}c[0-9]{2}$",
+      "description": "Codice del quadrato rRRcCC: riga RR contata da sud e colonna CC contata da ovest, da 00. Il quadrato misura 0,00225 gradi di latitudine per 0,0032 di longitudine (circa 250 per 250 metri). L'angolo sud-ovest è a latitudine 45,568 + RR × 0,00225 e longitudine 8,804 + CC × 0,0032 (WGS 84). La griglia è descritta anche nel campo griglia di data/mappa.json."
+    },
+    "quadratiPerVoce": {
+      "type": "object",
+      "x-chiave": "voce",
+      "additionalProperties": {
+        "type": "object",
+        "description": "Quadrati con almeno soglia segnalazioni per quella voce, dal più segnalato.",
+        "x-chiave": "quadrato",
+        "propertyNames": { "$ref": "#/$defs/codiceQuadrato" },
+        "additionalProperties": { "type": "integer", "x-unita": "segnalazioni", "description": "Segnalazioni nel quadrato per quella voce." }
+      }
+    }
+  }
+}

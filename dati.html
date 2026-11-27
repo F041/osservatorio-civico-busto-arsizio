@@ -61,15 +61,22 @@
             </div>
             <div class="download-item">
                 <h3>Formato CSV (Comma Separated Values)</h3>
-                <p>I dati principali in formato CSV, generati al momento dal database più recente. Facilmente importabili in fogli di calcolo (Excel, Google Sheets, LibreOffice Calc) e altri software di analisi dati.</p>
+                <p>Tutte le colonne del database in formato CSV, generate al momento dal database più recente. Facilmente importabili in fogli di calcolo (Excel, Google Sheets, LibreOffice Calc) e altri software di analisi dati.</p>
                 <button id="download-csv" class="download-button">Scarica .csv</button>
                 <p id="csv-status" role="status"></p>
             </div>
         </div>
         
-        <h2>Note sui Dati</h2>
-        <p><em>Ultimo aggiornamento del database: <span id="db-last-update-date">[Caricamento data...]</span></em></p>
-        <p><em>Fonte: Comune di Busto Arsizio. Creative Commons Attribuzione 4.0 Internazionale (CC BY 4.0)</em></p>
+        <h2>Note sui dati</h2>
+        <p>Ultimo aggiornamento del database: <span id="db-last-update-date">[Caricamento data...]</span>.</p>
+        <p>Fonte: Comune di Busto Arsizio, Amministrazione trasparente,
+            <a href="https://bustoarsizio.trasparenza-valutazione-merito.it/web/trasparenza/papca-g/-/papca/igrid/36236" target="_blank" rel="noopener">Dati sui pagamenti</a>.
+            Il portale dei pagamenti non indica una licenza. L'<a href="https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2013-03-14;33~art7" target="_blank" rel="noopener">articolo 7 del d.lgs. 33/2013</a>
+            rende riutilizzabili questi dati, con l'obbligo di citare la fonte e di rispettarne l'integrità.</p>
+        <p>Alcuni beneficiari sono persone fisiche: i loro dati vanno usati nel rispetto delle norme sulla protezione dei dati personali.</p>
+        <p>Il CSV segue la <a href="https://www.rfc-editor.org/rfc/rfc4180" target="_blank" rel="noopener">RFC 4180</a>: UTF-8 con BOM,
+            separatore virgola, una riga di intestazione, numeri con il punto decimale.
+            Cosa vuol dire ogni colonna, e da dove vengono gli altri dati del sito: <a href="dati-aperti.html#pagamenti">Dati aperti</a>.</p>
     </div>
 
     <footer class="main-footer">

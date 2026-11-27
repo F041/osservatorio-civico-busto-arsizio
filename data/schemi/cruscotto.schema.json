@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://f041.github.io/osservatorio-civico-busto-arsizio/data/schemi/cruscotto.schema.json",
+  "title": "Pagamenti aggregati per categoria e beneficiario",
+  "description": "Struttura di data/cruscotto.json, calcolato da scripts/build_cruscotto.py sul database dei pagamenti ogni volta che il database cambia. Le categorie vengono dalle regole dello script, basate sugli elenchi di Amministrazione trasparente > Enti controllati. Le varianti di un nome che differiscono solo per maiuscole, punti, virgole e spazi sono unite.",
+  "type": "object",
+  "required": ["generato", "periodo", "anni", "coperture", "categorie", "periodi"],
+  "additionalProperties": false,
+  "properties": {
+    "generato": { "type": "string", "format": "date-time", "description": "Momento del calcolo, in UTC." },
+    "periodo": { "$ref": "#/$defs/intervallo", "description": "Data del primo e dell'ultimo pagamento del database." },
+    "anni": { "type": "array", "items": { "type": "string", "pattern": "^[0-9]{4}$" }, "description": "Anni presenti, dal più recente." },
+    "coperture": {
+      "type": "object",
+      "description": "Per ogni anno, data del primo e dell'ultimo pagamento. Un anno incompleto si riconosce da qui.",
+      "x-chiave": "anno",
+      "propertyNames": { "pattern": "^[0-9]{4}$" },
+      "additionalProperties": { "$ref": "#/$defs/intervallo" }
+    },
+    "categorie": { "type": "array", "items": { "$ref": "#/$defs/categoria" }, "description": "Le cinque categorie di beneficiario, nell'ordine della pagina." },
+    "periodi": {
+      "type": "object",
+      "description": "Totali per periodo: la chiave è un anno oppure tutti, per l'intero database.",
+      "x-chiave": "periodo",
+      "propertyNames": { "pattern": "^([0-9]{4}|tutti)$" },
+      "additionalProperties": {
+        "type": "object",
+        "required": ["totale", "n", "categorie", "beneficiari"],
+        "additionalProperties": false,
+        "properties": {
+          "totale": { "type": "number", "x-unita": "euro", "description": "Importo pagato nel periodo, arrotondato al centesimo." },
+          "n": { "type": "integer", "x-unita": "righe", "description": "Righe di pagamento del periodo." },
+          "categorie": {
+            "type": "object",
+            "description": "Importo e righe per categoria di beneficiario.",
+            "x-chiave": "categoria",
+            "propertyNames": { "$ref": "#/$defs/categoria" },
+            "additionalProperties": {
+              "type": "object",
+              "required": ["imp", "n"],
+              "additionalProperties": false,
+              "properties": {
+                "imp": { "type": "number", "x-unita": "euro", "description": "Importo della categoria nel periodo." },
+                "n": { "type": "integer", "x-unita": "righe", "description": "Righe di pagamento della categoria nel periodo." }
+              }
+            }
+          },
+          "beneficiari": {
+            "type": "array",
+            "description": "I 100 beneficiari con l'importo più alto nel periodo, più tutte le partecipate e gli enti controllati, dall'importo più alto.",
+            "items": {
+              "type": "object",
+              "required": ["b", "q", "cat", "imp", "n"],
+              "additionalProperties": false,
+              "properties": {
+                "b": { "type": "string", "description": "Nome del beneficiario: la variante scritta più spesso nei pagamenti." },
+                "q": { "type": "string", "description": "Chiave che unisce le varianti: nome in maiuscolo, senza punti, con apostrofo dritto e con virgole e spazi doppi ridotti a uno spazio." },
+                "cat": { "$ref": "#/$defs/categoria", "description": "Categoria del beneficiario." },
+                "nota": { "type": "string", "description": "Nota sul soggetto, per esempio se non è più nell'elenco 2025 delle partecipate. Manca se non serve." },
+                "imp": { "type": "number", "x-unita": "euro", "description": "Importo pagato al beneficiario nel periodo." },
+                "n": { "type": "integer", "x-unita": "righe", "description": "Righe di pagamento del beneficiario nel periodo." }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "intervallo": {
+      "type": "object",
+      "required": ["da", "a"],
+      "additionalProperties": false,
+      "properties": {
+        "da": { "type": "string", "format": "date", "description": "Data del primo pagamento." },
+        "a": { "type": "string", "format": "date", "description": "Data dell'ultimo pagamento." }
+      }
+    },
+    "categoria": {
+      "type": "string",
+      "enum": ["Partecipate", "Enti controllati e vigilati", "Altri enti pubblici", "Personale, fisco e giroconti", "Privati"],
+      "description": "Categoria di beneficiario."
+    }
+  }
+}

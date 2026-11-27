@@ -1,0 +1,76 @@
+{
+  "$schema": "https://datapackage.org/profiles/2.0/tableschema.json",
+  "title": "Pagamenti del Comune di Busto Arsizio",
+  "description": "Struttura della tabella pagamenti di busto_pagamenti.db e del CSV generato da Scarica dati. Una riga per ogni riga dei prospetti trimestrali dei pagamenti pubblicati dal Comune. Formato del CSV: RFC 4180, UTF-8 con BOM, separatore virgola, virgolette doppie solo dove servono, righe terminate da CRLF, una riga di intestazione. Numeri con il punto decimale e senza separatore delle migliaia. Un campo vuoto è un valore assente (NULL nel database).",
+  "missingValues": [""],
+  "fields": [
+    {
+      "name": "NumeroMandato",
+      "title": "Numero del mandato",
+      "type": "integer",
+      "description": "Numero del mandato di pagamento assegnato dal Comune. È progressivo dentro l'anno: per identificare un mandato servono Anno e NumeroMandato. Lo stesso mandato può comparire su più righe.",
+      "constraints": { "required": true, "minimum": 1 }
+    },
+    {
+      "name": "Anno",
+      "title": "Anno",
+      "type": "year",
+      "description": "Anno del mandato. Coincide con l'anno di DataMandato.",
+      "constraints": { "required": true }
+    },
+    {
+      "name": "DataMandato",
+      "title": "Data del mandato",
+      "type": "datetime",
+      "format": "%Y-%m-%d %H:%M:%S",
+      "description": "Data del mandato nel formato ISO 8601 AAAA-MM-GG hh:mm:ss. L'ora è sempre 00:00:00: i prospetti del Comune riportano solo il giorno.",
+      "constraints": { "required": true }
+    },
+    {
+      "name": "CIG",
+      "title": "Codice identificativo di gara",
+      "type": "string",
+      "description": "Codice identificativo di gara (CIG) dell'ANAC. La colonna è prevista ma è vuota in tutte le righe del database attuale."
+    },
+    {
+      "name": "Beneficiario",
+      "title": "Beneficiario",
+      "type": "string",
+      "description": "Nome del beneficiario come scritto nel prospetto del Comune, senza il codice fiscale e la partita IVA, che sono nelle colonne seguenti. Può essere un'impresa, un ente o una persona fisica. Mandati cumulativi come gli stipendi riportano nomi generici, per esempio DIVERSI.",
+      "constraints": { "required": true }
+    },
+    {
+      "name": "ImportoEuro",
+      "title": "Importo (euro)",
+      "type": "number",
+      "x-unita": "euro",
+      "description": "Importo pagato con questa riga, in euro, al massimo con due decimali. Mai negativo; alcune righe valgono 0.",
+      "constraints": { "required": true, "minimum": 0 }
+    },
+    {
+      "name": "DescrizioneMandato",
+      "title": "Descrizione",
+      "type": "string",
+      "description": "Descrizione o causale del pagamento come scritta nel prospetto del Comune. Può mancare e può contenere a capo."
+    },
+    {
+      "name": "NomeFileOrigine",
+      "title": "File di origine",
+      "type": "string",
+      "description": "Nome del file Excel (.xlsx o .xls) del Comune da cui viene la riga: un prospetto per trimestre.",
+      "constraints": { "required": true }
+    },
+    {
+      "name": "CodiceFiscale",
+      "title": "Codice fiscale",
+      "type": "string",
+      "description": "Codice fiscale del beneficiario, quando il prospetto lo scrive insieme al nome. 11 cifre per imprese ed enti, 16 caratteri per le persone fisiche. Testo, non numero: gli zeri iniziali contano."
+    },
+    {
+      "name": "PartitaIVA",
+      "title": "Partita IVA",
+      "type": "string",
+      "description": "Partita IVA del beneficiario, quando il prospetto la scrive insieme al nome. Di solito 11 cifre; una partita IVA estera inizia con il codice del paese. Testo, non numero: gli zeri iniziali contano."
+    }
+  ]
+}
