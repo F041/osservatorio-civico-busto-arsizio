@@ -1,4 +1,5 @@
 // Cruscotto: legge i dati precalcolati da scripts/build_cruscotto.py (data/cruscotto.json)
+import { integer, formatDate } from './formato.js';
 document.addEventListener('DOMContentLoaded', () => {
     const PRIVATI = 'Privati';
     const ENTITY_CATEGORIES = ['Partecipate', 'Enti controllati e vigilati'];
@@ -25,11 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const SVG_NS = 'http://www.w3.org/2000/svg';
 
     const euro = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
-    const integer = new Intl.NumberFormat('it-IT');
     const percent = new Intl.NumberFormat('it-IT', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 });
     const millions = new Intl.NumberFormat('it-IT', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
     const formatMillions = amount => `${millions.format(amount / 1e6)} mln €`;
-    const formatDate = iso => iso.split('-').reverse().join('/');
     const escapeHtml = text => String(text).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
     const exploreLink = name => `<a href="pagamenti.html?q=${encodeURIComponent(name)}">${escapeHtml(name)}</a>`;
 
