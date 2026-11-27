@@ -2,7 +2,7 @@
 // Ha un segno diverso dalle segnalazioni (linee e punti al posto dei quadrati) e i suoi numeri non si sommano mai a quelli.
 // Sotto la mappa un navigatore come quelli dei grafici dei prezzi: l'area dei fatti per settimana su tutto lo storico e
 // due maniglie per scegliere il periodo. Conteggi, soglia e tipi si calcolano qui, sul periodo scelto.
-import { punti, altreRighe } from './mappa.js';
+import { punti, altreRighe, menoMovimento } from './mappa.js';
 import { integer, formatDate } from './formato.js';
 
 const L = window.L;
@@ -441,7 +441,7 @@ export function creaVistaNotizie(dati, mappa, leggiMappa, mapDiv) {
     function seleziona(voce, centra) {
         evidenzia(voce.n);
         mostraDettaglio(voce);
-        const behavior = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+        const behavior = menoMovimento() ? 'auto' : 'smooth';
         if (centra) {
             leggiMappa().fitBounds(segni.get(voce.n).limiti, { maxZoom: 16, padding: [30, 30] });
             mapDiv.scrollIntoView({ block: 'nearest', behavior });

@@ -11,24 +11,6 @@
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
     <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        .open-data { max-width: 900px; }
-        .open-data h2 { margin-top: 36px; }
-        .open-data .facts { padding-left: 20px; }
-        .open-data .facts li { margin-bottom: 6px; }
-        .open-data code { font-size: 0.92em; overflow-wrap: anywhere; }
-        .dictionary-table { font-size: 0.92em; margin-top: 4px; }
-        .dictionary-table caption { text-align: left; font-weight: 600; padding: 6px 0; caption-side: top; }
-        .dictionary-table tbody th { background: #fff; font-weight: 400; min-width: 9em; }
-        .dictionary-table code { overflow-wrap: normal; }
-        .dictionary-table td:nth-child(2) { white-space: nowrap; }
-        .summary-table td a, .summary-table th a { overflow-wrap: anywhere; }
-        @media (max-width: 600px) {
-            .dictionary-table td:nth-child(2) { white-space: normal; }
-            .dictionary-table tbody th { min-width: 0; }
-            .dictionary-table code { font-size: 0.8em; overflow-wrap: anywhere; }
-        }
-    </style>
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -175,6 +157,7 @@
     </script>
 </head>
 <body>
+    <a class="skip-link" href="#contenuto">Vai al contenuto</a>
     <header class="main-header">
         <div class="container header-content">
             <img src="img/stemma.png" alt="Stemma Comune Busto Arsizio" class="header-logo" width="67" height="80">
@@ -190,8 +173,8 @@
         </div>
     </header>
 
-    <div class="container page-content open-data">
-        <h1>Dati aperti</h1>
+    <main id="contenuto" tabindex="-1" class="container page-content open-data">
+        <h2>Dati aperti</h2>
         <p>Qui trovi i file che il sito pubblica: da dove vengono, quando cambiano e cosa vuol dire ogni campo.
             Si scaricano senza registrazione.</p>
         <p>Ogni dizionario esiste anche come file per i programmi: Table Schema per la tabella dei pagamenti,
@@ -210,7 +193,7 @@
             </table>
         </div>
 
-        <h2 id="pagamenti">Pagamenti del Comune</h2>
+        <h3 id="pagamenti">Pagamenti del Comune</h3>
         <ul class="facts">
             <li>Un pagamento per riga, <span data-periodo="cruscotto">dal 2017 al 2025</span>. Dal quarto trimestre 2025 il Comune
                 pubblica solo importi aggregati, senza mandato né beneficiario: quei trimestri non ci sono.</li>
@@ -238,7 +221,7 @@
             virgole, virgolette o a capo, righe chiuse da CRLF e una riga di intestazione. Numeri con il punto decimale, senza separatore
             delle migliaia. Un campo vuoto è un valore assente.</p>
 
-        <h2 id="cruscotto">Pagamenti per categoria e beneficiario</h2>
+        <h3 id="cruscotto">Pagamenti per categoria e beneficiario</h3>
         <ul class="facts">
             <li>Totali per anno e per categoria di beneficiario, e i beneficiari che hanno ricevuto di più. Sono i numeri della pagina
                 <a href="cruscotto.html">Cruscotto</a>, calcolati dal database dei pagamenti.</li>
@@ -251,7 +234,7 @@
         </ul>
         <div class="table-responsive-wrapper" data-schema="data/schemi/cruscotto.schema.json" data-titolo="Campi di cruscotto.json"></div>
 
-        <h2 id="popolazione">Residenti stimati per gruppo di quartieri</h2>
+        <h3 id="popolazione">Residenti stimati per gruppo di quartieri</h3>
         <ul class="facts">
             <li>Elettori di ogni sezione elettorale, residenti del Comune secondo ISTAT e la stima dei residenti per gruppo di quartieri.
                 Il metodo è spiegato nella pagina <a href="popolazione.html">Popolazione</a>.</li>
@@ -270,7 +253,7 @@
         </ul>
         <div class="table-responsive-wrapper" data-schema="data/schemi/popolazione.schema.json" data-titolo="Campi di popolazione.json"></div>
 
-        <h2 id="sicurezza">Segnalazioni di Sicurezza, conteggi</h2>
+        <h3 id="sicurezza">Segnalazioni di Sicurezza, conteggi</h3>
         <ul class="facts">
             <li>Conteggi delle segnalazioni anonime fatte con il modulo <a href="segnala.html">Segnala</a> negli ultimi 90 giorni:
                 per quadrato della mappa, tipo, fascia oraria, fattori e denuncia. Le singole segnalazioni non sono mai pubblicate e i numeri sotto 3 sono nascosti.
@@ -283,14 +266,14 @@
         </ul>
         <div class="table-responsive-wrapper" data-schema="data/schemi/sicurezza.schema.json" data-titolo="Campi di sicurezza.json"></div>
 
-        <h2 id="formati">Formati e riferimenti</h2>
+        <h3 id="formati">Formati e riferimenti</h3>
         <p>Tutti i file sono in formati aperti e leggibili dai programmi: JSON in UTF-8, CSV e SQLite. Le date seguono la ISO 8601
             (AAAA-MM-GG) e gli orari di calcolo sono in UTC.</p>
         <p>Per formati, schemi e metadati seguiamo le
             <a href="https://www.agid.gov.it/sites/default/files/repository_files/lg-open-data_v.1.0_1.pdf" target="_blank" rel="noopener">linee guida AgID sui dati aperti</a>
             (versione 1.0, 2023), che indicano Table Schema per il CSV e JSON Schema per il JSON, e il vocabolario
             <a href="https://schema.org/Dataset" target="_blank" rel="noopener">schema.org Dataset</a> per i metadati.</p>
-    </div>
+    </main>
 
     <footer class="main-footer">
         <a href="https://github.com/F041/osservatorio-civico-busto-arsizio" target="_blank" rel="noopener" class="footer-link" title="Vai al repository GitHub">
