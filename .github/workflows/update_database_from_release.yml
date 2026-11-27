@@ -10,57 +10,47 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      DB: busto_pagamenti.db
+      DB_URL: https://github.com/F041/osservatorio-statistico-bustoarsizio-tubatura-dati/releases/latest/download/busto_pagamenti.db
 
     steps:
       - name: Checkout codice esploratore (questo repo)
         uses: actions/checkout@v4
 
-      - name: Definisci nome file e URL del database
-        id: db_info
-        run: |
-          echo "DB_FILENAME=busto_pagamenti.db" >> $GITHUB_OUTPUT # O pagamenti_slim.db
-          echo "DB_URL=https://github.com/F041/osservatorio-statistico-bustoarsizio-tubatura-dati/releases/latest/download/busto_pagamenti.db" >> $GITHUB_OUTPUT
-
+      # -f: con un errore HTTP curl si ferma, invece di salvare la pagina d'errore al posto del database
       - name: Scarica ultimo database dalla release
+        id: scarica
         run: |
-          echo "Scaricamento database da ${{ steps.db_info.outputs.DB_URL }}..."
-          curl -L -o ${{ steps.db_info.outputs.DB_FILENAME }} "${{ steps.db_info.outputs.DB_URL }}"
-          if [ $? -ne 0 ]; then
-            echo "Errore durante lo scaricamento del database."
+          curl -fsSL --retry 3 -o nuovo.db "$DB_URL"
+          if ! head -c 15 nuovo.db | grep -q 'SQLite format 3'; then
+            echo "::error::Il file scaricato non è un database SQLite"
             exit 1
           fi
-          echo "Database scaricato come ${{ steps.db_info.outputs.DB_FILENAME }}"
+          if cmp -s nuovo.db "$DB"; then
+            echo "Database uguale a quello pubblicato: niente da aggiornare."
+            rm nuovo.db
+            echo "cambiato=no" >> "$GITHUB_OUTPUT"
+          else
+            mv nuovo.db "$DB"
+            echo "cambiato=si" >> "$GITHUB_OUTPUT"
+          fi
 
+      # La data mostrata in Scarica dati è quella in cui il database è cambiato davvero
       - name: Registra data aggiornamento
-        id: update_date
+        if: steps.scarica.outputs.cambiato == 'si'
         run: |
-          # Formatta la data come preferisci (YYYY-MM-DD HH:MM:SS UTC)
-          # Oppure solo YYYY-MM-DD
-          # CURRENT_DATE=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
-          CURRENT_DATE_SIMPLE=$(date -u +"%d/%m/%Y") # Formato DD/MM/YYYY
-          echo "Data e ora dell'aggiornamento: $CURRENT_DATE_SIMPLE"
-          # Crea un semplice file JSON
-          echo "{\"lastUpdate\": \"$CURRENT_DATE_SIMPLE\"}" > last_update.json
-          # Oppure un semplice file di testo
-          # echo "$CURRENT_DATE_SIMPLE" > last_update.txt
-          echo "File last_update.json creato."
+          echo "{\"lastUpdate\": \"$(date -u +%d/%m/%Y)\"}" > last_update.json
 
       - name: Genera dati del cruscotto
-        run: python3 scripts/build_cruscotto.py ${{ steps.db_info.outputs.DB_FILENAME }} data/cruscotto.json
+        if: steps.scarica.outputs.cambiato == 'si'
+        run: python3 scripts/build_cruscotto.py "$DB" data/cruscotto.json
 
-      - name: Committa e Pusha file aggiornati (DB e data)
+      - name: Committa e pusha database, data e cruscotto
+        if: steps.scarica.outputs.cambiato == 'si'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          
-          git add ${{ steps.db_info.outputs.DB_FILENAME }} 
-          git add last_update.json # Aggiungi anche il file della data
-          git add data/cruscotto.json
-          
-          if git diff --staged --quiet; then
-            echo "Nessun cambiamento nei dati da committare."
-          else
-            git commit -m "Aggiornamento automatico database e data (${{ steps.db_info.outputs.DB_FILENAME }})"
-            git push
-            echo "Push completato."
-          fi
+          git add "$DB" last_update.json data/cruscotto.json
+          git commit -m "Aggiornamento automatico database e data ($DB)"
+          git push

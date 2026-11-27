@@ -9,15 +9,19 @@
     <title>Scarica dati - Osservatorio civico Busto Arsizio</title>
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
     <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
-    <link rel="stylesheet" href="css/style.css"> <!-- Link allo stesso CSS -->
+    <link rel="stylesheet" href="css/style.css">
     <style>
-        #pyodide-status {
+        #csv-status {
             margin-top: 10px;
             font-style: italic;
             color: #555;
         }
         .download-item button.download-button {
             cursor: pointer;
+        }
+        .download-item button.download-button:disabled {
+            cursor: progress;
+            opacity: 0.7;
         }
     </style>
 </head>
@@ -52,13 +56,13 @@
             <div class="download-item">
                 <h3>Database SQLite</h3>
                 <p>L'intero dataset in formato database SQLite. Utile per analisi più complesse e query dirette.</p>
-                <a href="pagamenti_slim.db" download="pagamenti_busto_arsizio.db" class="download-button">Scarica .db</a>
+                <a href="busto_pagamenti.db" download="pagamenti_busto_arsizio.db" class="download-button">Scarica .db</a>
             </div>
             <div class="download-item">
                 <h3>Formato CSV (Comma Separated Values)</h3>
                 <p>I dati principali in formato CSV, generati al momento dal database più recente. Facilmente importabili in fogli di calcolo (Excel, Google Sheets, LibreOffice Calc) e altri software di analisi dati.</p>
-                <button id="download-csv-pyodide" class="download-button">Genera e Scarica .csv</button>
-                <p id="pyodide-status"></p> 
+                <button id="download-csv" class="download-button">Scarica .csv</button>
+                <p id="csv-status" role="status"></p>
             </div>
         </div>
         
@@ -67,144 +71,6 @@
         <p><em>Fonte: Comune di Busto Arsizio. Creative Commons Attribuzione 4.0 Internazionale (CC BY 4.0)</em></p>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
-    <script>
-        const downloadCsvButton = document.getElementById('download-csv-pyodide');
-        const pyodideStatus = document.getElementById('pyodide-status');
-        let pyodideInstance = null;
-
-        async function loadPyodideAndPackages() {
-            if (pyodideInstance) return pyodideInstance; 
-            
-            pyodideStatus.textContent = 'Caricamento Pyodide e pacchetti (può richiedere un momento)...';
-            console.log('Inizio caricamento Pyodide...');
-            disableDownloadButton(true, 'Caricamento...');
-
-            try {
-                pyodideInstance = await loadPyodide();
-                console.log('Pyodide caricato. Caricamento pacchetti (pandas, sqlite3)...');
-                await pyodideInstance.loadPackage(['pandas', 'sqlite3']); // sqlite3 aggiunto qui
-                console.log('Pacchetti (pandas, sqlite3) caricati.');
-                pyodideStatus.textContent = 'Pyodide pronto.';
-                disableDownloadButton(false);
-                return pyodideInstance;
-            } catch (error) {
-                console.error('Errore durante il caricamento di Pyodide o pacchetti:', error);
-                pyodideStatus.textContent = `Errore caricamento Pyodide: ${error.message}`;
-                disableDownloadButton(false, 'Riprova Generazione CSV');
-                throw error;
-            }
-        }
-
-        function disableDownloadButton(disabled, text = null) {
-            if (downloadCsvButton) { // Aggiunto controllo per sicurezza
-                downloadCsvButton.disabled = disabled;
-                if (text) {
-                    downloadCsvButton.textContent = text;
-                } else if (!disabled) {
-                    downloadCsvButton.textContent = 'Genera e Scarica .csv';
-                }
-            }
-        }
-
-        if (downloadCsvButton) {
-            downloadCsvButton.addEventListener('click', async () => {
-                try {
-                    await loadPyodideAndPackages();
-                    
-                    pyodideStatus.textContent = 'Caricamento database per la conversione...';
-                    disableDownloadButton(true, 'Elaborazione...');
-
-                    const dbResponse = await fetch('pagamenti_slim.db');
-                    if (!dbResponse.ok) throw new Error(`Errore HTTP ${dbResponse.status} nel caricare il DB.`);
-                    const dbArrayBuffer = await dbResponse.arrayBuffer();
-                    
-                    const dbFileName = 'dati_pagamenti.db';
-                    pyodideInstance.FS.writeFile(dbFileName, new Uint8Array(dbArrayBuffer));
-                    pyodideStatus.textContent = 'Esecuzione script Python per conversione CSV...';
-
-                    const pythonScript = `
-import sqlite3
-import pandas as pd
-import io
-
-db_path = '${dbFileName}'
-csv_output_string = None
-
-try:
-    conn = sqlite3.connect(db_path)
-    df = pd.read_sql_query("SELECT * FROM pagamenti", conn) 
-    conn.close()
-
-    csv_buffer = io.StringIO()
-    df.to_csv(csv_buffer, index=False, encoding='utf-8-sig')
-    csv_output_string = csv_buffer.getvalue()
-    csv_buffer.close()
-    
-except Exception as e:
-    raise e
-
-csv_output_string
-                    `;
-
-                    let csvData = await pyodideInstance.runPythonAsync(pythonScript);
-                    
-                    pyodideStatus.textContent = 'Conversione CSV completata. Avvio download...';
-
-                    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8-sig;' });
-                    const link = document.createElement('a');
-                    const url = URL.createObjectURL(blob);
-                    link.setAttribute('href', url);
-                    link.setAttribute('download', 'pagamenti_busto_arsizio.csv');
-                    link.style.visibility = 'hidden';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    URL.revokeObjectURL(url);
-                    
-                    pyodideStatus.textContent = 'Download avviato!';
-                    disableDownloadButton(false);
-
-                } catch (error) {
-                    console.error('Errore durante la generazione del CSV con Pyodide:', error);
-                    pyodideStatus.textContent = `Errore durante la generazione del CSV: ${error.message || error}`;
-                    disableDownloadButton(false, 'Riprova Generazione CSV');
-                }
-            });
-        } else {
-            console.warn("Pulsante 'download-csv-pyodide' non trovato.");
-        }
-
-        // Opzionale: pre-carica Pyodide
-        // loadPyodideAndPackages().catch(err => console.warn("Pre-caricamento Pyodide fallito (opzionale):", err));
-
-    </script>
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const updateDateElement = document.getElementById('db-last-update-date');
-    
-                if (updateDateElement) {
-                    fetch('last_update.json') // Assicurati che il percorso sia corretto
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Errore nel caricare il file della data di aggiornamento.');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data && data.lastUpdate) {
-                                updateDateElement.textContent = data.lastUpdate;
-                            } else {
-                                updateDateElement.textContent = 'N/D'; // Non disponibile
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Errore fetch data aggiornamento:', error);
-                            updateDateElement.textContent = 'Errore nel caricare la data';
-                        });
-                }
-            });
-        </script>
     <footer class="main-footer">
         <a href="https://github.com/F041/osservatorio-civico-busto-arsizio" target="_blank" rel="noopener" class="footer-link" title="Vai al repository GitHub">
             <svg height="24" width="24" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.01.08-2.12 0 0 .67-.21 2.2.82a7.65 7.65 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.11.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
@@ -212,5 +78,7 @@ csv_output_string
         </a>
         <a href="privacy.html" class="footer-link">Privacy</a>
     </footer>
+    <script src="js/lib/sql-wasm.js"></script>
+    <script src="js/dati.js"></script>
 </body>
 </html>

@@ -2,13 +2,11 @@
 import { CATEGORIE, FASCE, FATTORI, DENUNCIA } from './sicurezza-config.js';
 import { caricaMappa, creaMappa, confiniCella, descriviCella } from './mappa.js';
 import { creaVistaNotizie } from './notizie.js';
+import { integer, formatDate } from './formato.js';
 
 const overview = document.getElementById('overview');
 const overviewTitle = document.getElementById('overview-title');
 const overviewNote = document.getElementById('overview-note');
-
-const integer = new Intl.NumberFormat('it-IT');
-const formatDate = iso => iso.split('-').reverse().join('/');
 
 // Classi della mappa: soglie delle quattro intensità, dalla più alta. La più bassa parte dalla soglia.
 const CLASSI = [20, 10, 5, 0];
@@ -105,14 +103,9 @@ function selettoreFonte(iniziale, cambia) {
     return riga;
 }
 
-// Quadrati con almeno `soglia` segnalazioni: filtro, mappa, legenda e la stessa informazione in tabella.
-// Se ci sono i dati delle notizie, un selettore passa alla vista con le vie (js/notizie.js)
-function mapCard(data, mappa, notizie, applicaVista) {
-    const section = card(`Dove: zone con almeno ${data.soglia} segnalazioni`);
-    section.classList.add('safety-card-wide');
-    const titolo = section.querySelector('h3');
-    const titoloSegnalazioni = titolo.textContent;
-
+// Vista Segnalazioni della mappa: quadrati con almeno `soglia` segnalazioni, filtro per voce, legenda e la stessa
+// informazione in tabella. Restituisce gli stessi pezzi di creaVistaNotizie (js/notizie.js), che mapCard monta.
+function creaVistaSegnalazioni(data, mappa, leggiMappa, mapDiv) {
     const filterRow = document.createElement('div');
     filterRow.className = 'map-filter';
     const filterLabel = document.createElement('label');
@@ -135,41 +128,25 @@ function mapCard(data, mappa, notizie, applicaVista) {
     const filterHint = document.createElement('p');
     filterHint.className = 'safety-muted map-filter-hint';
     filterHint.textContent = 'Una voce alla volta: incrociarne due, per esempio tipo e orario, renderebbe più riconoscibili le persone.';
-    const filtri = document.createElement('div');
-    filtri.append(filterRow, filterHint);
-    section.append(filtri);
+    const filtro = document.createElement('div');
+    filtro.append(filterRow, filterHint);
 
-    const mapDiv = document.createElement('div');
-    mapDiv.className = 'overview-map';
-    mapDiv.setAttribute('aria-label', 'Mappa delle zone con più segnalazioni; gli stessi dati sono nella tabella sotto');
     const legend = document.createElement('ul');
     legend.className = 'chart-legend';
     const note = document.createElement('p');
     note.className = 'safety-muted';
     note.setAttribute('aria-live', 'polite');
     const tableWrap = document.createElement('div');
-    const pannelloSegnalazioni = document.createElement('div');
-    pannelloSegnalazioni.append(legend, note, tableWrap);
-    section.append(mapDiv, pannelloSegnalazioni);
+    const pannello = document.createElement('div');
+    pannello.append(legend, note, tableWrap);
 
     const classi = CLASSI.map((da, i) => {
         const minimo = Math.max(da, data.soglia);
         return { da: minimo, label: i === 0 ? `${minimo} e più` : `${minimo}–${CLASSI[i - 1] - 1}` };
     });
-
-    // Leaflet va creato quando la scheda è già nella pagina, altrimenti non ne conosce le dimensioni
-    let map = null;
-    const quadrati = window.L.layerGroup();
+    // I quadrati si preparano anche prima che esista la mappa: compaiono quando mapCard aggiunge lo strato
+    const strato = window.L.layerGroup();
     const rettangoli = new Map();
-    const mappaPronta = new Promise(resolve => requestAnimationFrame(() => {
-        map = creaMappa(mapDiv, mappa, { griglia: false, tenue: true });
-        quadrati.addTo(map);
-        // Si parte inquadrando le zone segnalate, non tutto il comune; cambiando filtro la vista resta ferma
-        const tutte = Object.keys(data.celle).flatMap(id => confiniCella(mappa.griglia, id));
-        // Senza animazione: un'animazione ancora in corso sovrascriverebbe la vista Notizie aperta da link
-        if (tutte.length) map.fitBounds(window.L.latLngBounds(tutte), { padding: [40, 40], maxZoom: 15, animate: false });
-        resolve();
-    }));
 
     function mostra(valore) {
         const [campo, voce] = valore ? valore.split('.') : [];
@@ -196,17 +173,15 @@ function mapCard(data, mappa, notizie, applicaVista) {
             return item;
         }).reverse());
 
-        mappaPronta.then(() => {
-            quadrati.clearLayers();
-            rettangoli.clear();
-            for (const [id, n] of celle) {
-                const testo = `${descriviCella(mappa, id)}: ${integer.format(n)} segnalazioni${nome ? ` ${nome}` : ''}`;
-                const rect = window.L.rectangle(confiniCella(mappa.griglia, id), { color: '#ffffff', weight: 1.5, fillColor: colore(n), fillOpacity: 0.85 })
-                    .bindTooltip(testo, { sticky: true });
-                quadrati.addLayer(rect);
-                rettangoli.set(id, rect);
-            }
-        });
+        strato.clearLayers();
+        rettangoli.clear();
+        for (const [id, n] of celle) {
+            const testo = `${descriviCella(mappa, id)}: ${integer.format(n)} segnalazioni${nome ? ` ${nome}` : ''}`;
+            const rect = window.L.rectangle(confiniCella(mappa.griglia, id), { color: '#ffffff', weight: 1.5, fillColor: colore(n), fillOpacity: 0.85 })
+                .bindTooltip(testo, { sticky: true });
+            strato.addLayer(rect);
+            rettangoli.set(id, rect);
+        }
 
         tableWrap.replaceChildren();
         if (!celle.length) {
@@ -230,7 +205,7 @@ function mapCard(data, mappa, notizie, applicaVista) {
             button.title = 'Mostra sulla mappa';
             button.addEventListener('click', () => {
                 const rect = rettangoli.get(id);
-                map.fitBounds(rect.getBounds(), { maxZoom: 16 });
+                leggiMappa().fitBounds(rect.getBounds(), { maxZoom: 16 });
                 rect.openTooltip(rect.getBounds().getCenter());
                 mapDiv.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
             });
@@ -254,6 +229,38 @@ function mapCard(data, mappa, notizie, applicaVista) {
     reset.addEventListener('click', () => { mostra(''); select.focus(); });
     mostra(new URLSearchParams(location.search).get('mostra') ?? '');
 
+    // Si parte inquadrando tutte le zone segnalate, non tutto il comune; cambiando filtro la vista resta ferma
+    const limiti = () => {
+        const tutte = Object.keys(data.celle).flatMap(id => confiniCella(mappa.griglia, id));
+        return tutte.length ? window.L.latLngBounds(tutte) : null;
+    };
+    return { filtro, pannello, strato, limiti };
+}
+
+// Scheda della mappa: le segnalazioni e, se ci sono i dati, un selettore che passa alla vista Notizie con le vie
+function mapCard(data, mappa, notizie, applicaVista) {
+    const section = card(`Dove: zone con almeno ${data.soglia} segnalazioni`);
+    section.classList.add('safety-card-wide');
+    const titolo = section.querySelector('h3');
+    const titoloSegnalazioni = titolo.textContent;
+
+    const mapDiv = document.createElement('div');
+    mapDiv.className = 'overview-map';
+    mapDiv.setAttribute('aria-label', 'Mappa delle zone con più segnalazioni; gli stessi dati sono nella tabella sotto');
+    let map = null;
+    const segnalazioni = creaVistaSegnalazioni(data, mappa, () => map, mapDiv);
+    section.append(segnalazioni.filtro, mapDiv, segnalazioni.pannello);
+
+    // Leaflet va creato quando la scheda è già nella pagina, altrimenti non ne conosce le dimensioni
+    const mappaPronta = new Promise(resolve => requestAnimationFrame(() => {
+        map = creaMappa(mapDiv, mappa, { griglia: false, tenue: true });
+        segnalazioni.strato.addTo(map);
+        const limiti = segnalazioni.limiti();
+        // Senza animazione: un'animazione ancora in corso sovrascriverebbe la vista Notizie aperta da link
+        if (limiti) map.fitBounds(limiti, { padding: [40, 40], maxZoom: 15, animate: false });
+        resolve();
+    }));
+
     // La vista Notizie è facoltativa: se i suoi dati sono rotti la pagina resta con le sole segnalazioni
     let vista = null;
     if (notizie) {
@@ -276,8 +283,8 @@ function mapCard(data, mappa, notizie, applicaVista) {
         const cambiaVista = valore => {
             const inNotizie = valore === 'notizie';
             titolo.textContent = inNotizie ? `Dove: vie con almeno ${notizie.soglia} fatti nelle notizie` : titoloSegnalazioni;
-            filtri.hidden = inNotizie;
-            pannelloSegnalazioni.hidden = inNotizie;
+            segnalazioni.filtro.hidden = inNotizie;
+            segnalazioni.pannello.hidden = inNotizie;
             vista.pannello.hidden = !inNotizie;
             vista.filtro.hidden = !inNotizie;
             mapDiv.dataset.vista = valore;
@@ -289,21 +296,17 @@ function mapCard(data, mappa, notizie, applicaVista) {
             if (inNotizie) url.searchParams.set('vista', 'notizie'); else url.searchParams.delete('vista');
             history.replaceState(null, '', url);
             mappaPronta.then(() => {
-                if (inNotizie) {
-                    quadrati.remove();
-                    vista.strato.addTo(map);
-                    const limiti = vista.limiti();
-                    // Senza animazione: appena creata, la mappa sta ancora animando lo zoom sulle segnalazioni e
-                    // Leaflet scarterebbe questo cambio di vista
-                    if (limiti) map.fitBounds(limiti, { padding: [40, 40], maxZoom: 15, animate: false });
-                } else {
-                    vista.strato.remove();
-                    quadrati.addTo(map);
-                }
+                const [esce, entra] = inNotizie ? [segnalazioni, vista] : [vista, segnalazioni];
+                esce.strato.remove();
+                entra.strato.addTo(map);
+                const limiti = inNotizie && vista.limiti();
+                // Senza animazione: appena creata, la mappa sta ancora animando lo zoom sulle segnalazioni e
+                // Leaflet scarterebbe questo cambio di vista
+                if (limiti) map.fitBounds(limiti, { padding: [40, 40], maxZoom: 15, animate: false });
             });
         };
         const iniziale = new URLSearchParams(location.search).get('vista') === 'notizie' ? 'notizie' : 'segnalazioni';
-        section.insertBefore(selettoreFonte(iniziale, cambiaVista), filtri);
+        section.insertBefore(selettoreFonte(iniziale, cambiaVista), segnalazioni.filtro);
         if (iniziale === 'notizie') cambiaVista('notizie');
         else applicaVista('segnalazioni');
     } else {

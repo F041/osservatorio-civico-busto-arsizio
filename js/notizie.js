@@ -3,14 +3,13 @@
 // Sotto la mappa un navigatore come quelli dei grafici dei prezzi: l'area dei fatti per settimana su tutto lo storico e
 // due maniglie per scegliere il periodo. Conteggi, soglia e tipi si calcolano qui, sul periodo scelto.
 import { punti } from './mappa.js';
+import { integer, formatDate } from './formato.js';
 
 const L = window.L;
-const integer = new Intl.NumberFormat('it-IT');
 const nomeMese = new Intl.DateTimeFormat('it-IT', { month: 'short', timeZone: 'UTC' });
 const GIORNO = 864e5;
 const giorno = iso => Math.round(Date.parse(iso) / GIORNO);
 const iso = g => new Date(g * GIORNO).toISOString().slice(0, 10);
-const formatDate = s => s.split('-').reverse().join('/');
 const quantiFatti = n => `${integer.format(n)} ${n === 1 ? 'fatto' : 'fatti'}`;
 const tra = (v, min, max) => Math.min(max, Math.max(min, v));
 
