@@ -54,17 +54,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function caricamento(attivo) {
         caricando = attivo;
-        spinner.style.display = attivo ? 'flex' : 'none';
-        statoCaricamento.style.display = 'none';
+        spinner.hidden = !attivo;
+        statoCaricamento.hidden = true;
         document.querySelectorAll('.page-controls-bar :is(button, input), #active-filters-area :is(button, input, select), .pagination :is(button, input, select)')
             .forEach(el => { el.disabled = attivo; });
         filtriAttivi.classList.toggle('controls-disabled', attivo);
         if (!attivo) aggiornaPagine(corpoTabella.rows.length);
     }
 
+    function apriMenu(aperto) {
+        menuFiltri.hidden = !aperto;
+        apriFiltri.setAttribute('aria-expanded', aperto);
+    }
+
     function aggiornaPulsanti() {
-        applica.style.display = [...filtri.values()].some(compilato) ? 'inline-block' : 'none';
-        reimposta.style.display = filtri.size || ricerca.value.trim() ? 'inline-block' : 'none';
+        applica.hidden = ![...filtri.values()].some(compilato);
+        reimposta.hidden = !filtri.size && !ricerca.value.trim();
     }
 
     function aggiornaFreccia() {
@@ -105,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         valore.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); cerca(); } });
         valore.focus();
         menuFiltri.querySelector(`a[data-filter-type="${tipo}"]`)?.classList.add('disabled');
-        menuFiltri.style.display = 'none';
+        apriMenu(false);
         aggiornaPulsanti();
     }
 
@@ -168,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function mostraRisultati() {
         if (!db) { caricamento(false); return; }
-        messaggioErrore.style.display = 'none';
+        messaggioErrore.hidden = true;
         try {
             const { where, parametri } = condizioni();
             stato.totale = db.exec(`SELECT COUNT(*) FROM pagamenti${where}`, parametri)[0]?.values[0][0] ?? 0;
@@ -197,11 +202,11 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (e) {
             console.error('Errore nella ricerca dei pagamenti:', e);
             messaggioErrore.textContent = `Errore: ${e.message}`;
-            messaggioErrore.style.display = 'block';
+            messaggioErrore.hidden = false;
             corpoTabella.replaceChildren();
             const avviso = corpoTabella.insertRow().insertCell();
             avviso.colSpan = COLONNE.length;
-            avviso.style.cssText = 'text-align:center; color:red;';
+            avviso.className = 'table-error';
             avviso.textContent = 'Errore nel caricamento dei dati.';
             stato.totale = 0;
             stato.pagine = 1;
@@ -223,14 +228,14 @@ document.addEventListener('DOMContentLoaded', () => {
         inputPagina.disabled = unaSola;
     }
 
-    apriFiltri.addEventListener('click', () => { menuFiltri.style.display = menuFiltri.style.display === 'none' ? 'block' : 'none'; });
+    apriFiltri.addEventListener('click', () => apriMenu(menuFiltri.hidden));
     menuFiltri.addEventListener('click', e => {
         e.preventDefault();
         const voce = e.target.closest('a[data-filter-type]');
         if (voce && !voce.classList.contains('disabled')) aggiungiFiltro(voce.dataset.filterType, voce.dataset.filterLabel || voce.textContent);
     });
     document.addEventListener('click', e => {
-        if (!apriFiltri.contains(e.target) && !menuFiltri.contains(e.target)) menuFiltri.style.display = 'none';
+        if (!apriFiltri.contains(e.target) && !menuFiltri.contains(e.target)) apriMenu(false);
     });
     filtriAttivi.addEventListener('click', e => {
         const togli = e.target.closest('button[data-remove-filter]');
@@ -268,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (e) {
             console.error('Errore nel caricamento del database:', e);
             messaggioErrore.textContent = `Non riesco a caricare il database dei pagamenti (${e.message}). Riprova più tardi.`;
-            messaggioErrore.style.display = 'block';
+            messaggioErrore.hidden = false;
             caricamento(false);
         }
     }

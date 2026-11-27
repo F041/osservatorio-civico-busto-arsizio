@@ -8,6 +8,8 @@ body {
     line-height: 1.5;
     padding-bottom: 80px;
 }
+/* L'attributo hidden vince anche sulle regole che danno un display all'elemento */
+[hidden] { display: none !important; }
 
 .container {
     width: 95%;
@@ -113,7 +115,6 @@ body {
 /* Dropdown "Aggiungi Filtro" */
 .filter-dropdown-container { position: relative; display: inline-block; }
 .dropdown-content {
-    display: none; 
     position: absolute;
     background-color: #fff;
     min-width: 200px;
@@ -199,7 +200,8 @@ body {
     border: 1px solid #e3e3e3; border-radius: 4px; font-size: 0.9em;
 }
 .status-messages p { margin: 5px 0; }
-#error-message { color: #dc3545 !important; font-weight: bold; }
+#error-message { color: #dc3545; font-weight: bold; }
+.table-error { text-align: center; color: #dc3545; }
 
 /* Avviso copertura dati */
 .data-coverage-notice {
@@ -215,6 +217,7 @@ body {
 .dashboard-search { display: flex; gap: 8px; flex: 1 1 320px; }
 .dashboard-search .main-search-input { flex: 1; min-width: 0; }
 .dashboard-section { margin-bottom: 25px; }
+.overview-section { margin-top: 25px; }
 .dashboard-section h2 { font-size: 1.25em; font-weight: 600; margin: 0 0 10px; }
 .dashboard-table .num { text-align: right; white-space: nowrap; }
 .dashboard-table td a { color: #0056b3; text-decoration: none; }
@@ -405,7 +408,7 @@ td { color: #212529; }
 .pagination .rows-per-page-label { margin-left: 15px; }
 
 #loading-spinner { 
-    display: flex; /* Usato da JS per mostrarlo. Flex per centrare lo spinner figlio. */
+    display: flex; /* Flex per centrare lo spinner figlio; JS lo mostra e nasconde con l'attributo hidden */
     justify-content: center; /* Centra lo spinner orizzontalmente */
     align-items: center; /* Centra lo spinner verticalmente */
     width: 100%; /* Occupa la larghezza per una centratura efficace */

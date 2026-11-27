@@ -40,7 +40,7 @@
         </div>
     </nav>
 
-    <div id="loading-spinner" style="display: none;">
+    <div id="loading-spinner" hidden>
         <div class="spinner"></div>
     </div>
 
@@ -49,8 +49,8 @@
             <div class="list-info">Pagamenti (<span id="total-rows-header">0</span>)</div>
             
             <div class="filter-dropdown-container">
-                <button id="toggle-filter-dropdown-btn" class="control-button-style">Aggiungi Filtro ▾</button>
-                <div id="filter-options-dropdown" class="dropdown-content" style="display: none;">
+                <button id="toggle-filter-dropdown-btn" class="control-button-style" aria-expanded="false" aria-controls="filter-options-dropdown">Aggiungi Filtro ▾</button>
+                <div id="filter-options-dropdown" class="dropdown-content" hidden>
                     <a href="#" data-filter-type="year" data-filter-label="Anno">Anno</a>
                     <a href="#" data-filter-type="beneficiary" data-filter-label="Beneficiario">Beneficiario</a>
                     <a href="#" data-filter-type="description" data-filter-label="Descrizione">Descrizione</a>
@@ -65,8 +65,8 @@
         <div id="active-filters-area">
             <div id="active-filters-container"></div>
             <div class="action-buttons-for-filters">
-                <button id="apply-filters-button" class="control-button-style apply-button" style="display: none;">Applica</button>
-                <button id="reset-all-filters-button" class="control-button-style" style="display: none;">Reimposta Filtri</button>
+                <button id="apply-filters-button" class="control-button-style apply-button" hidden>Applica</button>
+                <button id="reset-all-filters-button" class="control-button-style" hidden>Reimposta Filtri</button>
             </div>
         </div>
 
@@ -80,7 +80,7 @@
 
         <div class="status-messages">
             <p id="loading-status">Caricamento database...</p>
-            <p id="error-message" style="color: red; display: none;"></p>
+            <p id="error-message" hidden></p>
             <p id="results-info">Mostrati <span id="current-rows">0</span> di <span id="total-rows-footer">0</span> risultati. Pagina <span id="current-page">1</span> di <span id="total-pages">1</span>.</p>
         </div>
         <div class="table-responsive-wrapper">

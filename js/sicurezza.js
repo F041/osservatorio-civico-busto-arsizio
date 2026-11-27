@@ -1,13 +1,11 @@
 // Panoramica Sicurezza: legge i conteggi aggregati da scripts/build_sicurezza.py (data/sicurezza.json)
 import { CATEGORIE, FASCE, FATTORI, DENUNCIA } from './sicurezza-config.js';
 import { caricaMappa, creaMappa, confiniCella, descriviCella } from './mappa.js';
+import { integer, formatDate } from './formato.js';
 
 const overview = document.getElementById('overview');
 const overviewTitle = document.getElementById('overview-title');
 const overviewNote = document.getElementById('overview-note');
-
-const integer = new Intl.NumberFormat('it-IT');
-const formatDate = iso => iso.split('-').reverse().join('/');
 
 // Classi della mappa: soglie delle quattro intensità, dalla più alta. La più bassa parte dalla soglia.
 const CLASSI = [20, 10, 5, 0];
