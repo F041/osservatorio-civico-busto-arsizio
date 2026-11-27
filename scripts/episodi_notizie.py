@@ -24,6 +24,8 @@ from raccogli_notizie import PROJECT_ID, CONSERVAZIONE_GIORNI, a_blocchi, client
 COLLEZIONE = 'notizie_episodi'
 COPERTURA = '_copertura'
 CAMPI = ('fonte', 'url', 'pubblicato', 'episodi')
+# Riassunti dei fatti, scritti a parte da scripts/riassunti_notizie.py: {"tipo|via|giorno": testo}
+RIASSUNTI = 'riassunti'
 
 
 def client():
@@ -55,6 +57,10 @@ def carica(client, righe):
     for r in righe:
         i = id_articolo(r['url'])
         voce = {k: r.get(k) for k in CAMPI}
+        # Un'analisi nuova non ha i riassunti: si tengono quelli già scritti
+        riassunti = {**(salvati.get(i) or {}).get(RIASSUNTI, {}), **(r.get(RIASSUNTI) or {})}
+        if riassunti:
+            voce[RIASSUNTI] = riassunti
         if r['episodi'] and (voce['pubblicato'] or '')[:10] >= limite:
             if salvati.get(i) != voce:
                 scrivi[i] = voce
@@ -94,8 +100,29 @@ def esporta(client, percorso):
         righe.insert(0, {'fonte': '', 'url': '', 'pubblicato': da, 'episodi': []})
     with open(percorso, 'w', encoding='utf-8', newline='\n') as f:
         for r in righe:
-            f.write(json.dumps({k: r.get(k) for k in CAMPI}, ensure_ascii=False) + '\n')
+            f.write(json.dumps({k: r[k] for k in (*CAMPI, RIASSUNTI) if k in r}, ensure_ascii=False) + '\n')
     print(f'Esportati {len(righe) - bool(da)} articoli con episodi, analisi dal {da}')
+
+
+def aggiungi_riassunti(client, nuovi):
+    """nuovi: {url: {chiave: riassunto}}. Scrive solo gli articoli che cambiano."""
+    raccolta = client.collection(COLLEZIONE)
+    operazioni = []
+    for url, testi in nuovi.items():
+        rif = raccolta.document(id_articolo(url))
+        doc = rif.get()
+        if not doc.exists:
+            continue
+        voce = doc.to_dict()
+        unione = {**voce.get(RIASSUNTI, {}), **testi}
+        if unione != voce.get(RIASSUNTI):
+            operazioni.append((rif, {**voce, RIASSUNTI: unione}))
+    for blocco in a_blocchi(operazioni):
+        batch = client.batch()
+        for rif, voce in blocco:
+            batch.set(rif, voce)
+        batch.commit()
+    print(f'Riassunti scritti in {len(operazioni)} articoli')
 
 
 if __name__ == '__main__':

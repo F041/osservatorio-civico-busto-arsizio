@@ -33,18 +33,24 @@
     <main id="contenuto" tabindex="-1" class="container page-content">
         <div class="privacy-text">
             <h2 id="titolo">Fatti dalle notizie da controllare</h2>
-            <p>Ogni riga è un fatto già sulla <a href="index.html?vista=notizie">mappa delle notizie</a>, con i link agli
-                articoli da cui viene. Controlla tipo, giorno e via. Se il fatto è sbagliato, nella pull request di revisione
-                scrivi <code>no</code> nella colonna esito della sua riga, in <code>revisione/notizie.tsv</code>.</p>
+            <p>Ogni riga è un fatto già sulla <a href="index.html?vista=notizie">mappa delle notizie</a>. Leggi il riassunto
+                e, se hai dubbi, l'articolo. Se tipo, giorno o via sono sbagliati, spunta <strong>Sbagliato</strong>.</p>
+            <p>Alla fine premi <strong>Invia la revisione</strong>: si apre GitHub con il messaggio già scritto e basta premere
+                <strong>Create</strong>. In un paio di minuti i fatti sbagliati spariscono dalla mappa e gli altri risultano controllati.</p>
             <p id="stato" role="status">Caricamento dei fatti…</p>
+            <p><label class="review-check"><input type="checkbox" id="anche-controllati"> Mostra anche i fatti già controllati</label></p>
         </div>
-        <div class="table-responsive-wrapper">
+        <div class="table-responsive-wrapper review-wrapper">
             <table class="review-table" id="fatti" hidden>
                 <thead>
-                    <tr><th scope="col">Giorno</th><th scope="col">Tipo</th><th scope="col">Via o luogo</th><th scope="col">Articoli</th><th scope="col">Id</th></tr>
+                    <tr><th scope="col">Giorno</th><th scope="col">Tipo</th><th scope="col">Cosa è successo</th><th scope="col">Via o luogo</th><th scope="col">Articoli</th><th scope="col">Esito</th></tr>
                 </thead>
                 <tbody></tbody>
             </table>
+        </div>
+        <div class="review-bar" id="barra" hidden>
+            <p id="conteggio"></p>
+            <a id="invia" class="download-button" href="#" target="_blank" rel="noopener">Invia la revisione</a>
         </div>
     </main>
 

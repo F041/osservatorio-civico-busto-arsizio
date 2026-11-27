@@ -1,7 +1,7 @@
 name: Pubblica il sito
 
 # Pubblica il sito su GitHub Pages con data/notizie.json creato al momento: i fatti delle notizie contengono i link agli
-# articoli, che non vanno mai nel repo (CLAUDE.md). Poi apre o allunga la pull request di revisione dei fatti nuovi.
+# articoli, che non vanno mai nel repo (CLAUDE.md). Poi avvisa con una issue se ci sono fatti da controllare.
 on:
   push:
     branches: [main]
@@ -22,14 +22,13 @@ jobs:
   costruisci:
     runs-on: ubuntu-latest
     permissions:
-      contents: write        # ramo revisione-notizie
-      pull-requests: write   # pull request di revisione
+      contents: read
+      issues: write   # issue di avviso dei fatti da controllare
     steps:
       - name: Checkout di main
         uses: actions/checkout@v5
         with:
           ref: main
-          fetch-depth: 0
 
       - name: Configura Python
         uses: actions/setup-python@v6
@@ -56,34 +55,30 @@ jobs:
         with:
           path: .
 
-      # Una sola pull request aperta alla volta: se c'è già si allunga, altrimenti ne parte una nuova da main.
-      # Se non riesce, il sito si pubblica lo stesso. Serve l'impostazione del repo "Allow GitHub Actions to create
-      # and approve pull requests" (Settings > Actions > General)
-      - name: Pull request di revisione
+      # Una sola issue di avviso aperta alla volta: si apre quando ci sono fatti da controllare, riceve un commento
+      # quando ne arrivano di nuovi e si chiude quando sono tutti controllati (revisione.html e revisione.yml).
+      # Se non riesce, il sito si pubblica lo stesso
+      - name: Avviso dei fatti da controllare
         continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          RAMO=revisione-notizie
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git show origin/main:revisione/notizie.tsv > "$RUNNER_TEMP/main.tsv" 2>/dev/null || : > "$RUNNER_TEMP/main.tsv"
-          APERTA=$(gh pr list --head "$RAMO" --base main --state open --json number -q '.[0].number')
-          if [ -n "$APERTA" ]; then
-            git checkout -q -B "$RAMO" "origin/$RAMO"
-          else
-            git checkout -q -B "$RAMO" origin/main
+          TITOLO="Fatti dalle notizie da controllare"
+          N=$(python3 scripts/avviso_revisione.py data/notizie.json revisione/notizie.tsv "$RUNNER_TEMP/avviso.md")
+          echo "Fatti da controllare: $N"
+          APERTA=$(gh issue list --state open --author "app/github-actions" --search "\"$TITOLO\" in:title" --json number -q '.[0].number')
+          if [ "$N" = "0" ]; then
+            [ -z "$APERTA" ] || gh issue close "$APERTA" --comment "Tutti i fatti sono controllati."
+            exit 0
           fi
-          NUOVI=$(python3 scripts/revisione_notizie.py data/notizie.json revisione/notizie.tsv "$RUNNER_TEMP/main.tsv" "$RUNNER_TEMP/corpo.md")
-          echo "Fatti nuovi da rivedere: $NUOVI"
-          [ "$NUOVI" = "0" ] && exit 0
-          git add revisione/notizie.tsv
-          git commit -q -m "Revisione notizie: $NUOVI fatti nuovi"
-          git push -q --force-with-lease origin "$RAMO"
-          if [ -n "$APERTA" ]; then
-            gh pr edit "$APERTA" --body-file "$RUNNER_TEMP/corpo.md"
-          else
-            gh pr create --base main --head "$RAMO" --title "Revisione dei fatti dalle notizie" --body-file "$RUNNER_TEMP/corpo.md"
+          if [ -z "$APERTA" ]; then
+            gh issue create --title "$TITOLO" --body-file "$RUNNER_TEMP/avviso.md"
+            exit 0
+          fi
+          PRIMA=$(gh issue view "$APERTA" --json body -q .body | sed -n 's/.*da-controllare: \([0-9]*\).*/\1/p')
+          gh issue edit "$APERTA" --body-file "$RUNNER_TEMP/avviso.md"
+          if [ "$N" -gt "${PRIMA:-0}" ]; then
+            gh issue comment "$APERTA" --body "Sono arrivati fatti nuovi: ora sono $N da controllare."
           fi
 
   pubblica:

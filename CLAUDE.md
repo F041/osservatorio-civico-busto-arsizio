@@ -111,10 +111,15 @@ Decisioni prese con l'utente a novembre 2026:
 - Storico: ilBustese rallenta di proposito le richieste in blocco (circa 30 secondi per pagina degli articoli e
   dell'archivio; feed e mappa del sito no). Non fingersi un browser: si scarica da solo, a parte e con calma.
   Prealpina: le mappe del sito più vecchie non hanno date, si leggono dalla pagina dell'articolo.
-- Revisione umana a posteriori (decisione dell'utente del 27/11/2026): i fatti vanno sul sito subito; quelli nuovi
-  arrivano in una pull request (una al giorno, o che si allunga finché non viene approvata) e l'utente toglie quelli sbagliati.
-  Il file `revisione/notizie.tsv` ha solo id, esito, giorno, tipo e via, mai i link; `esito = no` toglie il fatto alla
-  pubblicazione successiva. `revisione.html` (fuori dai menu, noindex) mostra i fatti con i link per controllarli.
+- Revisione umana a posteriori (decisione dell'utente del 27/11/2026): i fatti vanno sul sito subito. `pubblica.yml`
+  apre una issue "Fatti dalle notizie da controllare" (un commento quando ne arrivano di nuovi, si chiude quando sono
+  tutti visti). `revisione.html` (fuori dai menu, noindex) mostra i fatti non ancora in `revisione/notizie.tsv`, con
+  riassunto e link; l'utente spunta quelli sbagliati e "Invia la revisione" apre una issue già scritta. Quando la crea
+  il proprietario del repo, `revisione.yml` aggiorna il tsv su main (`scripts/applica_revisione.py`) e ripubblica.
+  Il tsv ha solo id, esito, giorno, tipo e via, mai i link; `esito = no` toglie il fatto dalla mappa.
+- Riassunti: 2 o 3 frasi per fatto, per la revisione, scritte da Haiku sul PC con `scripts/riassunti_notizie.py` dopo
+  `episodi_notizie.py carica`. Stanno nel campo `riassunti` dei documenti di `notizie_episodi` e finiscono in
+  data/notizie.json: sono pubblici, quindi mai nomi, età, nazionalità o targhe, e niente frasi copiate dall'articolo.
 - Dati personali: mai nomi o età, solo i campi dello schema e il link. Articoli e link si cancellano 24 mesi dopo l'uscita
   (decisione dell'utente del 26/11/2026, scritta in privacy.html; le segnalazioni restano a 12 mesi).
   Link agli articoli solo nel dettaglio della singola via. Soglia 2 per le notizie (decisione dell'utente del

@@ -1,0 +1,64 @@
+name: Applica la revisione delle notizie
+
+# revisione.html prepara una issue con i fatti controllati e quelli sbagliati. Quando il proprietario del repo la crea,
+# questo workflow aggiorna revisione/notizie.tsv su main, chiude la issue e ripubblica il sito (pubblica.yml): i fatti
+# sbagliati spariscono dalla mappa. Le issue di altre persone con lo stesso titolo non fanno niente.
+on:
+  issues:
+    types: [opened]
+
+concurrency:
+  group: revisione
+  cancel-in-progress: false
+
+jobs:
+  applica:
+    if: startsWith(github.event.issue.title, 'Revisione notizie') && github.event.issue.user.login == github.repository_owner
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # commit di revisione/notizie.tsv
+      issues: write     # commento e chiusura della issue
+      actions: write    # avvio di pubblica.yml
+    steps:
+      - name: Checkout di main
+        uses: actions/checkout@v5
+        with:
+          ref: main
+
+      # Il corpo della issue passa da una variabile d'ambiente a un file: mai dentro lo script
+      - name: Aggiorna revisione/notizie.tsv
+        id: applica
+        env:
+          CORPO: ${{ github.event.issue.body }}
+        run: |
+          printf '%s' "$CORPO" > "$RUNNER_TEMP/corpo.txt"
+          curl -sfL https://f041.github.io/osservatorio-civico-busto-arsizio/data/notizie.json -o "$RUNNER_TEMP/notizie.json"
+          RIEPILOGO=$(python3 scripts/applica_revisione.py "$RUNNER_TEMP/corpo.txt" "$RUNNER_TEMP/notizie.json" revisione/notizie.tsv)
+          echo "riepilogo=$RIEPILOGO" >> "$GITHUB_OUTPUT"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add revisione/notizie.tsv
+          git diff --cached --quiet && exit 0
+          git commit -q -m "Revisione notizie (issue #${{ github.event.issue.number }}): $RIEPILOGO"
+          for tentativo in 1 2 3; do
+            git pull -q --rebase origin main && git push -q origin HEAD:main && break
+            sleep 5
+          done
+
+      # I commit fatti con GITHUB_TOKEN non fanno partire "push": la pubblicazione si avvia a mano
+      - name: Ripubblica il sito e chiudi la issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RIEPILOGO: ${{ steps.applica.outputs.riepilogo }}
+          NUMERO: ${{ github.event.issue.number }}
+        run: |
+          gh workflow run pubblica.yml --ref main
+          gh issue close "$NUMERO" --comment "Fatto: $RIEPILOGO. Il sito si aggiorna in un paio di minuti."
+
+      - name: Avvisa se non è riuscita
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMERO: ${{ github.event.issue.number }}
+          LOG: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: gh issue comment "$NUMERO" --body "Non sono riuscito ad applicare la revisione. Il dettaglio è nel log: $LOG"

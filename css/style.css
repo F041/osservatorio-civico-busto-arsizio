@@ -427,7 +427,37 @@ html { scroll-padding-bottom: max(90px, 5em); }
 .review-table td { vertical-align: top; }
 .review-table ul { list-style: none; margin: 0; padding: 0; }
 .review-table li + li { margin-top: 4px; }
-.review-id { font-family: ui-monospace, Consolas, monospace; font-size: 0.85em; color: #5f5e5a; }
+.review-summary { min-width: 260px; max-width: 420px; line-height: 1.45; }
+.review-missing { color: #5f5e5a; font-style: italic; }
+.review-wrong td { background: #fdecea; }
+.review-check { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap; }
+.review-check input { width: 20px; height: 20px; margin: 0; }
+.review-done { display: block; margin-bottom: 4px; font-size: 0.85em; color: #5f5e5a; }
+/* La barra di invio resta in vista sopra il footer fisso mentre si scorre la tabella */
+.review-bar { position: sticky; bottom: 75px; z-index: 50; display: flex; flex-wrap: wrap; align-items: center;
+    justify-content: space-between; gap: 12px; margin-top: 16px; padding: 12px 16px; background: #fff;
+    border: 1px solid #8a8984; border-radius: 6px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12); }
+.review-bar p { margin: 0; }
+@media (max-height: 480px) { .review-bar { bottom: 0; } }
+/* Sul telefono ogni fatto diventa una scheda: sei colonne non stanno in 390 px */
+@media (max-width: 700px) {
+    .review-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .review-table, .review-table tbody, .review-table tr, .review-table td { display: block; box-sizing: border-box; width: 100%; }
+    .review-table tr { margin-bottom: 12px; padding: 8px 12px; border: 1px solid #8a8984; border-radius: 6px; background: #fff; }
+    .review-table td { padding: 4px 0; border: none; }
+    /* Giorno e tipo in testa alla scheda, sulla stessa riga; etichette solo dove il contenuto non basta */
+    .review-table td[data-label="Giorno"], .review-table td[data-label="Tipo"] { display: inline; width: auto; font-weight: 600; }
+    .review-table td[data-label="Tipo"]::before { content: " · "; }
+    .review-table td[data-label="Via o luogo"]::before, .review-table td[data-label="Articoli"]::before {
+        content: attr(data-label) ": "; font-size: 0.85em; font-weight: 600; color: #5f5e5a; }
+    .review-table td[data-label="Articoli"] ul { display: inline; }
+    .review-table td[data-label="Articoli"] li { display: inline; }
+    .review-table td[data-label="Articoli"] li + li::before { content: " · "; }
+    .review-table tr.review-wrong { background: #fdecea; }
+    .review-table .review-wrong td { background: none; }
+    .review-summary { min-width: 0; max-width: none; }
+    .review-wrapper { overflow-x: visible; }
+}
 .nowrap { white-space: nowrap; }
 .privacy-text li { margin-bottom: 8px; }
 
