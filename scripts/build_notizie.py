@@ -8,6 +8,8 @@ giorno, via o luogo, tipo e link agli articoli. Il periodo lo sceglie chi guarda
 conteggi, soglia e tipi si calcolano nella pagina: per un periodo qualsiasi servono i singoli fatti.
 Non pubblica titoli, testi, nomi o età. I conteggi non si sommano mai a quelli delle segnalazioni (build_sicurezza.py).
 """
+import csv
+import hashlib
 import json
 import sys
 from datetime import date, datetime, timedelta, timezone
@@ -43,6 +45,23 @@ def episodi_validi(righe, mappa, inizio, oggi):
     return out
 
 
+def id_fatto(gruppo):
+    """Serve alla revisione (revisione/notizie.tsv) per riconoscere i fatti già visti. Viene dal primo articolo (per
+    link) e da giorno, via e tipo che quell'articolo dà al fatto: un articolo può raccontare due furti in due vie. Resta
+    uguale quando altri articoli raccontano lo stesso fatto, a meno che uno non venga prima nell'ordine dei link."""
+    primo = min(e['articolo'] for e in gruppo)
+    giorno, via = min((e['data'], e['via']) for e in gruppo if e['articolo'] == primo)
+    return hashlib.sha256(f"{primo}|{giorno}|{via}|{gruppo[0]['categoria']}".encode('utf-8')).hexdigest()[:12]
+
+
+def esclusi(percorso):
+    """Id dei fatti che la revisione ha segnato come sbagliati (colonna esito = no)."""
+    if not percorso or not Path(percorso).exists():
+        return set()
+    with open(percorso, encoding='utf-8', newline='') as f:
+        return {r['id'] for r in csv.DictReader(f, delimiter='\t') if (r.get('esito') or '').strip().lower() == 'no'}
+
+
 def costruisci(righe, mappa, adesso):
     oggi = adesso.date()
     inizio = oggi - timedelta(days=FINESTRA_GIORNI)
@@ -56,12 +75,13 @@ def costruisci(righe, mappa, adesso):
         via = min(per_via, key=lambda v: (-len(per_via[v]), len(quadrati({'via': v}, mappa)), v))
         articoli = {e['articolo']: {'fonte': e['fonte'], 'data': e['data'], 'url': e['articolo']} for e in gruppo}
         fatti.append({
+            'id': id_fatto(gruppo),
             'data': min(e['data'] for e in gruppo),
             'via': via,
             'tipo': gruppo[0]['categoria'],
-            'articoli': sorted(articoli.values(), key=lambda a: (a['data'], a['fonte']), reverse=True),
+            'articoli': sorted(articoli.values(), key=lambda a: (a['data'], a['fonte'], a['url']), reverse=True),
         })
-    fatti.sort(key=lambda f: (f['data'], f['via']))
+    fatti.sort(key=lambda f: (f['data'], f['via'], f['id']))
     # La raccolta può coprire meno di FINESTRA_GIORNI: la serie parte dal primo articolo, non da prima
     pubblicati = [(r.get('pubblicato') or r.get('visto') or '')[:10] for r in righe]
     primo = max(date.fromisoformat(min((p for p in pubblicati if p), default=inizio.isoformat())), inizio)
@@ -75,11 +95,16 @@ def costruisci(righe, mappa, adesso):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        sys.exit('Uso: python scripts/build_notizie.py episodi.jsonl data/notizie.json')
+    if len(sys.argv) not in (3, 4):
+        sys.exit('Uso: python scripts/build_notizie.py episodi.jsonl data/notizie.json [revisione/notizie.tsv]')
     with open(sys.argv[1], encoding='utf-8') as f:
         righe = [json.loads(r) for r in f if r.strip()]
     dati = costruisci(righe, carica_mappa(), datetime.now(timezone.utc))
+    tolti = esclusi(sys.argv[3] if len(sys.argv) == 4 else None)
+    if tolti:
+        prima = len(dati['fatti'])
+        dati['fatti'] = [f for f in dati['fatti'] if f['id'] not in tolti]
+        print(f'Fatti segnati come sbagliati nella revisione e tolti: {prima - len(dati["fatti"])}')
     with open(sys.argv[2], 'w', encoding='utf-8', newline='\n') as f:
         json.dump(dati, f, ensure_ascii=False, indent=1)
     print(f"Scritto {sys.argv[2]}: {len(dati['fatti'])} fatti dal {dati['da']} al {dati['a']}")

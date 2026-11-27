@@ -1,0 +1,98 @@
+name: Pubblica il sito
+
+# Pubblica il sito su GitHub Pages con data/notizie.json creato al momento: i fatti delle notizie contengono i link agli
+# articoli, che non vanno mai nel repo (CLAUDE.md). Poi apre o allunga la pull request di revisione dei fatti nuovi.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  # I commit dei workflow di dati usano GITHUB_TOKEN e non fanno partire "push": si pubblica quando finiscono
+  workflow_run:
+    workflows: ['Aggiorna conteggi Sicurezza', 'Aggiorna Database da Release Esterna']
+    types: [completed]
+  # Ogni giorno, dopo la raccolta delle 4:41 UTC: porta sul sito i fatti caricati dal PC (scripts/episodi_notizie.py)
+  schedule:
+    - cron: '17 7 * * *'
+
+concurrency:
+  group: pubblica
+  cancel-in-progress: false
+
+jobs:
+  costruisci:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write        # ramo revisione-notizie
+      pull-requests: write   # pull request di revisione
+    steps:
+      - name: Checkout di main
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Configura Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Installa il client Firestore
+        run: pip install google-cloud-firestore==2.34.1
+
+      # Gli episodi stanno nella collezione notizie_episodi, chiusa al sito. Account di servizio sicurezza-conteggi,
+      # lo stesso di notizie.yml. Legge poche centinaia di documenti: la quota gratuita è di 50.000 letture al giorno
+      - name: Fatti delle notizie
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          echo "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/account.json"
+          GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/account.json" python3 scripts/episodi_notizie.py esporta "$RUNNER_TEMP/episodi.jsonl"
+          rm "$RUNNER_TEMP/account.json"
+          python3 scripts/build_notizie.py "$RUNNER_TEMP/episodi.jsonl" data/notizie.json revisione/notizie.tsv
+          rm "$RUNNER_TEMP/episodi.jsonl"
+
+      - name: Prepara il sito
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      # Una sola pull request aperta alla volta: se c'è già si allunga, altrimenti ne parte una nuova da main
+      - name: Pull request di revisione
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          RAMO=revisione-notizie
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git show origin/main:revisione/notizie.tsv > "$RUNNER_TEMP/main.tsv" 2>/dev/null || : > "$RUNNER_TEMP/main.tsv"
+          APERTA=$(gh pr list --head "$RAMO" --base main --state open --json number -q '.[0].number')
+          if [ -n "$APERTA" ]; then
+            git checkout -q -B "$RAMO" "origin/$RAMO"
+          else
+            git checkout -q -B "$RAMO" origin/main
+          fi
+          NUOVI=$(python3 scripts/revisione_notizie.py data/notizie.json revisione/notizie.tsv "$RUNNER_TEMP/main.tsv" "$RUNNER_TEMP/corpo.md")
+          echo "Fatti nuovi da rivedere: $NUOVI"
+          [ "$NUOVI" = "0" ] && exit 0
+          git add revisione/notizie.tsv
+          git commit -q -m "Revisione notizie: $NUOVI fatti nuovi"
+          git push -q --force-with-lease origin "$RAMO"
+          if [ -n "$APERTA" ]; then
+            gh pr edit "$APERTA" --body-file "$RUNNER_TEMP/corpo.md"
+          else
+            gh pr create --base main --head "$RAMO" --title "Revisione dei fatti dalle notizie" --body-file "$RUNNER_TEMP/corpo.md"
+          fi
+
+  pubblica:
+    needs: costruisci
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.pagine.outputs.page_url }}
+    steps:
+      - name: Pubblica su GitHub Pages
+        id: pagine
+        uses: actions/deploy-pages@v4

@@ -412,6 +412,12 @@ body {
 .routing-table { font-size: 0.95em; margin: 4px 0 10px; }
 .routing-table th:first-child, .routing-table td:first-child { width: 38%; }
 .routing-table td a { overflow-wrap: anywhere; }
+/* Revisione dei fatti delle notizie (revisione.html) */
+.review-table { margin-top: 15px; background: #fff; }
+.review-table td { vertical-align: top; }
+.review-table ul { list-style: none; margin: 0; padding: 0; }
+.review-table li + li { margin-top: 4px; }
+.review-id { font-family: ui-monospace, Consolas, monospace; font-size: 0.85em; color: #5f5e5a; }
 .nowrap { white-space: nowrap; }
 .privacy-text li { margin-bottom: 8px; }
 

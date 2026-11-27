@@ -102,12 +102,16 @@ Decisioni prese con l'utente a novembre 2026:
   mappa (1 mese, 3 mesi, 6 mesi, Tutto, o maniglie trascinabili) conta le vie nel browser. Che i singoli fatti
   siano leggibili nel file, sotto la soglia, va bene (decisione dell'utente del 25/11/2026). `data/notizie.json` non va mai nel
   repo: si genera durante la pubblicazione del sito (decisione del 24/11/2026), così i link spariscono davvero
-  quando scadono.
+  quando scadono. Pubblicazione: `.github/workflows/pubblica.yml` (GitHub Pages da Actions, non più dal ramo) legge gli
+  episodi dalla collezione Firestore `notizie_episodi` (solo gli articoli con almeno un episodio, circa 500 letture) e
+  costruisce il file. Gli episodi li carica dal PC `scripts/episodi_notizie.py carica`, perché l'analisi gira sul PC.
 - Storico: ilBustese rallenta di proposito le richieste in blocco (circa 30 secondi per pagina degli articoli e
   dell'archivio; feed e mappa del sito no). Non fingersi un browser: si scarica da solo, a parte e con calma.
   Prealpina: le mappe del sito più vecchie non hanno date, si leggono dalla pagina dell'articolo.
 - Revisione umana a posteriori (decisione dell'utente del 27/11/2026): i fatti vanno sul sito subito; quelli nuovi
   arrivano in una pull request (una al giorno, o che si allunga finché non viene approvata) e l'utente toglie quelli sbagliati.
+  Il file `revisione/notizie.tsv` ha solo id, esito, giorno, tipo e via, mai i link; `esito = no` toglie il fatto alla
+  pubblicazione successiva. `revisione.html` (fuori dai menu, noindex) mostra i fatti con i link per controllarli.
 - Dati personali: mai nomi o età, solo i campi dello schema e il link. Articoli e link si cancellano 24 mesi dopo l'uscita
   (decisione dell'utente del 26/11/2026, scritta in privacy.html; le segnalazioni restano a 12 mesi).
   Link agli articoli solo nel dettaglio della singola via. Soglia 2 per le notizie (decisione dell'utente del

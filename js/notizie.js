@@ -13,8 +13,8 @@ const iso = g => new Date(g * GIORNO).toISOString().slice(0, 10);
 const quantiFatti = n => `${integer.format(n)} ${n === 1 ? 'fatto' : 'fatti'}`;
 const tra = (v, min, max) => Math.min(max, Math.max(min, v));
 
-const TESTATE = { ilbustese: 'ilBustese', malpensa24: 'Malpensa24', prealpina: 'Prealpina', varesenews: 'VareseNews' };
-const TIPI = {
+export const TESTATE = { ilbustese: 'ilBustese', malpensa24: 'Malpensa24', prealpina: 'Prealpina', varesenews: 'VareseNews' };
+export const TIPI = {
     furto: 'Furto o tentato furto',
     aggressione: 'Aggressione o minaccia',
     molestia: 'Molestia',
