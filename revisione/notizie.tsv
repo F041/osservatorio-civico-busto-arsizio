@@ -1,30 +1,116 @@
 id	esito	data	tipo	via	tipo_giusto	sottotipo_giusto
-ffac303c33ae	ok	2026-10-15	insicurezza	Parco Comerio	vandalismo	
-a973b4672593	ok	2026-10-17	furto	Largo Gaetano Giardino		
+9070b6099768	ok	2026-03-05	furto	Via Marco Minghetti		nessuno
+45328b752672	ok	2026-03-11	furto	Piazza della chiesa		nessuno
+1278903ade5d	ok	2026-03-13	spaccio	Via Ugo Foscolo		
+4ca27895b0da	ok	2026-03-13	altro	Via Ugo Foscolo		
+3eaf8667b40a	ok	2026-04-05	furto	Via della Concordia		nessuno
+bc6a97c76263	ok	2026-04-05	vandalismo	Via San Michele		rifiuti
+349ed56d398d	ok	2026-04-10	vandalismo	Via Luigi Morelli		rifiuti
+c49454654736	ok	2026-04-11	vandalismo	Via Bienate		rifiuti
+4260292094d0	ok	2026-04-12	vandalismo	Viale Giovanni Boccaccio		rifiuti
+7163d1add515	ok	2026-04-16	vandalismo	Via Lodovico Antonio Muratori		rifiuti
+98b7a8e07c47	ok	2026-04-20	allagamento	Via Torquato Tasso		
+d05dd911ff02	ok	2026-04-20	vandalismo	Via Arnaldo da Brescia		rifiuti
+d3ea868d1c0c	ok	2026-04-20	vandalismo	Viale Sardegna		rifiuti
+760d312dc978	ok	2026-04-22	altro	Piazza Volontari della Libertà		
+f7079792f7ff	ok	2026-04-23	furto	Viale Duca d'Aosta		nessuno
+4e7d551594ac	ok	2026-05-06	allagamento	Via Torquato Tasso		
+7699b1cda711	ok	2026-05-06	allagamento	Viale Armando Diaz		
+a11b1c0a2a01	ok	2026-05-06	allagamento	Corso Venti Settembre		
+cd8c08ad2441	ok	2026-05-06	allagamento	Busto Arsizio Nord		
+e83ee84da239	ok	2026-05-11	aggressione	Piazza San Giovanni		
+e12865a5a900	ok	2026-05-19	furto	Via Don Giovanni Minzoni		nessuno
+f87ef33855d8	ok	2026-05-21	vandalismo	Viale Sardegna		rifiuti
+b0b28cf80157	no	2026-05-23	vandalismo	Busto Arsizio FS		
+e5942da927aa	ok	2026-05-24	aggressione	Via G. Redaelli		
+14129b626abb	ok	2026-05-27	aggressione	Piazza Garibaldi		
+a868cf700d22	ok	2026-05-27	vandalismo	Via Andrea Zappellini		nessuno
+e348464b4085	ok	2026-06-01	aggressione	Viale Luigi Pirandello		
+9a5e4033b0bf	ok	2026-06-02	allagamento	Corso Venti Settembre		
+ce7931b5b9e0	ok	2026-06-02	allagamento	Via Vincenzo Monti		
+a2f3ee8ca40f	ok	2026-06-03	vandalismo	Via Roma	aggressione	
+01e30700329f	ok	2026-06-04	vandalismo	Piazzale Rodolfo Crespi		nessuno
+54c5f4e97946	ok	2026-06-07	furto	Via Vercelli		nessuno
+56206117ec70	ok	2026-06-08	vandalismo	Piazza Venticinque Aprile		rifiuti
+06d4b2c4fbda	ok	2026-06-11	vandalismo	Via Francesco Ferrer		rifiuti
+45a859a5f036	ok	2026-06-22	vandalismo	Piazza Garibaldi		rifiuti
+1e703c0df85b	ok	2026-06-25	furto	Via Vincenzo Monti		nessuno
+d5ec9a83281e	ok	2026-06-25	furto	Piazza Volontari della Libertà		nessuno
+0850c1cb3a44	ok	2026-06-30	insicurezza	Viale Giovanni Boccaccio	vandalismo	rifiuti
+2e77b75f0991	ok	2026-06-30	insicurezza	Via Firenze	vandalismo	rifiuti
+6e633dead935	ok	2026-07-01	aggressione	Viale Giovanni Boccaccio		
+79f58eb12810	ok	2026-07-01	vandalismo	Viale Stelvio		rifiuti
+1c36e28c2995	ok	2026-07-03	aggressione	Via Ca' Bianca		
+acfc0a80caaf	ok	2026-07-04	vandalismo	Via Ventiquattro Maggio		rifiuti
+2f8448f4678a	ok	2026-07-06	furto	Busto Arsizio Nord		nessuno
+abe6d5e89cb2	ok	2026-07-08	vandalismo	Via Roberto Culin		nessuno
+1647776ccafb	ok	2026-07-10	aggressione	Piazza San Michele		
+58a74be9e8c1	ok	2026-07-10	furto	Viale Duca d'Aosta		nessuno
+6e1635d4397f	ok	2026-07-10	vandalismo	Via Marco Polo		nessuno
+f017b5c19237	ok	2026-07-13	spaccio	Piazza San Michele		
+799598bc18b7	ok	2026-07-15	vandalismo	Piazza Garibaldi		rifiuti
+9683a64e2639	no	2026-07-16	altro	Piazzale Alcide De Gasperi		
+b45407a3418f	ok	2026-07-18	vandalismo	Via Montebello	altro	
+322336172ff2	ok	2026-07-19	furto	Via Fidenza		nessuno
+49cc4057f896	ok	2026-07-22	insicurezza	Via Donato Bramante	molestia	
+edf9c804bf05	ok	2026-07-22	insicurezza	Via Dante Alighieri	molestia	
+88f21645af70	ok	2026-07-23	furto	Via Solferino		nessuno
+dc65394e1caf	ok	2026-07-27	vandalismo	Giardini del Museo del Tessile		rifiuti
+b7a15c846255	ok	2026-07-29	vandalismo	Via Monza		nessuno
+9acacab8f8b1	ok	2026-08-05	vandalismo	Piazza San Donato		rifiuti
+c117e980fede	ok	2026-08-05	furto	Via Felice Cavallotti		nessuno
+e47e6e535ef6	ok	2026-08-06	furto	Corso Sempione		nessuno
+931f83722855	ok	2026-08-10	furto	Piazza Volontari della Libertà		nessuno
+55c048c64ee4	ok	2026-08-14	vandalismo	Parco degli Alpini		nessuno
+14018e69c1c1	ok	2026-08-20	allagamento	Via Undici Settembre		
+2c0f91acbccf	ok	2026-08-20	allagamento	Via Torquato Tasso		
+81da8d3ddcc2	ok	2026-08-20	allagamento	Corso Venti Settembre		
+f15cc22c9d4b	ok	2026-08-20	allagamento	Viale Giovanni Boccaccio		
+a61c4e918311	ok	2026-08-28	vandalismo	Via Dante Alighieri		rifiuti
+45ed607174ca	ok	2026-08-31	vandalismo	Piazza Fratelli Rosselli		nessuno
+ac62f8c592f1	ok	2026-08-31	vandalismo	Via delle Allodole		rifiuti
+89e17889674c	ok	2026-09-14	vandalismo	Piazza San Donato		rifiuti
+ecc413937b3b	ok	2026-09-19	vandalismo	Via Monza		nessuno
+fe989e214d98	ok	2026-09-20	vandalismo	Via dei Mille		nessuno
+9fbfd694bd90	ok	2026-09-21	vandalismo	Via Giacomo Matteotti		rifiuti
+005c5d2e74f1	ok	2026-09-23	spaccio	Piazza San Michele		
+19c8767a1d7a	ok	2026-09-24	spaccio	Parco Milani		
+a0ce33dc346b	ok	2026-09-25	spaccio	Viale Giovanni Boccaccio		
+f5830771a49b	ok	2026-09-27	aggressione	Piazza Lucio Flauto		
+4109c0049a52	ok	2026-09-30	insicurezza	Piazza Santa Maria	molestia	
+620a695f92e5	ok	2026-09-30	aggressione	Via del lazzaretto	vandalismo	nessuno
+a15aac905b88	ok	2026-09-30	insicurezza	Piazza San Giovanni	molestia	
+ec9c7fb77a76	ok	2026-09-30	vandalismo	Via delle Allodole		nessuno
+5ca63edf0d01	ok	2026-10-01	furto	Piazza San Michele		nessuno
+842ec75f33b8	ok	2026-10-02	aggressione	Piazza San Giovanni		
+f723420ea199	ok	2026-10-03	vandalismo	Piazza Lucio Flauto		nessuno
+b80687f90498	ok	2026-10-13	furto	Via Bienate		nessuno
+ffac303c33ae	ok	2026-10-15	insicurezza	Parco Comerio	vandalismo	nessuno
+a973b4672593	ok	2026-10-17	furto	Largo Gaetano Giardino		nessuno
 ed94472a3b4b	ok	2026-10-17	spaccio	Via Quintino Sella		
-72784ba45e55	ok	2026-10-19	furto	Via Magenta		
+72784ba45e55	ok	2026-10-19	furto	Via Magenta		nessuno
 f86198393e94	ok	2026-10-23	aggressione	Viale della Repubblica	molestia	
 fb46de654179	ok	2026-10-23	spaccio	Via Volturno		
 e8883b17582c	ok	2026-10-24	spaccio	Viale Duca d'Aosta		
-628185257323	ok	2026-10-27	vandalismo	Viale Lombardia		
-ab0624b0628d	ok	2026-10-27	vandalismo	Via Bezzecca		
-b487e5a1ff52	ok	2026-10-29	insicurezza	Via Sorrento	vandalismo	
+628185257323	ok	2026-10-27	vandalismo	Viale Lombardia		rifiuti
+ab0624b0628d	ok	2026-10-27	vandalismo	Via Bezzecca		rifiuti
+b487e5a1ff52	ok	2026-10-29	insicurezza	Via Sorrento	vandalismo	nessuno
 dff615c2b7ff	ok	2026-10-30	aggressione	Busto Arsizio FS		
-86d289216240	ok	2026-11-03	vandalismo	Via Donato Bramante		
-41e136deca1d	ok	2026-11-07	furto	Via Giulio Pastore		
-7720821c8752	ok	2026-11-07	furto	Via Alpe di Siusi		
+86d289216240	ok	2026-11-03	vandalismo	Via Donato Bramante		nessuno
+41e136deca1d	ok	2026-11-07	furto	Via Giulio Pastore		casa
+7720821c8752	ok	2026-11-07	furto	Via Alpe di Siusi		casa
 edc36e330797	ok	2026-11-08	vandalismo	Via Veroncora	aggressione	
 23528308138f	ok	2026-11-09	vandalismo	Via Veroncorella	aggressione	
 4b7555d86d22	ok	2026-11-09	vandalismo	Via Corbetta	aggressione	
 58b31cb91ee2	ok	2026-11-09	aggressione	Via Filippo Meda		
-5a8d6d3366af	ok	2026-11-10	vandalismo	Viale Sardegna		
+5a8d6d3366af	ok	2026-11-10	vandalismo	Viale Sardegna		rifiuti
 cef378bb19a9	ok	2026-11-10	aggressione	Piazza Garibaldi		
-d8324f2be223	ok	2026-11-11	vandalismo	Via Lonate Pozzolo		
+d8324f2be223	ok	2026-11-11	vandalismo	Via Lonate Pozzolo		nessuno
 28eb49c6d2ae	ok	2026-11-12	spaccio	Via Quintino Sella		
-e11048b57c14	ok	2026-11-13	furto	Viale Duca d'Aosta		
-3c2bf3a0540f	ok	2026-11-18	furto	Viale della Repubblica		
-d26df6b5fd4c	ok	2026-11-18	furto	Via Magenta		
-f0151d6d5245	ok	2026-11-18	furto	Via Palestro		
-58d0f08b136e	ok	2026-11-19	furto	Viale Luigi Pirandello		
+e11048b57c14	ok	2026-11-13	furto	Viale Duca d'Aosta		nessuno
+3c2bf3a0540f	ok	2026-11-18	furto	Viale della Repubblica		nessuno
+d26df6b5fd4c	ok	2026-11-18	furto	Via Magenta		casa
+f0151d6d5245	ok	2026-11-18	furto	Via Palestro		nessuno
+58d0f08b136e	ok	2026-11-19	furto	Viale Luigi Pirandello		casa
 5c1eb5002336	ok	2026-11-20	aggressione	Giardini del Museo del Tessile		
-f90e20e39777	ok	2026-11-20	vandalismo	Via Pontida		
+f90e20e39777	ok	2026-11-20	vandalismo	Via Pontida		nessuno
