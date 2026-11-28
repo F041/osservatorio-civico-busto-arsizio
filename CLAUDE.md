@@ -114,9 +114,11 @@ Decisioni prese con l'utente a novembre 2026:
 - Revisione umana a posteriori (decisione dell'utente del 27/11/2026): i fatti vanno sul sito subito. `pubblica.yml`
   apre una issue "Fatti dalle notizie da controllare" (un commento quando ne arrivano di nuovi, si chiude quando sono
   tutti visti). `revisione.html` (fuori dai menu, noindex) mostra i fatti non ancora in `revisione/notizie.tsv`, con
-  riassunto e link; l'utente spunta quelli sbagliati e "Invia la revisione" apre una issue già scritta. Quando la crea
+  riassunto e link; per ogni fatto l'utente sceglie Giusto, Da togliere o il tipo giusto, e "Invia la revisione" apre
+  una issue già scritta. Quando la crea
   il proprietario del repo, `revisione.yml` aggiorna il tsv su main (`scripts/applica_revisione.py`) e ripubblica.
-  Il tsv ha solo id, esito, giorno, tipo e via, mai i link; `esito = no` toglie il fatto dalla mappa.
+  Il tsv ha solo id, esito, giorno, tipo, via e tipo_giusto, mai i link; `esito = no` toglie il fatto dalla mappa,
+  `tipo_giusto` ne cambia il tipo (build_notizie.py, funzione `applica`).
 - Riassunti: 2 o 3 frasi per fatto, per la revisione, scritte da Haiku sul PC con `scripts/riassunti_notizie.py` dopo
   `episodi_notizie.py carica`. Stanno nel campo `riassunti` dei documenti di `notizie_episodi` e finiscono in
   data/notizie.json: sono pubblici, quindi mai nomi, età, nazionalità o targhe, e niente frasi copiate dall'articolo.

@@ -432,6 +432,9 @@ html { scroll-padding-bottom: max(90px, 5em); }
 .review-wrong td { background: #fdecea; }
 .review-check { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap; }
 .review-check input { width: 20px; height: 20px; margin: 0; }
+.review-select { min-height: 36px; max-width: 190px; padding: 4px 6px; font: inherit; font-size: 0.95em;
+    border: 1px solid #8a8984; border-radius: 4px; background: #fff; color: #222; }
+.review-fix td { background: #fff4d6; }
 .review-done { display: block; margin-bottom: 4px; font-size: 0.85em; color: #5f5e5a; }
 /* La barra di invio resta in vista sopra il footer fisso mentre si scorre la tabella */
 .review-bar { position: sticky; bottom: 75px; z-index: 50; display: flex; flex-wrap: wrap; align-items: center;
@@ -455,6 +458,9 @@ html { scroll-padding-bottom: max(90px, 5em); }
     .review-table td[data-label="Articoli"] li + li::before { content: " · "; }
     .review-table tr.review-wrong { background: #fdecea; }
     .review-table .review-wrong td { background: none; }
+    .review-table tr.review-fix { background: #fff4d6; }
+    .review-table .review-fix td { background: none; }
+    .review-select { max-width: 100%; }
     .review-summary { min-width: 0; max-width: none; }
     .review-wrapper { overflow-x: visible; }
 }

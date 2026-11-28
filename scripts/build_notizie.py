@@ -65,12 +65,31 @@ def id_fatto(gruppo):
     return hashlib.sha256(f"{primo}|{giorno}|{via}|{gruppo[0]['categoria']}".encode('utf-8')).hexdigest()[:12]
 
 
-def esclusi(percorso):
-    """Id dei fatti che la revisione ha segnato come sbagliati (colonna esito = no)."""
+TIPI = ('furto', 'molestia', 'aggressione', 'vandalismo', 'spaccio', 'insicurezza', 'allagamento', 'altro')
+
+
+def revisione(percorso):
+    """Esiti della revisione per id: colonna esito (`no` toglie il fatto) e tipo_giusto (corregge il tipo)."""
     if not percorso or not Path(percorso).exists():
-        return set()
+        return {}
     with open(percorso, encoding='utf-8', newline='') as f:
-        return {r['id'] for r in csv.DictReader(f, delimiter='\t') if (r.get('esito') or '').strip().lower() == 'no'}
+        return {r['id']: r for r in csv.DictReader(f, delimiter='\t')}
+
+
+def applica(fatti, esiti):
+    """Toglie i fatti con esito `no` e corregge il tipo dove la revisione ne ha indicato un altro."""
+    tenuti, tolti, corretti = [], 0, 0
+    for f in fatti:
+        r = esiti.get(f['id'], {})
+        if (r.get('esito') or '').strip().lower() == 'no':
+            tolti += 1
+            continue
+        giusto = (r.get('tipo_giusto') or '').strip()
+        if giusto in TIPI and giusto != f['tipo']:
+            f = {**f, 'tipo': giusto}
+            corretti += 1
+        tenuti.append(f)
+    return tenuti, tolti, corretti
 
 
 def costruisci(righe, mappa, adesso):
@@ -115,11 +134,9 @@ if __name__ == '__main__':
     with open(sys.argv[1], encoding='utf-8') as f:
         righe = [json.loads(r) for r in f if r.strip()]
     dati = costruisci(righe, carica_mappa(), datetime.now(timezone.utc))
-    tolti = esclusi(sys.argv[3] if len(sys.argv) == 4 else None)
-    if tolti:
-        prima = len(dati['fatti'])
-        dati['fatti'] = [f for f in dati['fatti'] if f['id'] not in tolti]
-        print(f'Fatti segnati come sbagliati nella revisione e tolti: {prima - len(dati["fatti"])}')
+    dati['fatti'], tolti, corretti = applica(dati['fatti'], revisione(sys.argv[3] if len(sys.argv) == 4 else None))
+    if tolti or corretti:
+        print(f'Revisione: {tolti} fatti tolti, {corretti} con il tipo corretto')
     with open(sys.argv[2], 'w', encoding='utf-8', newline='\n') as f:
         json.dump(dati, f, ensure_ascii=False, indent=1)
     print(f"Scritto {sys.argv[2]}: {len(dati['fatti'])} fatti dal {dati['da']} al {dati['a']}")
