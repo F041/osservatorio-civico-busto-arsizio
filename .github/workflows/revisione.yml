@@ -61,4 +61,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           NUMERO: ${{ github.event.issue.number }}
           LOG: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: gh issue comment "$NUMERO" --body "Non sono riuscito ad applicare la revisione. Il dettaglio è nel log: $LOG"
+        run: |
+          gh issue comment "$NUMERO" --body "Non sono riuscito ad applicare la revisione. Il dettaglio è nel log: $LOG"

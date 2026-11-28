@@ -1,0 +1,30 @@
+id	esito	data	tipo	via	tipo_giusto	sottotipo_giusto
+ffac303c33ae	ok	2026-10-15	insicurezza	Parco Comerio	vandalismo	
+a973b4672593	ok	2026-10-17	furto	Largo Gaetano Giardino		
+ed94472a3b4b	ok	2026-10-17	spaccio	Via Quintino Sella		
+72784ba45e55	ok	2026-10-19	furto	Via Magenta		
+f86198393e94	ok	2026-10-23	aggressione	Viale della Repubblica	molestia	
+fb46de654179	ok	2026-10-23	spaccio	Via Volturno		
+e8883b17582c	ok	2026-10-24	spaccio	Viale Duca d'Aosta		
+628185257323	ok	2026-10-27	vandalismo	Viale Lombardia		
+ab0624b0628d	ok	2026-10-27	vandalismo	Via Bezzecca		
+b487e5a1ff52	ok	2026-10-29	insicurezza	Via Sorrento	vandalismo	
+dff615c2b7ff	ok	2026-10-30	aggressione	Busto Arsizio FS		
+86d289216240	ok	2026-11-03	vandalismo	Via Donato Bramante		
+41e136deca1d	ok	2026-11-07	furto	Via Giulio Pastore		
+7720821c8752	ok	2026-11-07	furto	Via Alpe di Siusi		
+edc36e330797	ok	2026-11-08	vandalismo	Via Veroncora	aggressione	
+23528308138f	ok	2026-11-09	vandalismo	Via Veroncorella	aggressione	
+4b7555d86d22	ok	2026-11-09	vandalismo	Via Corbetta	aggressione	
+58b31cb91ee2	ok	2026-11-09	aggressione	Via Filippo Meda		
+5a8d6d3366af	ok	2026-11-10	vandalismo	Viale Sardegna		
+cef378bb19a9	ok	2026-11-10	aggressione	Piazza Garibaldi		
+d8324f2be223	ok	2026-11-11	vandalismo	Via Lonate Pozzolo		
+28eb49c6d2ae	ok	2026-11-12	spaccio	Via Quintino Sella		
+e11048b57c14	ok	2026-11-13	furto	Viale Duca d'Aosta		
+3c2bf3a0540f	ok	2026-11-18	furto	Viale della Repubblica		
+d26df6b5fd4c	ok	2026-11-18	furto	Via Magenta		
+f0151d6d5245	ok	2026-11-18	furto	Via Palestro		
+58d0f08b136e	ok	2026-11-19	furto	Viale Luigi Pirandello		
+5c1eb5002336	ok	2026-11-20	aggressione	Giardini del Museo del Tessile		
+f90e20e39777	ok	2026-11-20	vandalismo	Via Pontida		
