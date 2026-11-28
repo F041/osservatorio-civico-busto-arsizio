@@ -114,7 +114,8 @@ Decisioni prese con l'utente a novembre 2026:
 - Revisione umana a posteriori (decisione dell'utente del 27/11/2026): i fatti vanno sul sito subito. `pubblica.yml`
   apre una issue "Fatti dalle notizie da controllare" (un commento quando ne arrivano di nuovi, si chiude quando sono
   tutti visti). `revisione.html` (fuori dai menu, noindex) mostra i fatti non ancora in `revisione/notizie.tsv`, con
-  riassunto e link; per ogni fatto l'utente sceglie Giusto, Da togliere o il tipo giusto, e "Invia la revisione" apre
+  riassunto e link; per ogni fatto l'utente sceglie Giusto, Togli o Cambia tipo (nessuna scelta preimpostata, la riga
+  sparisce), e "Invia" apre, anche a lotti (decisione dell'utente del 28/11/2026), solo per i fatti decisi
   una issue già scritta. Quando la crea
   il proprietario del repo, `revisione.yml` aggiorna il tsv su main (`scripts/applica_revisione.py`) e ripubblica.
   Il tsv ha solo id, esito, giorno, tipo, via e tipo_giusto, mai i link; `esito = no` toglie il fatto dalla mappa,

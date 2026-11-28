@@ -34,12 +34,19 @@
         <div class="privacy-text">
             <h2 id="titolo">Fatti dalle notizie da controllare</h2>
             <p>Ogni riga è un fatto già sulla <a href="index.html?vista=notizie">mappa delle notizie</a>. Leggi il riassunto
-                e, se hai dubbi, l'articolo. Nella colonna Esito lascia <strong>Giusto</strong>, scegli <strong>Da togliere</strong>
-                se il fatto non c'è, è fuori Busto o è nella via sbagliata, oppure scegli il tipo giusto se è solo quello a non tornare.</p>
-            <p>Alla fine premi <strong>Invia la revisione</strong>: si apre GitHub con il messaggio già scritto e basta premere
-                <strong>Create</strong>. In un paio di minuti la mappa si aggiorna e tutti i fatti dell'elenco risultano controllati.</p>
+                e, se hai dubbi, l'articolo, poi decidi: <strong>Giusto</strong>; <strong>Togli</strong> se il fatto non c'è,
+                è fuori Busto o è nella via sbagliata; <strong>Cambia tipo</strong> se è solo il tipo a non tornare.
+                La riga sparisce e passi alla successiva.</p>
+            <p>Quando vuoi, premi <strong>Invia</strong>: si apre GitHub con il messaggio già scritto e basta premere
+                <strong>Create</strong>. Partono solo i fatti già decisi; gli altri restano qui per la volta dopo.
+                Le decisioni non ancora inviate restano salvate in questo browser.</p>
             <p id="stato" role="status">Caricamento dei fatti…</p>
-            <p><label class="review-check"><input type="checkbox" id="anche-controllati"> Mostra anche i fatti già controllati</label></p>
+            <fieldset class="review-views">
+                <legend>Mostra</legend>
+                <label><input type="radio" name="vista" value="da-decidere" checked> Da decidere <span data-quanti="da-decidere"></span></label>
+                <label><input type="radio" name="vista" value="decisi"> Decisi, da inviare <span data-quanti="decisi"></span></label>
+                <label><input type="radio" name="vista" value="inviati"> Già inviati <span data-quanti="inviati"></span></label>
+            </fieldset>
         </div>
         <div class="table-responsive-wrapper review-wrapper">
             <table class="review-table" id="fatti" hidden>
@@ -50,8 +57,14 @@
             </table>
         </div>
         <div class="review-bar" id="barra" hidden>
-            <p id="conteggio"></p>
-            <a id="invia" class="download-button" href="#" target="_blank" rel="noopener">Invia la revisione</a>
+            <div class="review-bar-text">
+                <p id="conteggio"></p>
+                <p id="ultima" aria-live="polite"></p>
+            </div>
+            <div class="review-bar-actions">
+                <button type="button" class="link-button" id="annulla" hidden>Annulla l'ultima scelta</button>
+                <a id="invia" class="download-button" href="#" target="_blank" rel="noopener">Invia</a>
+            </div>
         </div>
     </main>
 
