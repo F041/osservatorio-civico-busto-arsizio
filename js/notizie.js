@@ -76,13 +76,20 @@ const ICONA_ALTEZZA = 30;
 const ICONA_SOPRA_LUOGO = 40;
 const MIN_GIORNI = 7;
 
-// Quattro intensità di una sola tinta, dalla più chiara, tutte con contrasto >= 3:1 sul fondo della mappa
-const SCALA = ['#e0569b', '#bd3480', '#8f1f60', '#5c1140'];
+// Cinque classi dal giallo pallido al rosso fuoco (decisione dell'utente del 28/11/2026): la più alta è 10 e più,
+// le altre strette perché quasi tutte le vie hanno tra 2 e 9 fatti. Il giallo chiaro sul fondo quasi bianco della
+// mappa non si vedrebbe: ogni via ha un bordo scuro (BORDO), che dà il contrasto al posto del colore
+const SCALA = ['#f6dd6e', '#f5b041', '#ee8327', '#dc4c1c', '#c0130f'];
+const BORDO = '#4a4945';
+// Barre delle tabelle: una sola serie, un colore con contrasto >= 3:1 sul bianco
+const COLORE_BARRA = SCALA[3];
 
-// Classi di colore come quelle delle segnalazioni, ma partendo dalla soglia delle notizie
 function classiNotizie(soglia) {
-    const limiti = [20, 10, 5, soglia].filter((da, i, tutti) => i === tutti.length - 1 || da > soglia);
-    return limiti.map((da, i) => ({ da, label: i === 0 ? `${da} e più` : `${da}–${limiti[i - 1] - 1}` }));
+    const limiti = [10, 6, 4, 3, soglia].filter((da, i, tutti) => i === tutti.length - 1 || da > soglia);
+    return limiti.map((da, i) => {
+        const fino = limiti[i - 1] - 1;
+        return { da, label: i === 0 ? `${da} e più` : fino === da ? `${da}` : `${da}–${fino}` };
+    });
 }
 
 function crea(tag, classe, testo) {
@@ -332,6 +339,7 @@ export function creaVistaNotizie(dati, mappa, leggiMappa, mapDiv) {
         const voce = crea('li');
         const campione = crea('span', 'chart-swatch chart-swatch-line');
         campione.style.background = SCALA[classi.length - 1 - i];
+        campione.style.boxShadow = `0 0 0 1px ${BORDO}`;
         voce.append(campione, classe.label);
         return voce;
     }).reverse());
@@ -398,7 +406,7 @@ export function creaVistaNotizie(dati, mappa, leggiMappa, mapDiv) {
         for (const [n, { segno, bordo }] of segni) {
             const scelto = n === nome;
             if (bordo) {
-                bordo.setStyle({ weight: scelto ? 12 : 9 });
+                bordo.setStyle({ weight: scelto ? 11 : 8 });
                 segno.setStyle({ weight: scelto ? 8 : 5 });
             } else {
                 segno.setRadius(scelto ? 12 : 9);
@@ -480,7 +488,7 @@ export function creaVistaNotizie(dati, mappa, leggiMappa, mapDiv) {
             cellaBarra.className = 'bar-cell';
             const barra = crea('div', 'bar');
             barra.style.width = `${(n / righe[0][1]) * 100}%`;
-            barra.style.background = spento ? '#d6d5d0' : SCALA[1];
+            barra.style.background = spento ? '#d6d5d0' : COLORE_BARRA;
             cellaBarra.append(barra);
             const numero = riga.insertCell();
             numero.className = 'num';
@@ -513,13 +521,13 @@ export function creaVistaNotizie(dati, mappa, leggiMappa, mapDiv) {
             let segno, bordo, limiti, linee;
             if (via) {
                 linee = via.g.map(l => punti(g, l));
-                bordo = L.polyline(linee, { renderer, color: '#ffffff', weight: 9, lineCap: 'round', interactive: false });
+                bordo = L.polyline(linee, { renderer, color: BORDO, weight: 8, lineCap: 'round', interactive: false });
                 strato.addLayer(bordo);
                 segno = L.polyline(linee, { renderer, color: colore(voce.fatti), weight: 5, lineCap: 'round' });
                 limiti = segno.getBounds();
             } else {
                 const punto = punti(g, luogo.p)[0];
-                segno = L.circleMarker(punto, { renderer, radius: 9, color: '#ffffff', weight: 2, fillColor: colore(voce.fatti), fillOpacity: 1 });
+                segno = L.circleMarker(punto, { renderer, radius: 9, color: BORDO, weight: 1.5, fillColor: colore(voce.fatti), fillOpacity: 1 });
                 limiti = L.latLngBounds([punto, punto]);
             }
             segno.bindTooltip(`${voce.n}: ${quantiFatti(voce.fatti)} dalle notizie`, { sticky: true });
@@ -589,7 +597,7 @@ export function creaVistaNotizie(dati, mappa, leggiMappa, mapDiv) {
             cellaBarra.className = 'bar-cell';
             const barra = crea('div', 'bar');
             barra.style.width = `${(voce.fatti / visibili[0].fatti) * 100}%`;
-            barra.style.background = SCALA[1];
+            barra.style.background = COLORE_BARRA;
             cellaBarra.append(barra);
             const numero = riga.insertCell();
             numero.className = 'num';
