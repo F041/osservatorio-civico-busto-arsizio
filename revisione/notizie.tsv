@@ -1,4 +1,99 @@
 id	esito	data	tipo	via	tipo_giusto	sottotipo_giusto
+82211f7d57ec	ok	2025-04-13	aggressione	Via Vercelli		
+bda338f55201	ok	2025-04-17	vandalismo	Piazza Santa Maria		nessuno
+2da4bb17394c	ok	2025-04-19	aggressione	Viale Giovanni Boccaccio		
+79ccd3df9535	ok	2025-04-22	aggressione	Via dei Mille		
+7195e9dd91b9	ok	2025-04-23	vandalismo	Via Piombina		rifiuti
+9f17a154d0f6	ok	2025-04-25	furto	Viale Rimembranze		nessuno
+f3e4af5226e8	ok	2025-04-25	vandalismo	Via dei Mille		nessuno
+510584b505b8	ok	2025-04-26	aggressione	Via Magenta		
+8ced2a6814d8	ok	2025-04-26	furto	Via Fagnano Olona		casa
+36c8033badf3	ok	2025-05-02	aggressione	Viale Duca d'Aosta	molestia	
+3d5e41d7612d	ok	2025-05-09	furto	Viale Trentino		casa
+accf91d693f0	ok	2025-05-14	vandalismo	Via Biagio Bellotti		nessuno
+632e339bc11a	ok	2025-05-17	vandalismo	Piazza Santa Maria		nessuno
+d8b2bded49e3	ok	2025-05-17	aggressione	Piazza Santa Maria	vandalismo	nessuno
+b89ccba80579	ok	2025-06-06	aggressione	Via dei Sassi		
+f8be62ee62a5	ok	2025-06-15	furto	Via Luciano Manara		nessuno
+3cd67947d9a3	ok	2025-06-25	aggressione	Via Milano		
+dc2f7f4eae0d	ok	2025-06-30	furto	Viale Luigi Pirandello		nessuno
+94a5f0a9e3d2	ok	2025-07-03	altro	Viale Duca d'Aosta		
+39b9fcece00b	ok	2025-07-19	furto	Viale Luigi Pirandello		nessuno
+8a66380256d5	ok	2025-07-19	altro	Via Girolamo Miani	molestia	
+8e671aadbfb2	ok	2025-07-21	furto	Via Magenta		casa
+f8d85d7602ec	ok	2025-07-21	furto	Via Novara		casa
+4257aac07732	ok	2025-07-22	insicurezza	Vicolo della Pace	vandalismo	nessuno
+339356fb3ef7	ok	2025-07-24	aggressione	Piazza Vittorio Veneto		
+3dbb8065caf4	ok	2025-07-26	furto	Via Marco Minghetti		nessuno
+441822112702	ok	2025-07-28	vandalismo	Corso Venti Settembre		nessuno
+7b87fe41081a	ok	2025-08-02	aggressione	Piazza Achille Venzaghi		
+8435d6ea8801	ok	2025-08-09	furto	Busto Arsizio Nord		nessuno
+359340b763a2	ok	2025-08-11	vandalismo	Viale Sardegna		rifiuti
+60de41cb2b78	ok	2025-08-11	vandalismo	Via Bienate		rifiuti
+c67af1178dbc	ok	2025-08-11	vandalismo	Via Generale Espinasse		rifiuti
+284c1a014207	ok	2025-08-12	furto	Via Dante Alighieri		nessuno
+b46f67d3ba20	ok	2025-08-12	furto	Via Otto Martiri		nessuno
+1b097fbbebe8	ok	2025-08-14	molestia	Via Milano		
+59848045f408	ok	2025-08-14	insicurezza	Viale della Repubblica	vandalismo	nessuno
+182c6c1953ea	ok	2025-08-18	aggressione	Viale Luigi Pirandello		
+6e66152df364	ok	2025-08-21	allagamento	Corso Venti Settembre		
+ccc8b7d91905	ok	2025-08-21	allagamento	Busto Arsizio Nord		
+4613fe169c1a	ok	2025-08-26	vandalismo	Parco Comerio		nessuno
+12b3c4cabf8f	ok	2025-08-28	allagamento	Corso Venti Settembre		
+7c72af3d7f11	ok	2025-08-28	allagamento	Via Gaeta		
+1c31e8acf516	ok	2025-08-31	furto	Piazza Garibaldi		nessuno
+2b885125f17b	ok	2025-08-31	aggressione	Piazza Garibaldi		
+9d2a4793aad4	ok	2025-08-31	insicurezza	Via Montello	molestia	
+970023ae4bcb	ok	2025-09-06	aggressione	Via Girolamo Miani		
+c477e746644f	ok	2025-09-07	aggressione	Via Bernardino Luini		
+b0d578354229	ok	2025-09-10	aggressione	Via Tito Speri		
+c2f94ab01012	ok	2025-09-22	furto	Via Azzimonti		casa
+f9379caffc6e	ok	2025-09-23	furto	Via cavalier Carlo Azimonti		casa
+f867bddef3c8	ok	2025-10-15	vandalismo	Via Roccolo		rifiuti
+8470724faa7e	ok	2025-10-25	vandalismo	Via Luciano Manara		rifiuti
+a06ce345b1ed	ok	2025-10-26	vandalismo	Via Emilio Salgari		nessuno
+88a763e782d3	ok	2025-10-31	vandalismo	Via Roberto Culin		nessuno
+662a24dfdf10	ok	2025-11-02	furto	Corso Sempione		nessuno
+ddbac9c8d75b	ok	2025-11-02	altro	Viale Toscana	aggressione	
+fa20e1c2918b	ok	2025-11-08	vandalismo	Via delle Allodole	furto	nessuno
+c71c32118470	ok	2025-11-12	altro	Via delle Allodole	furto	nessuno
+fbbd69d72dd0	ok	2025-11-15	aggressione	Via Cascina dei Poveri		
+592aeadaa366	ok	2025-11-23	molestia	Via Vincenzo Monti		
+40bb1ff2c938	ok	2025-11-25	molestia	Busto Arsizio FS		
+47c43e261946	ok	2025-11-27	furto	Via Vincenzo Monti		nessuno
+dbf1333a4faf	ok	2025-11-27	vandalismo	Busto Arsizio Nord	furto	nessuno
+2ea7875b3dc1	ok	2025-12-02	molestia	Busto Arsizio Nord		
+71be24b77657	ok	2025-12-12	furto	Via Stefano Ferrario		nessuno
+85c9bbc6f258	ok	2025-12-12	furto	Via Favana		nessuno
+e68eae43d15e	ok	2025-12-12	vandalismo	Via Favana	furto	nessuno
+5de4f541cd09	ok	2025-12-15	aggressione	Via Roberto Culin		
+b94bfb70d9cd	ok	2025-12-15	vandalismo	Via Roberto Culin	aggressione	
+773688ca9200	ok	2025-12-16	aggressione	Viale della Repubblica		
+97ae035f6673	ok	2025-12-17	vandalismo	Viale della Repubblica		nessuno
+6937f40a88f2	ok	2025-12-24	vandalismo	Piazza San Giovanni		nessuno
+71a7ecc5b43c	ok	2025-12-24	furto	Piazza Santa Maria	vandalismo	nessuno
+4ec2e79b914c	ok	2025-12-31	vandalismo	Via Quintino Sella		nessuno
+cb43917a01d3	ok	2026-01-06	aggressione	Via Gaeta		
+f5345ea1cb7a	ok	2026-01-10	aggressione	Corso Venti Settembre		
+0f82fcdfa288	ok	2026-01-19	furto	Viale Stelvio		nessuno
+9144fa03f5b8	ok	2026-01-19	furto	Via Della Ricordanza		nessuno
+b3f8fe68431f	ok	2026-01-19	furto	Via Ventiquattro Maggio		nessuno
+1a9b4243a4b5	ok	2026-01-20	vandalismo	Viale Duca d'Aosta		nessuno
+7ce38ab28780	ok	2026-01-20	furto	Viale Duca d'Aosta		nessuno
+dfb553a39240	ok	2026-01-20	aggressione	Busto Arsizio Nord		
+1c3b8e3f33a3	ok	2026-01-23	vandalismo	Piazza Garibaldi		rifiuti
+4948141eefbe	ok	2026-01-25	furto	Via Giuseppe Mazzini		nessuno
+702d8fcd9060	ok	2026-02-01	vandalismo	Viale Sardegna		rifiuti
+ab4a5eafd060	ok	2026-02-03	aggressione	Busto Arsizio FS		
+2b37cdecc465	ok	2026-02-04	vandalismo	Via Goffredo Mameli		nessuno
+73cf9ee39485	ok	2026-02-05	furto	Via Della Ricordanza		nessuno
+4018c40e056a	ok	2026-02-06	furto	Corso Italia		nessuno
+b5d3dab8b66d	ok	2026-02-07	furto	Viale Giovanni Boccaccio		nessuno
+dc73c2278902	ok	2026-02-15	aggressione	Via Correggio		
+a2ea63dce640	ok	2026-02-22	vandalismo	Piazza Garibaldi		rifiuti
+4c89215b664e	ok	2026-03-01	aggressione	Via Girolamo Miani		
+66a0a21aa860	ok	2026-03-02	aggressione	Piazza Trento e Trieste		
+8d2d98f155a2	ok	2026-03-02	aggressione	Corso Italia		
 9070b6099768	ok	2026-03-05	furto	Via Marco Minghetti		nessuno
 45328b752672	ok	2026-03-11	furto	Piazza della chiesa		nessuno
 1278903ade5d	ok	2026-03-13	spaccio	Via Ugo Foscolo		
