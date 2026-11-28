@@ -115,9 +115,8 @@ Decisioni prese con l'utente a novembre 2026:
   apre una issue "Fatti dalle notizie da controllare" (un commento quando ne arrivano di nuovi, si chiude quando sono
   tutti visti). `revisione.html` (fuori dai menu, noindex) mostra i fatti non ancora in `revisione/notizie.tsv`, con
   riassunto e link; per ogni fatto l'utente sceglie Giusto, Togli o Cambia tipo (nessuna scelta preimpostata, la riga
-  sparisce), e "Invia" apre, anche a lotti (decisione dell'utente del 28/11/2026), solo per i fatti decisi
-  una issue già scritta. Quando la crea
-  il proprietario del repo, `revisione.yml` aggiorna il tsv su main (`scripts/applica_revisione.py`) e ripubblica.
+  sparisce). "Invia" apre una issue già scritta con i soli fatti decisi, anche a lotti (decisione dell'utente del
+  28/11/2026). Quando la crea il proprietario del repo, `revisione.yml` aggiorna il tsv su main (`scripts/applica_revisione.py`) e ripubblica.
   Il tsv ha solo id, esito, giorno, tipo, via e tipo_giusto, mai i link; `esito = no` toglie il fatto dalla mappa,
   `tipo_giusto` ne cambia il tipo (build_notizie.py, funzione `applica`).
 - Riassunti: 2 o 3 frasi per fatto, per la revisione, scritte da Haiku sul PC con `scripts/riassunti_notizie.py` dopo
