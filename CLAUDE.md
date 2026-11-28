@@ -1,12 +1,17 @@
 # Osservatorio civico Busto Arsizio
 
 Sito statico su GitHub Pages (https://f041.github.io/osservatorio-civico-busto-arsizio/), pubblicato
-dal ramo `main`. Tre sezioni: Sicurezza (segnalazioni anonime), Pagamenti (dati dal repo della pipeline, aggiornati da
-`update_database_from_release.yml`) e Popolazione (residenti stimati per gruppo di quartieri). Lingua del sito e dei commit: italiano.
+dal ramo `main`. Quattro sezioni: Sicurezza (fatti dalle notizie; le segnalazioni anonime sono ferme), Pagamenti (dati
+dal repo della pipeline, aggiornati da `update_database_from_release.yml`), Popolazione (residenti stimati per gruppo di
+quartieri) e Studi statistici (`studi.html`: per ora solo le domande, con l'avviso che la pagina non è completa).
+Lingua del sito e dei commit: italiano.
 
 ## Dove stanno le cose
 - Sicurezza: `index.html` (panoramica), `segnala.html` (modulo), `prossimi-passi.html`, `privacy.html`;
   codice in `js/sicurezza.js`, `js/segnala.js`, `js/mappa.js`, elenchi in `js/sicurezza-config.js`.
+  Dal 28/11/2026 (decisione dell'utente) il modulo è fermo: `segnala.html` ha solo l'avviso dei lavori in corso e la
+  panoramica mostra solo le notizie, senza il selettore della fonte (`SEGNALAZIONI_ATTIVE = false` in `js/sicurezza.js`;
+  `js/segnala.js` resta nel repo per quando si riapre).
 - Le segnalazioni vanno su Firestore (progetto `osservatorio-civico-busto`, collezione `segnalazioni`),
   protette da `firestore.rules` e da App Check con reCAPTCHA Enterprise.
 - Gli elenchi (categorie, fasce, fattori, denuncia) devono coincidere in `firestore.rules`,
@@ -94,9 +99,13 @@ Decisioni prese con l'utente a novembre 2026:
   maltempo, le buche e i guasti no. Sulla mappa si separano dai reati col filtro "Mostra": "Tutti" li esclude e
   si vedono solo scegliendo "Allagamento" (decisione dell'utente del 26/11/2026). Nel dettaglio di una via e sulle icone
   compaiono tutti i tipi, anche con un fatto solo (stessa data).
-- Mappa: selettore "Fonte" con due viste, una alla volta e mai sovrapposte. Segnalazioni (predefinita) con i quadrati,
-  Notizie (`js/notizie.js`, `?vista=notizie`) con vie evidenziate e un punto per parchi e stazioni. Senza
-  `data/notizie.json` il selettore non compare. I conteggi delle due fonti non si sommano mai.
+- Mappa: con le segnalazioni attive, selettore "Fonte" con due viste, una alla volta e mai sovrapposte: Segnalazioni
+  con i quadrati, Notizie (`js/notizie.js`, `?vista=notizie`) con vie evidenziate e un punto per parchi e stazioni.
+  Adesso c'è solo la vista Notizie. I conteggi delle due fonti non si sommano mai.
+- Sottotipi (decisione dell'utente del 28/11/2026): un campo `sottotipo` accanto al tipo, mai tipi nuovi (cambierebbero
+  gli id dei fatti). `furto` → `casa` (case, appartamenti, box, cantine e parti comuni dei condomini); `vandalismo` →
+  `rifiuti` (abbandono di rifiuti). Sulla mappa sono un secondo filtro che compare scegliendo Furto o Vandalismo.
+  Elenchi in `build_notizie.SOTTOTIPI` e `js/notizie.js` (SOTTOTIPI), da tenere uguali.
 - Quartieri: `scripts/build_quartieri.py` scrive `data/quartieri.json` da OpenStreetMap, che ha solo i punti (i confini
   mancano, verificato il 25/11/2026). La mappa mostra i nomi, mai confini stimati. Icone dei tipi: Lucide (ISC), nel filtro, nelle tabelle e
   sulla mappa (una per tipo, affiancate sulla stessa via; quelle che si accavallano si nascondono, prima le vie con più fatti).
@@ -108,6 +117,9 @@ Decisioni prese con l'utente a novembre 2026:
   quando scadono. Pubblicazione: `.github/workflows/pubblica.yml` (GitHub Pages da Actions, non più dal ramo) legge gli
   episodi dalla collezione Firestore `notizie_episodi` (solo gli articoli con almeno un episodio, circa 500 letture) e
   costruisce il file. Gli episodi li carica dal PC `scripts/episodi_notizie.py carica`, perché l'analisi gira sul PC.
+- Id dei fatti: dal primo articolo per link; un fatto già pubblicato o già nella revisione tiene il suo id anche se
+  arriva un articolo che viene prima (per esempio dal recupero di ilBustese). Per questo `pubblica.yml` scarica il
+  `data/notizie.json` pubblicato prima di costruire il nuovo e si ferma se non ci riesce (`build_notizie.primo_episodio`).
 - Storico: ilBustese rallenta di proposito le richieste in blocco (circa 30 secondi per pagina degli articoli e
   dell'archivio; feed e mappa del sito no). Non fingersi un browser: si scarica da solo, a parte e con calma.
   Prealpina: le mappe del sito più vecchie non hanno date, si leggono dalla pagina dell'articolo.
@@ -115,13 +127,16 @@ Decisioni prese con l'utente a novembre 2026:
   apre una issue "Fatti dalle notizie da controllare" (un commento quando ne arrivano di nuovi, si chiude quando sono
   tutti visti). `revisione.html` (fuori dai menu, noindex) mostra i fatti non ancora in `revisione/notizie.tsv`, con
   riassunto e link; per ogni fatto l'utente sceglie Giusto, Togli o Cambia tipo (nessuna scelta preimpostata, la riga
-  sparisce). "Invia" apre una issue già scritta con i soli fatti decisi, anche a lotti (decisione dell'utente del
+  sparisce). Per furti e vandalismi il menu ha tipo e sottotipo insieme e "Giusto" conferma anche il sottotipo; quelli
+  inviati prima dei sottotipi tornano da decidere per guardare solo quello (`build_notizie.da_controllare`, stessa
+  regola in `js/revisione.js`). "Invia" apre una issue già scritta con i soli fatti decisi, anche a lotti (decisione dell'utente del
   28/11/2026). Quando la crea il proprietario del repo, `revisione.yml` aggiorna il tsv su main (`scripts/applica_revisione.py`) e ripubblica.
-  Il tsv ha solo id, esito, giorno, tipo, via e tipo_giusto, mai i link; `esito = no` toglie il fatto dalla mappa,
-  `tipo_giusto` ne cambia il tipo (build_notizie.py, funzione `applica`).
-- Riassunti: 2 o 3 frasi per fatto, per la revisione, scritte da Haiku sul PC con `scripts/riassunti_notizie.py` dopo
-  `episodi_notizie.py carica`. Stanno nel campo `riassunti` dei documenti di `notizie_episodi` e finiscono in
-  data/notizie.json: sono pubblici, quindi mai nomi, età, nazionalità o targhe, e niente frasi copiate dall'articolo.
+  Il tsv ha solo id, esito, giorno, tipo, via, tipo_giusto e sottotipo_giusto, mai i link; `esito = no` toglie il fatto
+  dalla mappa, `tipo_giusto` ne cambia il tipo, `sottotipo_giusto` il sottotipo (`nessuno` = senza) (build_notizie.py,
+  funzione `applica`).
+- Riassunti e sottotipi: 2 o 3 frasi per fatto e, per furti e vandalismi, il sottotipo, scritti da Haiku sul PC con
+  `scripts/riassunti_notizie.py` dopo `episodi_notizie.py carica`. Stanno nei campi `riassunti` e `sottotipi` dei
+  documenti di `notizie_episodi` e finiscono in data/notizie.json; i riassunti sono pubblici, quindi mai nomi, età, nazionalità o targhe, e niente frasi copiate dall'articolo.
 - Dati personali: mai nomi o età, solo i campi dello schema e il link. Articoli e link si cancellano 24 mesi dopo l'uscita
   (decisione dell'utente del 26/11/2026, scritta in privacy.html; le segnalazioni restano a 12 mesi).
   Link agli articoli solo nel dettaglio della singola via. Soglia 2 per le notizie (decisione dell'utente del
@@ -138,6 +153,9 @@ Decisioni prese con l'utente a novembre 2026:
   `bash valutazione/recupero_veloci.sh` per Malpensa24, Prealpina e VareseNews;
   `bash valutazione/riprendi_ilbustese.sh` per ilBustese, che richiede più giorni: si ferma quando si vuole e riparte
   da dove era. Anteprima locale: `valutazione/episodi_anteprima.py`, poi `scripts/build_notizie.py`.
+  Il 2024 intero, per gli studi statistici (richiesta dell'utente del 28/11/2026): `bash valutazione/riprendi_2024.sh`
+  (`valutazione/storico_2024.py`), solo in locale in `valutazione/dati`, mai in Firestore, perché la raccolta cancella
+  gli articoli oltre i 24 mesi. Aspetta da solo che il recupero 2026 di ilBustese abbia finito di scaricare.
 - Firestore è sul piano gratuito: 50.000 letture e 20.000 scritture al giorno, azzerate alle 9 italiane, condivise con
   la raccolta delle 14:28. Il 26/11/2026 il recupero le ha finite e la raccolta è fallita (429 Quota exceeded).
   Un'esportazione completa legge tutta la collezione (oltre 10.000 documenti): farne poche, meglio di una testata sola

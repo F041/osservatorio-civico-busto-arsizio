@@ -4,6 +4,10 @@ import { caricaMappa, creaMappa, confiniCella, descriviCella, altreRighe, menoMo
 import { creaVistaNotizie } from './notizie.js';
 import { integer, formatDate } from './formato.js';
 
+// Decisione dell'utente del 28/11/2026: il modulo Segnala è fermo per lavori, quindi la panoramica mostra solo le
+// notizie, senza il selettore della fonte. Con true torna la scelta tra segnalazioni e notizie (data/sicurezza.json)
+const SEGNALAZIONI_ATTIVE = false;
+
 const overview = document.getElementById('overview');
 const overviewTitle = document.getElementById('overview-title');
 const overviewNote = document.getElementById('overview-note');
@@ -319,8 +323,32 @@ function mapCard(data, mappa, notizie, applicaVista) {
     return section;
 }
 
+// Scheda della mappa quando le segnalazioni sono ferme: solo la vista Notizie
+function mapCardNotizie(notizie, mappa, applicaVista) {
+    const section = card(`Dove: vie con almeno ${notizie.soglia} fatti nelle notizie`);
+    section.classList.add('safety-card-wide');
+    const mapDiv = document.createElement('div');
+    mapDiv.className = 'overview-map';
+    mapDiv.dataset.vista = 'notizie';
+    mapDiv.setAttribute('role', 'region');
+    mapDiv.setAttribute('aria-label', 'Mappa delle vie con più fatti nelle notizie; gli stessi dati sono nella tabella sotto');
+    let map = null;
+    const vista = creaVistaNotizie(notizie, mappa, () => map, mapDiv);
+    section.append(vista.filtro, mapDiv, vista.pannello);
+    vista.pannello.addEventListener('periodo', ev => applicaVista('notizie', ev.detail));
+    // Leaflet va creato quando la scheda è già nella pagina, altrimenti non ne conosce le dimensioni
+    requestAnimationFrame(() => {
+        map = creaMappa(mapDiv, mappa, { griglia: false, tenue: true });
+        vista.strato.addTo(map);
+        const limiti = vista.limiti();
+        if (limiti) map.fitBounds(limiti, { padding: [40, 40], maxZoom: 15, animate: false });
+    });
+    applicaVista('notizie', vista.periodo());
+    return section;
+}
+
 Promise.all([
-    fetch('data/sicurezza.json').then(response => { if (!response.ok) throw new Error(`HTTP ${response.status}`); return response.json(); }),
+    !SEGNALAZIONI_ATTIVE ? null : fetch('data/sicurezza.json').then(response => { if (!response.ok) throw new Error(`HTTP ${response.status}`); return response.json(); }),
     caricaMappa(),
     // Facoltativo: senza questo file, o con una struttura diversa da quella di build_notizie.py, solo le segnalazioni
     fetch('data/notizie.json').then(response => (response.ok ? response.json() : null))
@@ -329,6 +357,16 @@ Promise.all([
 ])
     .then(([data, mappa, notizie]) => {
         overview.replaceChildren();
+        if (!SEGNALAZIONI_ATTIVE) {
+            if (!notizie) throw new Error('dati delle notizie non disponibili');
+            const titoloNotizie = periodo => `Notizie dal ${formatDate(periodo.da)} al ${formatDate(periodo.a)}`;
+            overviewNote.textContent = `Aggiornato il ${formatDate(notizie.generato.slice(0, 10))}.`;
+            overviewTitle.textContent = titoloNotizie(notizie);
+            overview.append(mapCardNotizie(notizie, mappa, (_, periodo) => {
+                if (periodo) overviewTitle.textContent = titoloNotizie(periodo);
+            }));
+            return;
+        }
 
         const totalCard = card('Segnalazioni');
         const total = document.createElement('p');

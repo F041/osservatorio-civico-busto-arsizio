@@ -47,7 +47,11 @@ jobs:
           echo "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/account.json"
           GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/account.json" python3 scripts/episodi_notizie.py esporta "$RUNNER_TEMP/episodi.jsonl"
           rm "$RUNNER_TEMP/account.json"
-          python3 scripts/build_notizie.py "$RUNNER_TEMP/episodi.jsonl" data/notizie.json revisione/notizie.tsv
+          # I fatti già pubblicati tengono il loro id (build_notizie.primo_episodio): senza il file di adesso la
+          # revisione già fatta su alcuni fatti andrebbe persa, quindi meglio non pubblicare
+          curl -sfL --retry 3 https://f041.github.io/osservatorio-civico-busto-arsizio/data/notizie.json -o "$RUNNER_TEMP/precedente.json" \
+            || { echo "::error::data/notizie.json pubblicato non raggiungibile"; exit 1; }
+          python3 scripts/build_notizie.py "$RUNNER_TEMP/episodi.jsonl" data/notizie.json revisione/notizie.tsv "$RUNNER_TEMP/precedente.json"
           rm "$RUNNER_TEMP/episodi.jsonl"
 
       - name: Prepara il sito

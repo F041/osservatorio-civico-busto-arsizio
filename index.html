@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
     <title>Sicurezza - Osservatorio civico Busto Arsizio</title>
-    <meta name="description" content="Segnalazioni anonime di insicurezza, furti e molestie a Busto Arsizio, con la mappa delle zone più segnalate.">
+    <meta name="description" content="Furti, aggressioni, vandalismi e altri fatti di cronaca a Busto Arsizio raccontati dalle testate locali, con la mappa delle vie dove succedono più spesso.">
     <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
     <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
@@ -30,6 +30,7 @@
                 <a href="index.html" aria-current="true">Sicurezza</a>
                 <a href="pagamenti.html">Pagamenti</a>
                 <a href="popolazione.html">Popolazione</a>
+                <a href="studi.html">Studi statistici</a>
             </nav>
         </div>
     </header>
@@ -44,22 +45,20 @@
 
     <main id="contenuto" tabindex="-1" class="container page-content">
         <section class="safety-intro">
-            <h2>Come ci si sente in città</h2>
-            <p>Chi vive o passa da Busto Arsizio può segnalare, in forma anonima, un momento di insicurezza:
-                un furto, una molestia, una zona buia o isolata. Raccogliamo solo risposte a scelta: tipo, giorno, fascia oraria,
-                un quadrato di circa 250 metri sulla mappa, cosa ha contribuito e se c'è stata denuncia.
-                Pubblichiamo i conteggi per capire dove e quando succede più spesso.</p>
+            <h2>Fatti di cronaca nelle notizie locali</h2>
+            <p>Ogni giorno leggiamo gli articoli di quattro testate locali, ilBustese, Malpensa24, Prealpina e VareseNews,
+                e segniamo sulla mappa i fatti avvenuti in una via di Busto Arsizio: tipo, giorno e via, con il link agli articoli.
+                Un fatto raccontato da più testate conta una volta. <a href="privacy.html">Come funziona</a>.</p>
             <div class="emergency-note" role="note">
-                <strong>Non è una denuncia e nessuno legge le segnalazioni in tempo reale.</strong>
+                <strong>La mappa mostra solo i fatti arrivati sui giornali.</strong>
                 In caso di pericolo chiama il <strong>112</strong>. Per denunciare un reato rivolgiti a Carabinieri, Polizia di Stato o Polizia locale.
             </div>
-            <a class="cta-button" href="segnala.html">Fai una segnalazione</a>
         </section>
 
         <section class="dashboard-section overview-section">
-            <h2 id="overview-title">Ultimi 90 giorni</h2>
+            <h2 id="overview-title">Notizie</h2>
             <div class="safety-grid" id="overview">
-                <p class="safety-muted">Caricamento dei conteggi…</p>
+                <p class="safety-muted">Caricamento della mappa…</p>
             </div>
             <p class="safety-muted" id="overview-note"></p>
         </section>

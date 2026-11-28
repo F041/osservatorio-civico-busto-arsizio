@@ -24,8 +24,11 @@ from raccogli_notizie import PROJECT_ID, CONSERVAZIONE_GIORNI, a_blocchi, client
 COLLEZIONE = 'notizie_episodi'
 COPERTURA = '_copertura'
 CAMPI = ('fonte', 'url', 'pubblicato', 'episodi')
-# Riassunti dei fatti, scritti a parte da scripts/riassunti_notizie.py: {"tipo|via|giorno": testo}
+# Riassunti e sottotipi dei fatti, scritti a parte da scripts/riassunti_notizie.py: {"tipo|via|giorno": testo} e
+# {"tipo|via|giorno": "casa" | "rifiuti" | "nessuno"}
 RIASSUNTI = 'riassunti'
+SOTTOTIPI = 'sottotipi'
+AGGIUNTI = (RIASSUNTI, SOTTOTIPI)
 
 
 def client():
@@ -57,10 +60,11 @@ def carica(client, righe):
     for r in righe:
         i = id_articolo(r['url'])
         voce = {k: r.get(k) for k in CAMPI}
-        # Un'analisi nuova non ha i riassunti: si tengono quelli già scritti
-        riassunti = {**(salvati.get(i) or {}).get(RIASSUNTI, {}), **(r.get(RIASSUNTI) or {})}
-        if riassunti:
-            voce[RIASSUNTI] = riassunti
+        # Un'analisi nuova non ha riassunti e sottotipi: si tengono quelli già scritti
+        for campo in AGGIUNTI:
+            valori = {**(salvati.get(i) or {}).get(campo, {}), **(r.get(campo) or {})}
+            if valori:
+                voce[campo] = valori
         if r['episodi'] and (voce['pubblicato'] or '')[:10] >= limite:
             if salvati.get(i) != voce:
                 scrivi[i] = voce
@@ -100,12 +104,12 @@ def esporta(client, percorso):
         righe.insert(0, {'fonte': '', 'url': '', 'pubblicato': da, 'episodi': []})
     with open(percorso, 'w', encoding='utf-8', newline='\n') as f:
         for r in righe:
-            f.write(json.dumps({k: r[k] for k in (*CAMPI, RIASSUNTI) if k in r}, ensure_ascii=False) + '\n')
+            f.write(json.dumps({k: r[k] for k in (*CAMPI, *AGGIUNTI) if k in r}, ensure_ascii=False) + '\n')
     print(f'Esportati {len(righe) - bool(da)} articoli con episodi, analisi dal {da}')
 
 
-def aggiungi_riassunti(client, nuovi):
-    """nuovi: {url: {chiave: riassunto}}. Scrive solo gli articoli che cambiano."""
+def aggiungi_riassunti(client, nuovi, campo=RIASSUNTI):
+    """nuovi: {url: {chiave: valore}}, nel campo `riassunti` o `sottotipi`. Scrive solo gli articoli che cambiano."""
     raccolta = client.collection(COLLEZIONE)
     operazioni = []
     for url, testi in nuovi.items():
@@ -114,15 +118,15 @@ def aggiungi_riassunti(client, nuovi):
         if not doc.exists:
             continue
         voce = doc.to_dict()
-        unione = {**voce.get(RIASSUNTI, {}), **testi}
-        if unione != voce.get(RIASSUNTI):
-            operazioni.append((rif, {**voce, RIASSUNTI: unione}))
+        unione = {**voce.get(campo, {}), **testi}
+        if unione != voce.get(campo):
+            operazioni.append((rif, {**voce, campo: unione}))
     for blocco in a_blocchi(operazioni):
         batch = client.batch()
         for rif, voce in blocco:
             batch.set(rif, voce)
         batch.commit()
-    print(f'Riassunti scritti in {len(operazioni)} articoli')
+    print(f'{campo.capitalize()} scritti in {len(operazioni)} articoli')
 
 
 if __name__ == '__main__':

@@ -354,6 +354,10 @@ html { scroll-padding-bottom: max(90px, 5em); }
 .news-filter-options input:checked + span { background: #0d5bb8; border-color: #0d5bb8; color: #fff; font-weight: 600; }
 .news-filter-options input:checked + span .news-icon { color: #fff; }
 .news-filter-options input:focus-visible + span { outline: 2px solid #0d5bb8; outline-offset: 2px; }
+/* Secondo filtro, dentro furti e vandalismi: allineato ai pulsanti del primo */
+.news-subfilter { margin: -4px 0 10px 64px; }
+.news-subfilter[hidden] { display: none; }
+@media (max-width: 480px) { .news-subfilter { margin-left: 0; } }
 /* Icone dei tipi sulla mappa: affiancate quando la stessa via ha più tipi */
 .news-pins-icon { background: none; border: none; }
 .news-pins { display: flex; gap: 2px; transform: translate(-50%, -50%); cursor: pointer; }
@@ -428,6 +432,7 @@ html { scroll-padding-bottom: max(90px, 5em); }
 .review-table ul { list-style: none; margin: 0; padding: 0; }
 .review-table li + li { margin-top: 4px; }
 .review-summary { min-width: 260px; max-width: 420px; line-height: 1.45; }
+.review-subtype { display: block; margin-top: 2px; font-size: .9em; color: #4a4945; }
 .review-missing { color: #5f5e5a; font-style: italic; }
 .review-wrong td { background: #fdecea; }
 .review-check { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; white-space: nowrap; }

@@ -26,6 +26,12 @@ export const TIPI = {
 };
 // Sui pulsanti del filtro, per stare in una riga: la prima parte del nome intero, così si riconosce lo stesso tipo
 const TIPI_BREVI = { furto: 'Furto', aggressione: 'Aggressione', vandalismo: 'Vandalismo', insicurezza: 'Problemi ricorrenti' };
+// Sottotipi (decisione dell'utente del 28/11/2026): un filtro dentro il tipo, non tipi nuovi (scripts/build_notizie.py).
+// Nel furto in casa entrano anche box, cantine e parti comuni dei condomini
+export const SOTTOTIPI = { furto: { casa: 'In casa o condominio' }, vandalismo: { rifiuti: 'Abbandono di rifiuti' } };
+// I fatti di quei tipi senza sottotipo, per la pagina di revisione
+export const SENZA_SOTTOTIPO = { furto: 'Fuori da case e condomini', vandalismo: 'Senza abbandono di rifiuti' };
+const TUTTI_DEL_TIPO = { furto: 'Tutti i furti', vandalismo: 'Tutti i vandalismi' };
 
 // Icone dei tipi da Lucide (https://lucide.dev), licenza ISC:
 // Copyright (c) for portions of Lucide are held by Cole Bemis 2013-2022 as part of Feather (MIT). All other copyright
@@ -102,7 +108,8 @@ function crea(tag, classe, testo) {
 // Gli allagamenti non sono reati: "Tutti" li lascia fuori, si vedono solo scegliendo il loro tipo (decisione
 // dell'utente del 26/11/2026)
 const A_PARTE = new Set(['allagamento']);
-const diTipo = (fatti, tipo) => fatti.filter(f => (tipo ? f.tipo === tipo : !A_PARTE.has(f.tipo)));
+const diTipo = (fatti, tipo, sottotipo) => fatti.filter(f => (tipo
+    ? f.tipo === tipo && (!sottotipo || f.sottotipo === sottotipo) : !A_PARTE.has(f.tipo)));
 
 // Vie e luoghi con almeno `soglia` fatti tra i giorni `da` e `a` compresi
 function vieNelPeriodo(fatti, da, a, soglia) {
@@ -387,13 +394,43 @@ export function creaVistaNotizie(dati, mappa, leggiMappa, mapDiv) {
         return input;
     });
     filtro.append(etichettaFiltro, scelte);
+    // Sotto, solo con furti o vandalismi scelti: tutti o un sottotipo
+    const sottoFiltro = crea('div', 'news-filter-options news-subfilter');
+    sottoFiltro.setAttribute('role', 'radiogroup');
+    sottoFiltro.setAttribute('aria-label', 'Quali');
+    sottoFiltro.hidden = true;
+    const bloccoFiltro = crea('div', 'news-filter-block');
+    bloccoFiltro.append(filtro, sottoFiltro);
     let tipoScelto = '';
-    const fattiScelti = () => diTipo(dati.fatti, tipoScelto);
-    function scegli(id) {
-        tipoScelto = id;
-        for (const r of radio) r.checked = r.value === id;
+    let sottotipoScelto = '';
+    const fattiScelti = () => diTipo(dati.fatti, tipoScelto, sottotipoScelto);
+    function aggiorna() {
         nav.serie(fattiScelti());
         disegna(...nav.periodo());
+    }
+    function disegnaSottoFiltro() {
+        const voci = SOTTOTIPI[tipoScelto];
+        sottoFiltro.hidden = !voci;
+        sottoFiltro.replaceChildren();
+        if (!voci) return;
+        for (const [id, testo] of [['', TUTTI_DEL_TIPO[tipoScelto]], ...Object.entries(voci)]) {
+            const label = crea('label');
+            const input = crea('input');
+            input.type = 'radio';
+            input.name = 'news-subfilter';
+            input.value = id;
+            input.checked = id === sottotipoScelto;
+            input.addEventListener('change', () => { sottotipoScelto = id; aggiorna(); });
+            label.append(input, crea('span', '', testo));
+            sottoFiltro.append(label);
+        }
+    }
+    function scegli(id) {
+        tipoScelto = id;
+        sottotipoScelto = '';
+        for (const r of radio) r.checked = r.value === id;
+        disegnaSottoFiltro();
+        aggiorna();
     }
 
     // Sopra la mappa, quando nessuna via raggiunge la soglia: la mappa vuota da sola sembra un errore
@@ -501,7 +538,8 @@ export function creaVistaNotizie(dati, mappa, leggiMappa, mapDiv) {
         const fatti = fattiScelti();
         const nelPeriodo = fatti.filter(f => giorno(f.data) >= da && giorno(f.data) <= a);
         const quanteVie = new Set(nelPeriodo.map(f => f.via)).size;
-        const tipo = tipoScelto ? ` (${TIPI[tipoScelto].toLowerCase()})` : '';
+        const sotto = sottotipoScelto ? `: ${SOTTOTIPI[tipoScelto][sottotipoScelto].toLowerCase()}` : '';
+        const tipo = tipoScelto ? ` (${TIPI[tipoScelto].toLowerCase()}${sotto})` : '';
         const esclusi = !tipoScelto && dati.fatti.some(f => A_PARTE.has(f.tipo) && giorno(f.data) >= da && giorno(f.data) <= a)
             ? ', senza contare gli allagamenti' : '';
         nav.riassunto.textContent = `Dal ${formatDate(iso(da))} al ${formatDate(iso(a))}: ${quantiFatti(nelPeriodo.length)}` +
@@ -617,5 +655,5 @@ export function creaVistaNotizie(dati, mappa, leggiMappa, mapDiv) {
         return tutti.length ? tutti.reduce((x, y) => L.latLngBounds(x.getSouthWest(), x.getNorthEast()).extend(y)) : null;
     };
     const periodo = () => { const [da, a] = nav.periodo(); return { da: iso(da), a: iso(a) }; };
-    return { pannello, filtro, strato, limiti: limitiTutti, periodo };
+    return { pannello, filtro: bloccoFiltro, strato, limiti: limitiTutti, periodo };
 }

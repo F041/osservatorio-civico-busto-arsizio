@@ -17,6 +17,8 @@ Storico150: lo storico dal 26/06; `... storico150 ilbustese` per ilBustese da so
 altre (id w...). ilBustese rallenta molto le richieste in blocco e si scarica a parte.
 Storico2026: il periodo tenuto dalla raccolta non ancora scaricato (prima solo il 2026, da qui il nome), dal più recente; `... storico2026 ilbustese` per ilBustese (id y + 10
 cifre del link), senza testata per le altre (id z...). Si può interrompere e rilanciare: riparte da dove era.
+Storico2024: lo stesso per il 2024 prima della finestra (elenco di valutazione/storico_2024.py), per gli studi
+statistici; i testi vanno in testi-storico2024-*.jsonl.
 I testi finiscono in valutazione/dati/, esclusa da git: servono solo alla prova e poi si cancellano.
 """
 import hashlib
@@ -80,16 +82,19 @@ def main(percorso, quale='80', fonti=''):
     elif quale == 'storico90':
         gia = gia_scelti('campione.jsonl', 'campione-arricchito.jsonl', 'testi-resto.jsonl', 'testi-nuovi.jsonl')
         scelti, uscita, prefisso = [a for a in articoli if a['url'] not in gia], DATI / 'testi-storico90.jsonl', 'v'
-    elif quale == 'storico2026':
+    elif quale in ('storico2026', 'storico2024'):
         # Il periodo tenuto dalla raccolta (CONSERVAZIONE_GIORNI), in più giri: l'id viene dal link e non dalla posizione nell'elenco, così resta lo stesso anche se
         # l'elenco cresce fra un giro e l'altro. Si scaricano prima i più recenti
         solo_ilbustese = fonti == 'ilbustese'
         inizio = (date.today() - timedelta(days=CONSERVAZIONE_GIORNI)).isoformat()
-        uscita = DATI / f"testi-storico2026-{'ilbustese' if solo_ilbustese else 'altre'}.jsonl"
+        fine = '9999'
+        if quale == 'storico2024':
+            inizio, fine = '2024-01-01', '2024-11-27'
+        uscita = DATI / f"testi-{quale}-{'ilbustese' if solo_ilbustese else 'altre'}.jsonl"
         gia = gia_scelti(*(p.name for p in DATI.glob('*.jsonl')
                            if p.name.startswith(('testi-', 'campione')) and p.name != uscita.name))
         scelti = sorted((a for a in articoli if a['url'] not in gia and (a['fonte'] == 'ilbustese') == solo_ilbustese
-                         and (a.get('pubblicato') or a['visto']) >= inizio),
+                         and inizio <= (a.get('pubblicato') or a['visto']) < fine),
                         key=lambda a: a.get('pubblicato') or a['visto'], reverse=True)
         prefisso = None
     elif quale.startswith('storico'):
@@ -118,7 +123,7 @@ def main(percorso, quale='80', fonti=''):
 
     # Ogni articolo si salva appena letto: se il lavoro si interrompe, al giro dopo riparte da dove era.
     # Nello storico 2026 gli articoli rimasti senza testo (503 di ilBustese) si riprovano al giro dopo
-    if quale == 'storico2026' and uscita.exists():
+    if quale in ('storico2026', 'storico2024') and uscita.exists():
         righe = [r for r in open(uscita, encoding='utf-8') if r.endswith('\n') and r.strip()]
         piene = [r for r in righe if json.loads(r)['testo']]
         if len(piene) < len(righe):

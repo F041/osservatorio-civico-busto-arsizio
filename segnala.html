@@ -7,7 +7,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
     <title>Segnala - Osservatorio civico Busto Arsizio</title>
-    <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
     <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
     <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
     <link rel="stylesheet" href="css/style.css">
@@ -25,6 +24,7 @@
                 <a href="index.html" aria-current="true">Sicurezza</a>
                 <a href="pagamenti.html">Pagamenti</a>
                 <a href="popolazione.html">Popolazione</a>
+                <a href="studi.html">Studi statistici</a>
             </nav>
         </div>
     </header>
@@ -38,73 +38,9 @@
     </nav>
 
     <main id="contenuto" tabindex="-1" class="container page-content">
-        <h2 class="visually-hidden">Fai una segnalazione</h2>
-        <div class="emergency-note report-form" role="note">
-            <strong>In caso di pericolo chiama il 112.</strong> Questa segnalazione è anonima, non è una denuncia
-            e nessuno la legge in tempo reale: serve a contare dove e quando ci si sente insicuri.
-        </div>
-
-        <form id="report-form" class="report-form" novalidate>
-            <fieldset>
-                <legend>1. Cosa è successo?</legend>
-                <div class="choice-list" id="choices-categoria"></div>
-            </fieldset>
-
-            <fieldset>
-                <legend>2. Quando?</legend>
-                <div class="field-row">
-                    <label for="report-date">Giorno</label>
-                    <input type="date" id="report-date" required aria-describedby="report-date-hint">
-                </div>
-                <p class="hint" id="report-date-hint">Negli ultimi 90 giorni.</p>
-                <p class="field-label" id="fascia-label">Fascia oraria <span class="safety-muted">(non chiediamo l'ora esatta)</span></p>
-                <div class="choice-list" id="choices-fascia" role="radiogroup" aria-labelledby="fascia-label"></div>
-            </fieldset>
-
-            <fieldset>
-                <legend>3. Dove?</legend>
-                <p class="hint">Scegli il quadrato della mappa (circa 250 × 250 metri) in cui è successo.
-                    Salviamo solo il quadrato: né la via né il punto preciso.</p>
-                <div class="field-row">
-                    <label for="place-search">Via o luogo</label>
-                    <input type="search" id="place-search" list="place-list" autocomplete="off" spellcheck="false"
-                        placeholder="Es. Corso Italia…" aria-describedby="place-search-hint">
-                    <datalist id="place-list"></datalist>
-                </div>
-                <p class="hint" id="place-search-hint">La ricerca avviene sul tuo dispositivo: quello che scrivi non viene inviato né salvato.</p>
-                <div class="place-cells" id="place-cells" hidden>
-                    <p class="field-label" id="place-cells-label">In quale tratto?</p>
-                    <div class="choice-list" id="choices-cella" role="radiogroup" aria-labelledby="place-cells-label"></div>
-                </div>
-                <div class="report-map" id="report-map" role="region" aria-label="Mappa di Busto Arsizio: tocca un quadrato per sceglierlo, oppure cerca la via nel campo qui sopra"></div>
-                <p class="cell-chosen" id="cell-chosen" aria-live="polite">Nessun quadrato scelto: cerca una via o tocca la mappa.</p>
-            </fieldset>
-
-            <fieldset>
-                <legend>4. Cosa ha contribuito? <span class="safety-muted">(facoltativo)</span></legend>
-                <div class="choice-list" id="choices-fattori"></div>
-            </fieldset>
-
-            <fieldset>
-                <legend>5. Hai sporto denuncia?</legend>
-                <div class="choice-list" id="choices-denuncia"></div>
-            </fieldset>
-
-            <p class="hint form-note">Non c'è uno spazio per scrivere: così nessuno può inserire nomi, descrizioni di persone o altri dati che rendano riconoscibile qualcuno.</p>
-            <label class="consent">
-                <input type="checkbox" id="report-consent" required>
-                <span>Ho capito che la segnalazione è anonima e non è una denuncia. <a href="privacy.html" target="_blank">Come funziona e privacy</a></span>
-            </label>
-            <button type="submit" class="cta-button" id="report-submit">Invia segnalazione</button>
-            <p class="form-status" id="report-status" role="status" aria-live="polite"></p>
-            <p class="hint recaptcha-note">Per bloccare gli invii automatici il modulo usa reCAPTCHA di Google: valgono le
-                <a href="https://policies.google.com/privacy?hl=it" target="_blank" rel="noopener">norme sulla privacy</a> e i
-                <a href="https://policies.google.com/terms?hl=it" target="_blank" rel="noopener">termini di servizio</a> di Google.</p>
-        </form>
-
-        <div class="form-thanks" id="report-thanks" hidden>
-            <p><strong>Grazie, la segnalazione è stata registrata.</strong> Comparirà nei conteggi della panoramica entro un giorno.</p>
-            <p><a href="index.html">Vai alla panoramica</a> · <a href="segnala.html">Fai un'altra segnalazione</a></p>
+        <h2 class="visually-hidden">Segnala</h2>
+        <div class="emergency-note" role="note">
+            <strong>Lavori in corso: per ora non si possono inviare segnalazioni.</strong> In caso di pericolo chiama il 112.
         </div>
     </main>
 
@@ -117,7 +53,5 @@
         <a href="accessibilita.html" class="footer-link">Accessibilità</a>
     </footer>
 
-    <script src="vendor/leaflet/leaflet.js"></script>
-    <script type="module" src="js/segnala.js"></script>
 </body>
 </html>
