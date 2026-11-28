@@ -64,10 +64,12 @@ function riassunto(cellaTesto, f) {
     if (!f.riassunto) {
         cellaTesto.textContent = 'Riassunto non ancora pronto: apri l\'articolo.';
         cellaTesto.classList.add('review-missing');
-    } else if (f.riassunto.startsWith('Dubbio')) {
+    } else if (f.riassunto.includes('Dubbio')) {
+        // Haiku scrive "Dubbio:" quando l'articolo non torna con il fatto, anche a metà riassunto
+        const inizio = f.riassunto.indexOf('Dubbio');
         const forte = document.createElement('strong');
         forte.textContent = 'Dubbio';
-        cellaTesto.append(forte, f.riassunto.slice('Dubbio'.length));
+        cellaTesto.append(f.riassunto.slice(0, inizio), forte, f.riassunto.slice(inizio + 'Dubbio'.length));
     } else {
         cellaTesto.textContent = f.riassunto;
     }
